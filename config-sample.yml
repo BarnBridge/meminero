@@ -1,0 +1,69 @@
+# api-related fields
+api:
+  # The port on which the API will be exposed (default:3001)
+  port: 3001
+
+  # Enable/disable development CORS
+  dev-cors: true
+
+  # Allowed hosts for HTTP API development CORS
+  dev-cors-host: "*"
+
+# database fields
+db:
+  # Database host
+  host: "smartbackend-postgres"
+
+  # Database port
+  port: 5432
+
+  # Database sslmode
+  sslmode: "disable"
+
+  # Database name
+  dbname: "barnbridge"
+
+  # Database user (also allowed via PG_USER env var)
+  user: "barnbridge"
+
+  password: "password"
+
+  automigrate: true
+
+# ethereum-related fields
+eth:
+  client:
+    # HTTP endpoint of a web3-compatible node (mandatory)
+    http: "http://localhost:8545"
+
+    # Websockets endpoint of JSON-RPC enabled node (optional)
+    # if this is present, the task manager will use a newHeads subscription to watch for new blocks
+    # if not present, the task manager will use polling to get the highest block
+    ws: "ws://localhost:8546"
+
+    # The interval at which the task manager will poll the node for best block (default:"15s")
+    # optional, only used if `ws` url is not specified
+    poll-interval: "15s"
+
+# feature flags
+feature:
+  queuekeeper:
+    enabled: true
+    lag: 10
+
+  # Uncles scraping
+  uncles:
+    # Enable/disabled the uncles scraping
+    enabled: true
+
+# Control what to be logged using format "module=level,module=level"; `*` means all other modules
+logging: "*=info"
+
+# redis-related fields
+redis:
+  # URL of redis server (default:"localhost:6379")
+  server: "smartbackend-redis:6379"
+
+  # The name of the redis list the scraper will use for task management (default: "todo")
+  list: "todo"
+

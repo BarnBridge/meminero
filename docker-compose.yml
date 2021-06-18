@@ -1,0 +1,37 @@
+version: '3.7'
+services:
+  redis:
+    container_name: smartbackend-redis
+    image: redis:6
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - 0.0.0.0:6379:6379
+    volumes:
+      - .volumes/redis:/data
+  postgres:
+    container_name: smartbackend-postgres
+    image: postgres:13
+    restart: always
+    environment:
+      - POSTGRES_USER=smartbackend
+      - POSTGRES_DB=smartbackend
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 0.0.0.0:5432:5432
+    volumes:
+      - .volumes/postgresql:/var/lib/postgresql/data
+  smartbackend:
+    container_name: smartbackend
+    image: barnbridge/smartbackend:latest
+    restart: always
+    depends_on:
+      - redis
+      - postgres
+    ports:
+      - 127.0.0.1:3001:3001
+      - 127.0.0.1:3000:3000
+    environment:
+      - PG_PASSWORD=password
+    volumes:
+      - .volumes/smartbackend:/config
