@@ -149,14 +149,14 @@ func (p *Processor) storeBlock(tx *sql.Tx) error {
 	start := time.Now()
 	defer func() { p.logger.WithField("duration", time.Since(start)).Debug("done storing block") }()
 
-	stmt, err := tx.Prepare(pq.CopyIn("blocks", "number", "block_hash", "parent_block_hash", "block_creation_time", "block_gas_limit", "block_gas_used", "block_difficulty", "total_block_difficulty", "block_extra_data", "block_mix_hash", "block_nonce", "block_size", "block_logs_bloom", "includes_uncle", "has_beneficiary", "has_receipts_trie", "has_tx_trie", "sha3_uncles", "number_of_uncles", "number_of_txs"))
+	stmt, err := tx.Prepare(pq.CopyIn("blocks", "number", "block_hash", "parent_block_hash", "block_creation_time"))
 	if err != nil {
 		return err
 	}
 
 	b := p.Block
 
-	_, err = stmt.Exec(b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime, b.BlockGasLimit, b.BlockGasUsed, b.BlockDifficulty, b.TotalBlockDifficulty, b.BlockExtraData, b.BlockMixHash, b.BlockNonce, b.BlockSize, b.BlockLogsBloom, b.IncludesUncle, b.HasBeneficiary, b.HasReceiptsTrie, b.HasTxTrie, b.Sha3Uncles, b.NumberOfUncles, len(b.Txs))
+	_, err = stmt.Exec(b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
 	if err != nil {
 		return err
 	}
