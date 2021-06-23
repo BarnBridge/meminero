@@ -37,15 +37,6 @@ func (p *Processor) parseBlockData() error {
 
 	b.BlockHash = utils.Trim0x(raw.Hash)
 	b.ParentBlockHash = utils.Trim0x(raw.ParentHash)
-	b.BlockExtraData = types.ByteArray(utils.Trim0x(raw.ExtraData))
-	b.BlockMixHash = types.ByteArray(utils.Trim0x(raw.MixHash))
-	b.BlockNonce = types.ByteArray(utils.Trim0x(raw.Nonce))
-	b.BlockLogsBloom = types.ByteArray(utils.Trim0x(raw.LogsBloom))
-	b.IncludesUncle = raw.Uncles
-	b.HasBeneficiary = types.ByteArray(utils.Trim0x(utils.CleanUpHex(raw.Miner)))
-	b.HasReceiptsTrie = types.ByteArray(utils.Trim0x(raw.ReceiptsRoot))
-	b.HasTxTrie = types.ByteArray(utils.Trim0x(raw.TransactionsRoot))
-	b.Sha3Uncles = types.ByteArray(utils.Trim0x(raw.Sha3Uncles))
 
 	// -- ints
 	number, err := strconv.ParseInt(raw.Number, 0, 64)
@@ -53,37 +44,6 @@ func (p *Processor) parseBlockData() error {
 		return errors.Wrap(err, "could not decode block number")
 	}
 	b.Number = number
-
-	size, err := strconv.ParseInt(raw.Size, 0, 64)
-	if err != nil {
-		return errors.Wrap(err, "could not decode block size")
-	}
-	b.BlockSize = size
-
-	// --hexes
-	gasLimit, err := utils.HexStrToBigIntStr(raw.GasLimit)
-	if err != nil {
-		return errors.Wrap(err, "could not decode block gas limit")
-	}
-	b.BlockGasLimit = gasLimit
-
-	gasUsed, err := utils.HexStrToBigIntStr(raw.GasUsed)
-	if err != nil {
-		return errors.Wrap(err, "could not decode block gas used")
-	}
-	b.BlockGasUsed = gasUsed
-
-	difficulty, err := utils.HexStrToBigIntStr(raw.Difficulty)
-	if err != nil {
-		return errors.Wrap(err, "could not decode block difficulty")
-	}
-	b.BlockDifficulty = difficulty
-
-	totalDifficulty, err := utils.HexStrToBigIntStr(raw.TotalDifficulty)
-	if err != nil {
-		return errors.Wrap(err, "could not decode block total difficulty")
-	}
-	b.TotalBlockDifficulty = totalDifficulty
 
 	// --timestamp
 	timestamp, err := strconv.ParseInt(raw.Timestamp, 0, 64)
