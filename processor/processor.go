@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/barnbridge/smartbackend/state"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -32,6 +33,10 @@ func New(raw *types.RawData) (*Processor, error) {
 		return nil, err
 	}
 
+	err = state.Refresh()
+	if err != nil {
+		return nil, errors.Wrap(err, "could not refresh state")
+	}
 	p.registerStorables()
 
 	return p, nil

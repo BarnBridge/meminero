@@ -6,6 +6,7 @@ package ethtypes
 import (
 	"math/big"
 
+	web3types "github.com/alethio/web3-go/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/lacasian/ethwheels/ethgen"
@@ -44,13 +45,22 @@ func (d *BalancerPoolDecoder) IsBalancerPoolLOGCALLEvent(log *types.Log) bool {
 	return log.Topics[0] == d.BalancerPoolLOGCALLEventID()
 }
 
-func (d *BalancerPoolDecoder) BalancerPoolLOGCALLEvent(log types.Log) (BalancerPoolLOGCALLEvent, error) {
+func (d *BalancerPoolDecoder) BalancerPoolLOGCALLEventW3(w3l web3types.Log) (BalancerPoolLOGCALLEvent, error) {
+	l, err := ethgen.W3LogToLog(w3l)
+	if err != nil {
+		return BalancerPoolLOGCALLEvent{}, err
+	}
+
+	return d.BalancerPoolLOGCALLEvent(l)
+}
+
+func (d *BalancerPoolDecoder) BalancerPoolLOGCALLEvent(l types.Log) (BalancerPoolLOGCALLEvent, error) {
 	var out BalancerPoolLOGCALLEvent
-	if !d.IsBalancerPoolLOGCALLEvent(&log) {
+	if !d.IsBalancerPoolLOGCALLEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
-	err := d.UnpackLog(&out, "LOG_CALL", log)
-	out.Raw = log
+	err := d.UnpackLog(&out, "LOG_CALL", l)
+	out.Raw = l
 	return out, err
 }
 
@@ -72,13 +82,22 @@ func (d *BalancerPoolDecoder) IsBalancerPoolLOGJOINEvent(log *types.Log) bool {
 	return log.Topics[0] == d.BalancerPoolLOGJOINEventID()
 }
 
-func (d *BalancerPoolDecoder) BalancerPoolLOGJOINEvent(log types.Log) (BalancerPoolLOGJOINEvent, error) {
+func (d *BalancerPoolDecoder) BalancerPoolLOGJOINEventW3(w3l web3types.Log) (BalancerPoolLOGJOINEvent, error) {
+	l, err := ethgen.W3LogToLog(w3l)
+	if err != nil {
+		return BalancerPoolLOGJOINEvent{}, err
+	}
+
+	return d.BalancerPoolLOGJOINEvent(l)
+}
+
+func (d *BalancerPoolDecoder) BalancerPoolLOGJOINEvent(l types.Log) (BalancerPoolLOGJOINEvent, error) {
 	var out BalancerPoolLOGJOINEvent
-	if !d.IsBalancerPoolLOGJOINEvent(&log) {
+	if !d.IsBalancerPoolLOGJOINEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
-	err := d.UnpackLog(&out, "LOG_JOIN", log)
-	out.Raw = log
+	err := d.UnpackLog(&out, "LOG_JOIN", l)
+	out.Raw = l
 	return out, err
 }
 
@@ -100,13 +119,22 @@ func (d *BalancerPoolDecoder) IsBalancerPoolApprovalEvent(log *types.Log) bool {
 	return log.Topics[0] == d.BalancerPoolApprovalEventID()
 }
 
-func (d *BalancerPoolDecoder) BalancerPoolApprovalEvent(log types.Log) (BalancerPoolApprovalEvent, error) {
+func (d *BalancerPoolDecoder) BalancerPoolApprovalEventW3(w3l web3types.Log) (BalancerPoolApprovalEvent, error) {
+	l, err := ethgen.W3LogToLog(w3l)
+	if err != nil {
+		return BalancerPoolApprovalEvent{}, err
+	}
+
+	return d.BalancerPoolApprovalEvent(l)
+}
+
+func (d *BalancerPoolDecoder) BalancerPoolApprovalEvent(l types.Log) (BalancerPoolApprovalEvent, error) {
 	var out BalancerPoolApprovalEvent
-	if !d.IsBalancerPoolApprovalEvent(&log) {
+	if !d.IsBalancerPoolApprovalEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
-	err := d.UnpackLog(&out, "Approval", log)
-	out.Raw = log
+	err := d.UnpackLog(&out, "Approval", l)
+	out.Raw = l
 	return out, err
 }
 
@@ -130,13 +158,22 @@ func (d *BalancerPoolDecoder) IsBalancerPoolLOGSWAPEvent(log *types.Log) bool {
 	return log.Topics[0] == d.BalancerPoolLOGSWAPEventID()
 }
 
-func (d *BalancerPoolDecoder) BalancerPoolLOGSWAPEvent(log types.Log) (BalancerPoolLOGSWAPEvent, error) {
+func (d *BalancerPoolDecoder) BalancerPoolLOGSWAPEventW3(w3l web3types.Log) (BalancerPoolLOGSWAPEvent, error) {
+	l, err := ethgen.W3LogToLog(w3l)
+	if err != nil {
+		return BalancerPoolLOGSWAPEvent{}, err
+	}
+
+	return d.BalancerPoolLOGSWAPEvent(l)
+}
+
+func (d *BalancerPoolDecoder) BalancerPoolLOGSWAPEvent(l types.Log) (BalancerPoolLOGSWAPEvent, error) {
 	var out BalancerPoolLOGSWAPEvent
-	if !d.IsBalancerPoolLOGSWAPEvent(&log) {
+	if !d.IsBalancerPoolLOGSWAPEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
-	err := d.UnpackLog(&out, "LOG_SWAP", log)
-	out.Raw = log
+	err := d.UnpackLog(&out, "LOG_SWAP", l)
+	out.Raw = l
 	return out, err
 }
 
@@ -158,13 +195,22 @@ func (d *BalancerPoolDecoder) IsBalancerPoolTransferEvent(log *types.Log) bool {
 	return log.Topics[0] == d.BalancerPoolTransferEventID()
 }
 
-func (d *BalancerPoolDecoder) BalancerPoolTransferEvent(log types.Log) (BalancerPoolTransferEvent, error) {
+func (d *BalancerPoolDecoder) BalancerPoolTransferEventW3(w3l web3types.Log) (BalancerPoolTransferEvent, error) {
+	l, err := ethgen.W3LogToLog(w3l)
+	if err != nil {
+		return BalancerPoolTransferEvent{}, err
+	}
+
+	return d.BalancerPoolTransferEvent(l)
+}
+
+func (d *BalancerPoolDecoder) BalancerPoolTransferEvent(l types.Log) (BalancerPoolTransferEvent, error) {
 	var out BalancerPoolTransferEvent
-	if !d.IsBalancerPoolTransferEvent(&log) {
+	if !d.IsBalancerPoolTransferEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
-	err := d.UnpackLog(&out, "Transfer", log)
-	out.Raw = log
+	err := d.UnpackLog(&out, "Transfer", l)
+	out.Raw = l
 	return out, err
 }
 
@@ -186,12 +232,21 @@ func (d *BalancerPoolDecoder) IsBalancerPoolLOGEXITEvent(log *types.Log) bool {
 	return log.Topics[0] == d.BalancerPoolLOGEXITEventID()
 }
 
-func (d *BalancerPoolDecoder) BalancerPoolLOGEXITEvent(log types.Log) (BalancerPoolLOGEXITEvent, error) {
+func (d *BalancerPoolDecoder) BalancerPoolLOGEXITEventW3(w3l web3types.Log) (BalancerPoolLOGEXITEvent, error) {
+	l, err := ethgen.W3LogToLog(w3l)
+	if err != nil {
+		return BalancerPoolLOGEXITEvent{}, err
+	}
+
+	return d.BalancerPoolLOGEXITEvent(l)
+}
+
+func (d *BalancerPoolDecoder) BalancerPoolLOGEXITEvent(l types.Log) (BalancerPoolLOGEXITEvent, error) {
 	var out BalancerPoolLOGEXITEvent
-	if !d.IsBalancerPoolLOGEXITEvent(&log) {
+	if !d.IsBalancerPoolLOGEXITEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
-	err := d.UnpackLog(&out, "LOG_EXIT", log)
-	out.Raw = log
+	err := d.UnpackLog(&out, "LOG_EXIT", l)
+	out.Raw = l
 	return out, err
 }

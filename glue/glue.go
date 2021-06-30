@@ -67,6 +67,11 @@ func (g *Glue) ScrapeSingleBlock(b int64) error {
 		return errors.Wrap(err, "could not store block")
 	}
 
+	err = state.Init(g.db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	log.WithField("duration", time.Since(start)).Info("done processing block")
 
 	return nil
