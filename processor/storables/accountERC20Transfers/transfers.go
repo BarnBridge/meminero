@@ -1,4 +1,4 @@
-package accountErc20Transfers
+package accountERC20Transfers
 
 import (
 	web3types "github.com/alethio/web3-go/types"

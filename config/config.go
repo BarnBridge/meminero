@@ -11,6 +11,8 @@ type store struct {
 	API      api      `mapstructure:"api"`
 	Feature  features `mapstructure:"feature"`
 	ETH      eth      `mapstructure:"eth"`
+
+	AccountERC20Transfers accountERC20Transfers
 }
 
 var Store store

@@ -69,4 +69,6 @@ func init() {
 	addRedisFlags(scrapeQueueCmd)
 	addFeatureFlags(scrapeQueueCmd)
 	addETHFlags(scrapeQueueCmd)
+
+	addAccountERC20TransfersFlags(scrapeQueueCmd)
 }

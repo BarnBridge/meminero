@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/barnbridge/smartbackend/state"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -17,14 +18,17 @@ type Processor struct {
 	Raw   *types.RawData
 	Block *types.Block
 
+	eth   *ethclient.Client
+
 	logger *logrus.Entry
 
 	storables []types.Storable
 }
 
-func New(raw *types.RawData) (*Processor, error) {
+func New(raw *types.RawData, eth *ethclient.Client) (*Processor, error) {
 	p := &Processor{
 		Raw:    raw,
+		eth: eth,
 		logger: logrus.WithField("module", "processor"),
 	}
 

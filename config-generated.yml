@@ -44,6 +44,8 @@ feature:
         enabled: true
 # Display debug messages
 logging: '*=info'
+accountERC20Transfers:
+    enabled: true
 redis:
     # The name of the list to be used for task management
     list: todo
@@ -51,3 +53,4 @@ redis:
     password: ""
     # Redis server URL
     server: localhost:6379
+

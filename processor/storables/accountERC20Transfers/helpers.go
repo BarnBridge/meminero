@@ -1,4 +1,4 @@
-package accountErc20Transfers
+package accountERC20Transfers
 
 import (
 	"database/sql"

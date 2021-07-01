@@ -45,3 +45,7 @@ type features struct {
 type eth struct {
 	bestblock.Config `mapstructure:"client"`
 }
+
+type accountERC20Transfers struct {
+	Enabled bool
+}

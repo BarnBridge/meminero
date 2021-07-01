@@ -1,4 +1,4 @@
-package accountErc20Transfers
+package accountERC20Transfers
 
 import (
 	"database/sql"
@@ -23,7 +23,7 @@ type Storable struct {
 	}
 }
 
-func NewStorable(block *types.Block ,ethConn *ethclient.Client) *Storable {
+func New(block *types.Block ,ethConn *ethclient.Client) *Storable {
 	return &Storable{
 		block:   block,
 		ethConn: ethConn,
@@ -47,11 +47,14 @@ func (s *Storable) Execute() error {
 			}
 		}
 	}
-
+	err := s.decodeLogs(logs,erc20Decoder)
+	if err != nil {
+		return errors.Wrap(err,"could not decode erc20 transfers logs")
+	}
 	return nil
 }
 
-func (b *Storable) Rollback(tx *sql.Tx) error {
+func (s *Storable) Rollback(tx *sql.Tx) error {
 	return nil
 }
 
@@ -61,7 +64,9 @@ func (s *Storable) SaveToDatabase(tx *sql.Tx) error {
 		return errors.Wrap(err, "could not store erc20transfers")
 	}
 
-
-
 	return nil
+}
+
+func (s *Storable) Result() interface{} {
+	return s.processed
 }

@@ -47,3 +47,7 @@ func addGenerateETHTypesFlags(cmd *cobra.Command) {
 	cmd.Flags().String("ethtypes.abi-folder", "ethtypes/_source", "Folder containing ABI JSONs")
 	cmd.Flags().String("ethtypes.package-path", "ethtypes", "Path where to generate packages. Final folder represents package name")
 }
+
+func addAccountERC20TransfersFlags(cmd *cobra.Command) {
+	cmd.Flags().Bool("accountERC20Transfers", true, "Enable/disable erc20 transfers scraping")
+}

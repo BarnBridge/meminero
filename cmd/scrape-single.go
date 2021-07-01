@@ -49,6 +49,7 @@ func init() {
 	addRedisFlags(scrapeSingleCmd)
 	addFeatureFlags(scrapeSingleCmd)
 	addETHFlags(scrapeSingleCmd)
+	addAccountERC20TransfersFlags(scrapeQueueCmd)
 
 	scrapeSingleCmd.Flags().Int64("block", -1, "The block to scrape")
 }

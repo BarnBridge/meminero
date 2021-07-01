@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/alethio/web3-go/validator"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
@@ -21,22 +22,30 @@ type Glue struct {
 	state   *state.Manager
 	scraper *scraper.Scraper
 	db      *sql.DB
+	eth        *ethclient.Client
 	logger  *logrus.Entry
 
 	stopMu sync.Mutex
 }
 
 func New(db *sql.DB, state *state.Manager) (*Glue, error) {
+    logger:=  logrus.WithField("module", "glue")
 	s, err := scraper.New()
 	if err != nil {
 		return nil, errors.Wrap(err, "could not init scraper")
 	}
 
+	// Create an IPC based RPC connection to a remote node
+	eth, err := ethclient.Dial(config.Store.ETH.HTTP)
+	if err != nil {
+		logger.Fatalf("failed to connect to the Ethereum client: %v", err)
+	}
 	return &Glue{
 		state:   state,
 		scraper: s,
 		db:      db,
-		logger:  logrus.WithField("module", "glue"),
+		eth: eth,
+		logger: logger,
 	}, nil
 }
 
@@ -57,7 +66,7 @@ func (g *Glue) ScrapeSingleBlock(b int64) error {
 
 	log.Debug("block is valid; processing")
 
-	p, err := processor.New(blk)
+	p, err := processor.New(blk,g.eth)
 	if err != nil {
 		return errors.Wrap(err, "could not init processor")
 	}
