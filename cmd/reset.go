@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -9,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/barnbridge/smartbackend/db"
 	"github.com/barnbridge/smartbackend/state"
 )
 
@@ -43,15 +45,21 @@ var resetCmd = &cobra.Command{
 
 		fmt.Print("Truncating database ... ")
 
-		db, err := state.NewPostgres()
+		d, err := db.New()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		_, err = db.Exec(`
-		drop schema public cascade;
-		create schema public;
+		_, err = d.Connection().Exec(context.Background(),`
+			drop schema public cascade;
+			create schema public;
+		
+			drop schema if exists yield_farming cascade;
+			drop schema if exists governance cascade;
+			drop schema if exists smart_yield cascade;
+			drop schema if exists smart_exposure cascade;
 		`)
+
 		if err != nil {
 			log.Fatal(err)
 		}
