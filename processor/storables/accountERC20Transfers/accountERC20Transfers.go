@@ -38,7 +38,7 @@ func (s *Storable) Execute() error {
 	for _, tx := range s.block.Txs{
 		for _, log := range tx.LogEntries {
 			if erc20Decoder.IsERC20TransferEvent(&log) && state.IsMonitoredAccount(log) {
-				err := s.checkTokenExists(tx, utils.NormalizeAddress(log.Address.String()))
+				err := s.checkTokenExists(utils.NormalizeAddress(log.Address.String()))
 				if err != nil {
 					continue
 				}
