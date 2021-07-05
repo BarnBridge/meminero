@@ -1,6 +1,7 @@
 package accountERC20Transfers
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/barnbridge/smartbackend/contracts"
@@ -9,9 +10,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (s *Storable) checkTokenExists(tx *sql.Tx, tokenAddress string) error {
+func (s *Storable) checkTokenExists(tokenAddress string) error {
 	var count int64
-	err := tx.QueryRow(`select count(*) from erc20_tokens where token_address = $1`, tokenAddress).Scan(&count)
+	err := s.db.QueryRow(context.Background(),`select count(*) from erc20_tokens where token_address = $1`, tokenAddress).Scan(&count)
 	if err != nil {
 		return err
 	} else if count > 0 {

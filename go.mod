@@ -4,7 +4,7 @@ require (
 	github.com/alethio/ethmock v0.0.0-20190820104914-7b8327fb645e // indirect
 	github.com/alethio/web3-go v0.0.6
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/ethereum/go-ethereum v1.10.2
+	github.com/ethereum/go-ethereum v1.10.4
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.1
 	github.com/go-playground/validator/v10 v10.5.0 // indirect
@@ -28,7 +28,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/ugorji/go v1.2.5 // indirect
-	golang.org/x/sys v0.0.0-20210415045647-66c3f260301c // indirect
 	golang.org/x/text v0.3.6 // indirect
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect

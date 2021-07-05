@@ -1,10 +1,10 @@
 package accountERC20Transfers
 
 import (
-	web3types "github.com/alethio/web3-go/types"
 	"github.com/barnbridge/smartbackend/ethtypes"
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
 )
-func (s *Storable) decodeLogs(logs []web3types.Log,erc20Decoder *ethtypes.ERC20Decoder) error {
+func (s *Storable) decodeLogs(logs []gethtypes.Log,erc20Decoder *ethtypes.ERC20Decoder) error {
 	for _, log := range logs {
 		t, err := s.decodeTransfer(log,erc20Decoder)
 		if err != nil {
@@ -17,9 +17,8 @@ func (s *Storable) decodeLogs(logs []web3types.Log,erc20Decoder *ethtypes.ERC20D
 	return nil
 }
 
-func (s *Storable) decodeTransfer(log web3types.Log,erc20Decoder *ethtypes.ERC20Decoder) (*ethtypes.ERC20TransferEvent, error) {
-
-	erc20Transfer,err := erc20Decoder.ERC20TransferEventW3(log)
+func (s *Storable) decodeTransfer(log gethtypes.Log,erc20Decoder *ethtypes.ERC20Decoder) (*ethtypes.ERC20TransferEvent, error) {
+	erc20Transfer,err := erc20Decoder.ERC20TransferEvent(log)
 	if err != nil {
 		return nil,err
 	}
