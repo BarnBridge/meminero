@@ -21,7 +21,7 @@ create index user_delegated_power_idx
 create trigger refresh_barn_users
     after insert or update or delete or truncate
     on barn.barn_delegate_changes
-execute procedure refresh_barn_users();
+execute procedure barn.refresh_barn_users();
 
 
 ---- create above / drop below ----

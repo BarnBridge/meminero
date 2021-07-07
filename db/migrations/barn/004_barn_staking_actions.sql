@@ -22,8 +22,7 @@ create index barn_staking_actions_included_in_block_idx
 create trigger refresh_barn_users
     after insert or update or delete or truncate
     on barn.barn_staking_actions
-execute procedure  refresh_barn_users();
-
+execute procedure  barn.refresh_barn_users();
 
 ---- create above / drop below ----
 
