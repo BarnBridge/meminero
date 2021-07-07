@@ -43,22 +43,23 @@ begin
 end;
 $$;
 
-create or replace function smart_yield.junior_active_balance_at_ts(user_address text, ts bigint) returns double precision
-    language plpgsql as
+create function smart_yield.junior_active_balance_at_ts(user_address text, ts bigint) returns double precision
+    language plpgsql
+as
 $$
 declare
     total_balance double precision;
 begin
-    select into total_balance balance::numeric(78, 18) / pow(10, (select underlying_decimals
-                                                                  from smart_yield.smart_yield_pools
-                                                                  where sy_address = pool
-                                                                  limit 1)) * (select jtoken_price / pow(10, 18)
-                                                                               from smart_yield.smart_yield_state
-                                                                               where pool_address = pool
-                                                                                 and block_timestamp <= to_timestamp(ts)
-                                                                               order by block_timestamp desc
-                                                                               limit 1) *
-                              (select smart_yield.pool_underlying_price_at_ts(pool, ts))
+    select into total_balance sum(balance::numeric(78, 18) / pow(10, ( select underlying_decimals
+                                                                       from smart_yield.smart_yield_pools
+                                                                       where sy_address = pool
+                                                                       limit 1 )) * ( select jtoken_price / pow(10, 18)
+                                                                                      from smart_yield_state
+                                                                                      where pool_address = pool
+                                                                                        and block_timestamp <= to_timestamp(ts)
+                                                                                      order by block_timestamp desc
+                                                                                      limit 1 ) *
+                                  ( select smart_yield.pool_underlying_price_at_ts(pool, ts) ))
     from smart_yield.junior_active_positions_at_ts(user_address, ts);
 
     return total_balance;
@@ -162,14 +163,16 @@ begin
 end;
 $$;
 
-create or replace function smart_yield.junior_portfolio_value_at_ts(addr text, ts bigint) returns double precision
-    language plpgsql as
+create function junior_portfolio_value_at_ts(addr text, ts bigint) returns double precision
+    language plpgsql
+as
 $$
 declare
     value double precision;
 begin
     select into value coalesce(smart_yield.junior_locked_balance_at_ts(addr, ts), 0) +
-                      coalesce(smart_yield.junior_active_balance_at_ts(addr, ts), 0);
+                      coalesce(smart_yield.junior_active_balance_at_ts(addr, ts), 0) +
+                      coalesce(smart_yield.junior_staked_balance_at_ts(addr, ts), 0);
 
     return value;
 end;
@@ -177,12 +180,12 @@ $$;
 
 ---- create above / drop below ----
 
-drop function if exists smart_yield.junior_active_positions_at_ts;
-drop function if exists smart_yield.pool_underlying_price_at_ts;
-drop function if exists smart_yield.junior_active_balance_at_ts;
-drop function if exists smart_yield.junior_bond_value_at_ts;
-drop function if exists smart_yield.junior_bond_redeemed_at_ts;
-drop function if exists smart_yield.junior_underlying_price_at_ts;
-drop function if exists smart_yield.junior_locked_positions_at_ts;
-drop function if exists smart_yield.junior_locked_balance_at_ts;
-drop function if exists smart_yield.junior_portfolio_value_at_ts;
+drop function if exists smart_yield.junior_active_positions_at_ts(user_address text, ts bigint);
+drop function if exists smart_yield.pool_underlying_price_at_ts(addr text, ts bigint);
+drop function if exists smart_yield.junior_active_balance_at_ts(user_address text, ts bigint);
+drop function if exists smart_yield.junior_bond_value_at_ts(token_address text, token_id bigint, ts bigint);
+drop function if exists smart_yield.junior_bond_redeemed_at_ts(token_address text, token_id bigint, ts bigint);
+drop function if exists smart_yield.junior_underlying_price_at_ts(addr text, ts bigint);
+drop function if exists smart_yield.junior_locked_positions_at_ts(addr text, ts bigint);
+drop function if exists smart_yield.junior_locked_balance_at_ts(addr text, ts bigint);
+drop function if exists smart_yield.junior_portfolio_value_at_ts(addr text, ts bigint);

@@ -95,8 +95,8 @@ $$;
 
 ---- create above / drop below ----
 
-drop function if exists smart_yield.number_of_nft_holders;
-drop function if exists smart_yield.number_of_seniors;
-drop function if exists smart_yield.number_of_juniors_locked;
-drop function if exists smart_yield.number_of_jtoken_holders;
-drop function if exists smart_yield.junior_liquidity_locked;
+drop function if exists smart_yield.number_of_nft_holders(addr text);
+drop function if exists smart_yield.number_of_seniors(pool_address text);
+drop function if exists smart_yield.number_of_juniors_locked(pool_address text);
+drop function if exists smart_yield.number_of_jtoken_holders(addr text);
+drop function if exists smart_yield.junior_liquidity_locked(pool_address text);

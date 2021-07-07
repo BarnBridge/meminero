@@ -53,21 +53,8 @@ begin
 end;
 $$;
 
-create or replace function smart_yield.junior_portfolio_value_at_ts(addr text, ts bigint) returns double precision
-    language plpgsql as
-$$
-declare
-    value double precision;
-begin
-    select into value coalesce(smart_yield.junior_locked_balance_at_ts(addr, ts), 0) +
-                      coalesce(smart_yield.junior_active_balance_at_ts(addr, ts), 0) +
-                      coalesce(smart_yield.junior_staked_balance_at_ts(addr, ts), 0);
-
-    return value;
-end;
-$$;
 ---- create above / drop below ----
 
-drop function if exists staked_amount_at_ts_by_reward_pool;
-drop function if exists jtoken_price_scaled_at_ts;
-drop function if exists junior_staked_value_at_ts;
+drop function if exists smart_yield.staked_amount_at_ts_by_reward_pool(pool text, address text, ts bigint);
+drop function if exists smart_yield.jtoken_price_scaled_at_ts(sy_address text, ts bigint);
+drop function if exists smart_yield.junior_staked_balance_at_ts(user_address text, ts bigint);

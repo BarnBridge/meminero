@@ -1,25 +1,4 @@
-create or replace function bond_staked_at_ts(ts timestamp with time zone) returns numeric(78)
-    language plpgsql as
-$$
-declare
-    value numeric(78);
-begin
-    with values as (select action_type, sum(amount) as amount
-                    from barn.barn_staking_actions
-                    where included_in_block < (select number
-                                               from blocks
-                                               where block_creation_time < ts
-                                               order by block_creation_time desc
-                                               limit 1)
-                    group by action_type)
-    select into value coalesce((select amount from values where action_type = 'DEPOSIT'), 0) -
-                      coalesce((select amount from values where action_type = 'WITHDRAW'), 0);
-
-    return value;
-end;
-$$;
-
-create function proposal_state(id bigint) returns text
+create function governance.proposal_state(id bigint) returns text
     language plpgsql
 as
 $$
@@ -84,7 +63,7 @@ begin
 
     -- check if there's a abrogation proposal that passed
     if (select count(*) from governance.governance_abrogation_proposals where proposal_id = id) > 0 then
-        select into abrogationProposalQuorum bond_staked_at_ts(to_timestamp((select create_time - 1
+        select into abrogationProposalQuorum public.bond_staked_at_ts(to_timestamp((select create_time - 1
                                                                              from governance.governance_abrogation_proposals
                                                                              where proposal_id = id))) / 2;
 
@@ -102,5 +81,4 @@ $$;
 
 ---- create above / drop below ----
 
-drop function if exists proposal_state;
-drop function if exists bond_staked_at_ts;
+drop function if exists governance.proposal_state(id bigint);

@@ -1,4 +1,4 @@
-create type action_type as enum ('DEPOSIT','WITHDRAW');
+create type barn.action_type as enum ('DEPOSIT','WITHDRAW');
 create table barn.barn_staking_actions
 (
     tx_hash           text        not null,
@@ -29,3 +29,4 @@ execute procedure barn.refresh_barn_users();
 drop table if exists barn.barn_staking_actions;
 drop index if exists barn.user_balance_idx;
 drop index if exists barn.barn_staking_actions_included_in_block_idx;
+drop type if exists barn.action_type;

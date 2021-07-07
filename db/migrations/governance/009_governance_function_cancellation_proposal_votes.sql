@@ -1,10 +1,10 @@
-create or replace function governance.abrogation_proposal_votes(id bigint)
-    returns table
+create function governance.abrogation_proposal_votes(id bigint)
+    returns TABLE
             (
                 user_id         text,
                 support         boolean,
                 block_timestamp bigint,
-                power           numeric(78)
+                power           numeric
             )
     language plpgsql
 as
@@ -24,8 +24,9 @@ begin
                  and vc.user_id = v.user_id
                  and vc.block_timestamp > v.block_timestamp) = 0;
 end;
+
 $$;
 
 ---- create above / drop below ----
 
-drop function if exists abrogation_proposal_votes;
+drop function if exists governance.abrogation_proposal_votes(id bigint);
