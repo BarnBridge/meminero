@@ -5,7 +5,7 @@ union
 select distinct receiver
 from barn.barn_delegate_changes;
 
-create unique index on barn.barn_users(user_address);
+create unique index on barn.barn_users (user_address);
 
 create or replace function barn.refresh_barn_users() returns TRIGGER
     language plpgsql as
