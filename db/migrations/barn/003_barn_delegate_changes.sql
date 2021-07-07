@@ -10,7 +10,7 @@ create table barn.barn_delegate_changes
     receiver                     text                 not null,
     amount                       numeric(78)          not null,
     receiver_new_delegated_power numeric(78)          not null,
-    timestamp                    bigint,
+    block_timestamp              bigint,
     included_in_block            bigint               not null,
     created_at                   timestamp default now()
 );

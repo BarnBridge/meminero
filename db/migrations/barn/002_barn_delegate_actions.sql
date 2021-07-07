@@ -8,7 +8,7 @@ create table barn.barn_delegate_actions
     sender            text                 not null,
     receiver          text                 not null,
     action_type       delegate_action_type not null,
-    timestamp         bigint               not null,
+    block_timestamp   bigint               not null,
     included_in_block bigint               not null,
     created_at        timestamp default now()
 );
