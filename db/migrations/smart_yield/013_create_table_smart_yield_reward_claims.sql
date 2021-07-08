@@ -1,4 +1,4 @@
-create table smart_yield.smart_yield_rewards_claims
+create table smart_yield.rewards_claims
 (
     user_address         text    not null,
     amount               numeric(78),
@@ -13,4 +13,4 @@ create table smart_yield.smart_yield_rewards_claims
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_rewards_claims;
+drop table if exists smart_yield.rewards_claims;

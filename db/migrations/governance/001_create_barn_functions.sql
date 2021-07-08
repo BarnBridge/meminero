@@ -95,7 +95,7 @@ begin
     if is_delegating then
         self_power = 0;
     else
-        select governance.balance_of(addr) * barn.user_multiplier(addr) / 10 ^ 18 into self_power;
+        select governance.balance_of(addr) * governance.user_multiplier(addr) / 10 ^ 18 into self_power;
     end if;
 
     select governance.delegated_power(addr) into delegated_power;

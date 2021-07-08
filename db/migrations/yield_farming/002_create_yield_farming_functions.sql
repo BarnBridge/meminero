@@ -6,7 +6,7 @@ $$
 begin
     return query select sum(yf.amount),
                         date_trunc(scale, to_timestamp(block_timestamp)) as wk
-                 from yield_farming.yield_farming_actions yf
+                 from yield_farming.transactions yf
                  where action_type = a_type
                    and token_address = _token_address
                    and block_timestamp between _start_time and _end_time

@@ -1,4 +1,4 @@
-create table smart_yield.smart_yield_token_sell
+create table smart_yield.junior_instant_withdraw_events
 (
     sy_address        text    not null,
     seller_address    text    not null,
@@ -15,4 +15,4 @@ create table smart_yield.smart_yield_token_sell
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_token_sell;
+drop table if exists smart_yield.junior_instant_withdraw_events;

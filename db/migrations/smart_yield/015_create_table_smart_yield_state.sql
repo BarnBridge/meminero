@@ -1,4 +1,4 @@
-create table smart_yield.smart_yield_state
+create table smart_yield.state
 (
     included_in_block  bigint           not null,
     block_timestamp    timestamp        not null,
@@ -17,15 +17,15 @@ create table smart_yield.smart_yield_state
     originator_net_apy double precision not null
 );
 
-create index smart_yield_state_pool_address_idx
-    on smart_yield.smart_yield_state (pool_address asc, block_timestamp desc);
+create index state_pool_address_idx
+    on smart_yield.state (pool_address asc, block_timestamp desc);
 
-create index sy_state_apy_trend_idx
-    on smart_yield.smart_yield_state (pool_address, date_trunc('day'::text, block_timestamp));
+create index state_apy_trend_idx
+    on smart_yield.state (pool_address, date_trunc('day'::text, block_timestamp));
 
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_state;
-drop index if exists smart_yield.smart_yield_state_pool_address_idx;
-drop index if exists smart_yield.sy_state_apy_trend_idx;
+drop table if exists smart_yield.state;
+drop index if exists smart_yield.state_pool_address_idx;
+drop index if exists smart_yield.state_apy_trend_idx;

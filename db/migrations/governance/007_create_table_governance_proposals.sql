@@ -1,4 +1,4 @@
-create table governance.governance_proposals
+create table governance.proposals
 (
     proposal_id           bigint not null,
     proposer              text   not null,
@@ -20,15 +20,15 @@ create table governance.governance_proposals
     min_quorum            bigint
 );
 
-create index governance_proposals_proposal_id_idx
-    on governance.governance_proposals (proposal_id desc);
+create index proposals_proposal_id_idx
+    on governance.proposals (proposal_id desc);
 
-create index governance_proposals_proposer_idx
-    on governance.governance_proposals (lower(proposer));
+create index proposals_proposer_idx
+    on governance.proposals (lower(proposer));
 
 
 ---- create above / drop below ----
 
-drop table if exists governance.governance_proposals;
-drop index if exists governance.governance_proposals_proposal_id_idx;
-drop index if exists governance.governance_proposals_proposer_idx;
+drop table if exists governance.proposals;
+drop index if exists governance.proposals_proposal_id_idx;
+drop index if exists governance.proposals_proposer_idx;

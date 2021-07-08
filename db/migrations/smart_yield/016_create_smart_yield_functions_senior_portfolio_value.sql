@@ -26,7 +26,7 @@ begin
                           when block_timestamp + for_days * 24 * 60 * 60 <= ts
                               then underlying_in + gain
                           else underlying_in end
-    from smart_yield.smart_yield_senior_buy
+    from smart_yield.senior_entry_events
     where senior_bond_address = token_address
       and senior_bond_id = token_id;
 
@@ -41,7 +41,7 @@ declare
     redeemed boolean;
 begin
     select into redeemed count(*) > 0
-    from smart_yield.smart_yield_senior_redeem
+    from smart_yield.senior_redeem_events
     where senior_bond_address = token_address
       and senior_bond_id = token_id
       and block_timestamp <= ts;
@@ -59,7 +59,7 @@ begin
     select into price price_usd
     from public.token_prices p
     where p.token_address =
-          (select underlying_address from smart_yield.smart_yield_pools where senior_bond_address = addr)
+          (select underlying_address from smart_yield.pools where senior_bond_address = addr)
       and block_timestamp <= ts
     order by block_timestamp desc
     limit 1;
@@ -98,7 +98,7 @@ begin
                               sum(
                                               smart_yield.senior_bond_value_at_ts(token_address, token_id, ts)::numeric(78, 18) /
                                               pow(10, (select underlying_decimals
-                                                       from smart_yield.smart_yield_pools
+                                                       from smart_yield.pools
                                                        where senior_bond_address = token_address)) *
                                               smart_yield.senior_underlying_price_at_ts(token_address, ts)
                                   ),

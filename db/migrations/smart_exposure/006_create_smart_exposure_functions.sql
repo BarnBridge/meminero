@@ -1,7 +1,7 @@
-create function smart_exposure.e_token_active_position_at_ts(user_address text, ts bigint)
+create function smart_exposure.active_position_at_ts(user_address text, ts bigint)
     returns TABLE
             (
-                e_token_address text,
+                etoken_address text,
                 balance         numeric
             )
     language plpgsql
@@ -13,7 +13,7 @@ begin
                                     where sender = user_address
                                       and block_timestamp <= ts
                                     union all
-                                    select e_token_address as address, value as amount
+                                    select etoken_address as address, value as amount
                                     from public.erc20_transfers
                                     where receiver = user_address
                                       and block_timestamp <= ts)
@@ -23,7 +23,7 @@ begin
 end;
 $$;
 
-create function smart_exposure.get_ratio_deviation(_e_token_address text, start bigint, _date_trunc text)
+create function smart_exposure.get_ratio_deviation(_etoken_address text, start bigint, _date_trunc text)
     returns TABLE
             (
                 point     timestamp without time zone,
@@ -36,13 +36,13 @@ declare
     target_ratio numeric(78, 18);
 begin
     select into target_ratio t.target_ratio::numeric(78, 18)
-    from smart_exposure.smart_exposure_tranches t
-    where t.e_token_address = _e_token_address;
+    from smart_exposure.tranches t
+    where t.etoken_address = _etoken_address;
     return query
         select date_trunc(_date_trunc, block_timestamp)::timestamp           as point,
                avg(1 - ((ts.current_ratio::numeric(78, 18)) / target_ratio)) as deviation
-        from smart_exposure.smart_exposure_tranche_state ts
-        where ts.e_token_address = _e_token_address
+        from smart_exposure.tranche_state ts
+        where ts.etoken_address = _etoken_address
           and ts.block_timestamp > start
         group by point
         order by point;
@@ -70,7 +70,7 @@ begin
 end
 $$;
 
-create function smart_exposure.get_tranche_details(_e_token_address text)
+create function smart_exposure.get_tranche_details(_etoken_address text)
     returns TABLE
             (
                 s_factor_e                          numeric,
@@ -139,8 +139,8 @@ begin
                                                                                   t.target_ratio,
                                                                                   t.token_a_ratio,
                                                                                   t.token_b_ratio
-    from smart_exposure.smart_exposure_tranches t
-    where t.e_token_address = _e_token_address;
+    from smart_exposure.tranches t
+    where t.etoken_address = _etoken_address;
 
     select into token_a_address,token_a_symbol,token_a_decimals,token_b_address,token_b_symbol,token_b_decimals p.token_a_address,
                                                                                                                 p.token_a_symbol,
@@ -148,7 +148,7 @@ begin
                                                                                                                 p.token_b_address,
                                                                                                                 p.token_b_symbol,
                                                                                                                 p.token_b_decimals
-    from smart_exposure.smart_exposure_pools p
+    from smart_exposure.pools p
     where p.pool_address = _pool_address;
 
     select into token_a_price_usd,token_a_included_in_block,token_a_block_timestamp price.price_usd,
@@ -171,7 +171,7 @@ begin
     select into pool_state_rebalancing_interval,pool_state_rebalancing_condition,pool_state_last_rebalance ps.rebalancing_interval,
                                                                                                            ps.rebalancing_condition,
                                                                                                            ps.last_rebalance
-    from smart_exposure.smart_exposure_pool_state ps
+    from smart_exposure.pool_state ps
     where ps.pool_address = _pool_address
     order by block_timestamp desc
     limit 1;
@@ -185,8 +185,8 @@ begin
                                                                                                                                               ts.token_b_current_ratio,
                                                                                                                                               ts.included_in_block,
                                                                                                                                               ts.block_timestamp
-    from smart_exposure.smart_exposure_tranche_state ts
-    where ts.e_token_address = _e_token_address
+    from smart_exposure.tranche_state ts
+    where ts.etoken_address = _etoken_address
     order by block_timestamp desc
     limit 1;
     return query
@@ -220,7 +220,7 @@ begin
 end
 $$;
 
-create function smart_exposure.se_user_portfolio_value(addr text, ts bigint) returns double precision
+create function smart_exposure.user_portfolio_value(addr text, ts bigint) returns double precision
     language plpgsql
 as
 $$
@@ -228,17 +228,17 @@ declare
     value double precision;
 begin
     select into value sum(coalesce(a.balance / pow(10, 18) * (select etoken_price
-                                                              from smart_exposure.smart_exposure_tranche_state s
-                                                              where s.e_token_address = a.e_token_address
+                                                              from smart_exposure.tranche_state s
+                                                              where s.etoken_address = a.etoken_address
                                                                 and s.block_timestamp <= to_timestamp(ts)
                                                               limit 1),0))
-    from smart_exposure.e_token_active_position_at_ts(addr, ts) a;
+    from smart_exposure.active_position_at_ts(addr, ts) a;
 
     return value;
 end;
 $$;
 
-create function smart_exposure.se_user_portfolio_value_by_pool(addr text, ts bigint, _pool_address text) returns double precision
+create function smart_exposure.user_portfolio_value_by_pool(addr text, ts bigint, _pool_address text) returns double precision
     language plpgsql
 as
 $$
@@ -246,22 +246,22 @@ declare
     value double precision;
 begin
     select into value sum(coalesce(a.balance / pow(10, 18) * (select etoken_price
-                                                              from smart_exposure_tranche_state s
-                                                              where s.e_token_address = a.e_token_address
+                                                              from smart_exposure.tranche_state s
+                                                              where s.etoken_address = a.etoken_address
                                                                 and s.block_timestamp <= to_timestamp(ts)
                                                               limit 1),0))
-    from smart_exposure.e_token_active_position_at_ts(addr, ts) a
-    where a.e_token_address in (select e_token_address from smart_exposure.smart_exposure_tranches where pool_address = _pool_address);
+    from smart_exposure.active_position_at_ts(addr, ts) a
+    where a.etoken_address in (select etoken_address from smart_exposure.tranches where pool_address = _pool_address);
     return value;
 end;
 $$;
 
 ---- create above / drop below ----
 
-drop function if exists smart_exposure.e_token_active_position_at_ts(user_address text, ts bigint);
+drop function if exists smart_exposure.active_position_at_ts(user_address text, ts bigint);
 drop function if exists smart_exposure.get_ratio_deviation(_e_token_address text, start bigint, _date_trunc text);
 drop function if exists smart_exposure.get_token_price_chart(_token_address text, start bigint, _date_trunc text);
 drop function if exists smart_exposure.get_tranche_details(_e_token_address text);
-drop function if exists smart_exposure.se_user_portfolio_value(addr text, ts bigint);
-drop function if exists smart_exposure.se_user_portfolio_value_by_pool(addr text, ts bigint, _pool_address text);
+drop function if exists smart_exposure.user_portfolio_value(addr text, ts bigint);
+drop function if exists smart_exposure.user_portfolio_value_by_pool(addr text, ts bigint, _pool_address text);
 

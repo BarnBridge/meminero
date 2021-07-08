@@ -1,5 +1,5 @@
 create type reward_action as enum ('JUNIOR_STAKE','JUNIOR_UNSTAKE');
-create table smart_yield.smart_yield_rewards_staking_actions
+create table smart_yield.rewards_staking_actions
 (
     user_address      text          not null,
     amount            numeric(78),
@@ -13,13 +13,13 @@ create table smart_yield.smart_yield_rewards_staking_actions
     included_in_block bigint        not null
 );
 
-create index smart_yield_rewards_staking_actions_pool_addr_idx
-    on smart_yield.smart_yield_rewards_staking_actions (pool_address asc, user_address asc, included_in_block desc,
-                                                        tx_index desc, log_index desc);
+create index rewards_staking_actions_pool_addr_idx
+    on smart_yield.rewards_staking_actions (pool_address asc, user_address asc, included_in_block desc,
+                                            tx_index desc, log_index desc);
 
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_rewards_staking_actions;
-drop index if exists smart_yield.smart_yield_rewards_staking_actions_pool_addr_idx;
+drop table if exists smart_yield.rewards_staking_actions;
+drop index if exists smart_yield.rewards_staking_actions_pool_addr_idx;
 drop type if exists reward_action;

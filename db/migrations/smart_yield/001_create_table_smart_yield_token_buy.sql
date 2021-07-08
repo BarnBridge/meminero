@@ -1,4 +1,4 @@
-create table smart_yield.smart_yield_token_buy
+create table smart_yield.junior_entry_events
 (
     sy_address        text    not null,
     buyer_address     text    not null,
@@ -15,4 +15,4 @@ create table smart_yield.smart_yield_token_buy
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_token_buy;
+drop table if exists smart_yield.junior_entry_events;

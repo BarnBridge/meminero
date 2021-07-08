@@ -1,4 +1,4 @@
-create table smart_yield.smart_yield_senior_buy
+create table smart_yield.senior_entry_events
 (
     sy_address          text        not null,
     buyer_address       text        not null,
@@ -15,10 +15,11 @@ create table smart_yield.smart_yield_senior_buy
     created_at          timestamp default now()
 );
 
-create index smart_yield_senior_buy_junior_bond_address_id_idx
-    on smart_yield.smart_yield_senior_buy (senior_bond_address, senior_bond_id);
+create index senior_entry_events_senior_bond_address_id_idx
+    on smart_yield.senior_entry_events (senior_bond_address, senior_bond_id);
 
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_senior_buy;
+drop table if exists smart_yield.senior_entry_events;
+drop index if exists smart_yield.senior_entry_events_senior_bond_address_id_idx;

@@ -1,5 +1,5 @@
 create type reward_pool_type as enum ('SINGLE', 'MULTI');
-create table smart_yield.smart_yield_reward_pools
+create table smart_yield.reward_pools
 (
     pool_address           text                       not null,
     pool_token_address     text                       not null,
@@ -12,5 +12,5 @@ create table smart_yield.smart_yield_reward_pools
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_reward_pools;
+drop table if exists smart_yield.reward_pools;
 drop type if exists reward_pool_type;

@@ -1,9 +1,9 @@
-create table smart_exposure.smart_exposure_tranche_state
+create table smart_exposure.tranche_state
 (
     included_in_block     bigint    not null,
     block_timestamp       bigint not null,
     pool_address          text      not null,
-    e_token_address       text      not null,
+    etoken_address       text      not null,
     token_a_liquidity     double precision,
     token_b_liquidity     double precision,
     current_ratio         numeric(78),
@@ -16,4 +16,4 @@ create table smart_exposure.smart_exposure_tranche_state
 
 ---- create above / drop below ----
 
-drop table if exists smart_exposure.smart_exposure_tranche_state;
+drop table if exists smart_exposure.tranche_state;

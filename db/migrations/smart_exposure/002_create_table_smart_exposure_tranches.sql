@@ -1,7 +1,7 @@
-create table smart_exposure.smart_exposure_tranches
+create table smart_exposure.tranches
 (
     pool_address    text             not null,
-    e_token_address text             not null,
+    etoken_address text             not null,
     s_factor_e      numeric(78)      not null,
     target_ratio    numeric(78)      not null,
     token_a_ratio   double precision not null,
@@ -13,4 +13,4 @@ create table smart_exposure.smart_exposure_tranches
 
 ---- create above / drop below ----
 
-drop table if exists smart_exposure.smart_exposure_tranches;
+drop table if exists smart_exposure.tranches;

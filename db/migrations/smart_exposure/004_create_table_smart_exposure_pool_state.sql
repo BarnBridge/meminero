@@ -1,4 +1,4 @@
-create table smart_exposure.smart_exposure_pool_state
+create table smart_exposure.pool_state
 (
     included_in_block     bigint not null,
     block_timestamp       bigint not null,
@@ -11,4 +11,4 @@ create table smart_exposure.smart_exposure_pool_state
 
 ---- create above / drop below ----
 
-drop table if exists smart_exposure.smart_exposure_pool_state;
+drop table if exists smart_exposure.pool_state;

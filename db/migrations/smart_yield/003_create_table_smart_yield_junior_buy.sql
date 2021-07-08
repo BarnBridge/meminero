@@ -1,4 +1,4 @@
-create table smart_yield.smart_yield_junior_buy
+create table smart_yield.junior_2step_withdraw_events
 (
     sy_address          text    not null,
     buyer_address       text    not null,
@@ -14,10 +14,10 @@ create table smart_yield.smart_yield_junior_buy
     created_at          timestamp default now()
 );
 
-create index smart_yield_junior_buy_junior_bond_address_id_idx
-    on smart_yield.smart_yield_junior_buy (junior_bond_address, junior_bond_id);
+create index junior_2step_withdraw_junior_bond_address_id_idx
+    on smart_yield.junior_2step_withdraw_events (junior_bond_address, junior_bond_id);
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_junior_buy;
-drop index if exists smart_yield.smart_yield_junior_buy_junior_bond_address_id_idx;
+drop table if exists smart_yield.junior_2step_withdraw_events;
+drop index if exists smart_yield.junior_2step_withdraw_junior_bond_address_id_idx;

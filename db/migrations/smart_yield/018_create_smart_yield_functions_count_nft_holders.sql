@@ -29,7 +29,7 @@ declare
 begin
     select into value smart_yield.number_of_nft_holders(
                               (select senior_bond_address
-                               from smart_yield.smart_yield_pools
+                               from smart_yield.pools
                                where sy_address = pool_address));
 
     return value;
@@ -44,7 +44,7 @@ declare
 begin
     select into value smart_yield.number_of_nft_holders(
                               (select junior_bond_address
-                               from smart_yield.smart_yield_pools
+                               from smart_yield.pools
                                where sy_address = pool_address));
 
     return value;
@@ -82,11 +82,11 @@ declare
 begin
     select into value sum(case
                               when (select count(*)
-                                    from smart_yield.smart_yield_junior_redeem as r
+                                    from smart_yield.junior_2step_redeem_events as r
                                     where r.junior_bond_address = b.junior_bond_address
                                       and r.junior_bond_id = b.junior_bond_id) = 0 then tokens_in
                               else 0 end)
-    from smart_yield.smart_yield_junior_buy as b
+    from smart_yield.junior_2step_withdraw_events as b
     where b.sy_address = pool_address;
 
     return value;

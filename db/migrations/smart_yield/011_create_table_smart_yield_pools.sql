@@ -1,4 +1,4 @@
-create table smart_yield.smart_yield_pools
+create table smart_yield.pools
 (
     protocol_id           text                not null,
     controller_address    text                not null,
@@ -18,4 +18,4 @@ create table smart_yield.smart_yield_pools
 
 ---- create above / drop below ----
 
-drop table if exists smart_yield.smart_yield_pools;
+drop table if exists smart_yield.pools;

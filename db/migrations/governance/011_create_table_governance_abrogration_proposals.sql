@@ -1,4 +1,4 @@
-create table governance.governance_abrogation_proposals
+create table governance.abrogation_proposals
 (
     proposal_id       bigint  not null,
     creator           text    not null,
@@ -12,11 +12,11 @@ create table governance.governance_abrogation_proposals
     created_at        timestamp default now()
 );
 
-create index governance_abrogation_proposals_proposal_id_idx
-    on governance.governance_abrogation_proposals (proposal_id desc);
+create index abrogation_proposals_proposal_id_idx
+    on governance.abrogation_proposals (proposal_id desc);
 
 
 ---- create above / drop below ----
 
-drop table if exists governance.governance_abrogation_proposals;
-drop index if exists governance.governance_abrogation_proposals_proposal_id_idx;
+drop table if exists governance.abrogation_proposals;
+drop index if exists governance.abrogation_proposals_proposal_id_idx;

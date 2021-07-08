@@ -1,5 +1,5 @@
 create type event_type as enum ('CREATED','QUEUED','EXECUTED','CANCELED');
-create table governance.governance_events
+create table governance.proposal_events
 (
     proposal_id       bigint     not null,
     caller            text       not null,
@@ -15,10 +15,10 @@ create table governance.governance_events
 );
 
 
-create index governance_votes_proposal_id_event_type_idx
-    on governance.governance_events (proposal_id, event_type);
+create index proposal_events_id_event_type_idx
+    on governance.proposal_events (proposal_id, event_type);
 
 ---- create above / drop below ----
 
-drop table if exists governance.governance_events;
-drop index if exists governance.governance_votes_proposal_id_event_type_idx;
+drop table if exists governance.proposal_events;
+drop index if exists governance.proposal_events_id_event_type_idx;

@@ -1,4 +1,4 @@
-create table yield_farming.yield_farming_actions
+create table yield_farming.transactions
 (
     tx_hash text not null,
     tx_index integer not null,
@@ -14,4 +14,4 @@ create table yield_farming.yield_farming_actions
 
 ---- create above / drop below ----
 
-drop table if exists  yield_farming.yield_farming_actions;
+drop table if exists  yield_farming.transactions;

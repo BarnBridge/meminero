@@ -1,4 +1,4 @@
-create table smart_exposure.smart_exposure_pools
+create table smart_exposure.pools
 (
     pool_address     text   not null,
     pool_name        text   not null,
@@ -15,4 +15,4 @@ create table smart_exposure.smart_exposure_pools
 
 ---- create above / drop below ----
 
-drop table if exists smart_exposure.smart_exposure_pools;
+drop table if exists smart_exposure.pools;
