@@ -1,5 +1,5 @@
 create type delegate_action_type as enum ('START','STOP');
-create table barn.barn_delegate_actions
+create table governance.barn_delegate_actions
 (
     tx_hash           text                 not null,
     tx_index          integer              not null,
@@ -14,11 +14,11 @@ create table barn.barn_delegate_actions
 );
 
 create index user_delegation_idx
-    on barn.barn_delegate_actions (sender asc, included_in_block desc, log_index desc);
+    on governance.barn_delegate_actions (sender asc, included_in_block desc, log_index desc);
 
 
 ---- create above / drop below ----
 
-drop table if exists barn.barn_delegate_actions;
-drop index if exists barn.user_delegation_idx;
+drop table if exists governance.barn_delegate_actions;
+drop index if exists governance.user_delegation_idx;
 drop type if exists delegate_action_type;
