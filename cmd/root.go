@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/barnbridge/smartbackend/config"
-	_ "github.com/barnbridge/smartbackend/migrations"
 )
 
 var log = logrus.WithField("module", "main")

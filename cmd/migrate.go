@@ -1,26 +1,24 @@
 package cmd
 
 import (
-	"database/sql"
+	"context"
 
 	_ "github.com/lib/pq"
-	"github.com/pressly/goose"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
-	_ "github.com/barnbridge/smartbackend/migrations"
+	"github.com/barnbridge/smartbackend/db"
 )
 
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
 	Short: "Manually run the database migrations",
 	Run: func(cmd *cobra.Command, args []string) {
-		db, err := sql.Open("postgres", viper.GetString("db.connection-string"))
+		d, err := db.New()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		err = goose.Up(db, "/tmp")
+		err = d.Migrate(context.Background())
 		if err != nil {
 			log.Fatal(err)
 		}

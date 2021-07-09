@@ -15,18 +15,13 @@ func addDBFlags(cmd *cobra.Command) {
 	cmd.Flags().String("db.user", "", "Database user (also allowed via PG_USER env)")
 	cmd.Flags().String("db.password", "", "Database password (also allowed via PG_PASSWORD env)")
 	cmd.Flags().Bool("db.automigrate", true, "Enable/disable the automatic migrations feature")
+	cmd.Flags().String("db.migrations-path", "db/migrations", "Path to migrations directory")
 }
 
 func addRedisFlags(cmd *cobra.Command) {
 	cmd.Flags().String("redis.server", "localhost:6379", "Redis server URL")
 	cmd.Flags().String("redis.list", "todo", "The name of the list to be used for task management")
 	cmd.Flags().String("redis.password", "", "Redis password")
-}
-
-func addAPIFlags(cmd *cobra.Command) {
-	cmd.Flags().String("api.port", "3001", "HTTP API port")
-	cmd.Flags().Bool("api.dev-cors", false, "Enable development cors for HTTP API")
-	cmd.Flags().String("api.dev-cors-host", "", "Allowed host for HTTP API dev cors")
 }
 
 func addFeatureFlags(cmd *cobra.Command) {
