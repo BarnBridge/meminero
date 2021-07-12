@@ -1,11 +1,14 @@
 package processor
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
 	"github.com/barnbridge/smartbackend/state"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -46,13 +49,13 @@ func New(raw *types.RawData, eth *ethclient.Client) (*Processor, error) {
 	return p, nil
 }
 
-func (p *Processor) rollbackAll(db *sql.DB) error {
-	tx, err := db.Begin()
+func (p *Processor) rollbackAll(db  *pgxpool.Pool) error {
+	tx, err := db.BeginTx(context.Background(),pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
-	_, err = tx.Exec("delete from blocks where number = $1", p.Block.Number)
+	_, err = tx.Exec(context.Background(),"delete from blocks where number = $1", p.Block.Number)
 	if err != nil {
 		return errors.Wrap(err, "could not remove block from database")
 	}
@@ -60,12 +63,12 @@ func (p *Processor) rollbackAll(db *sql.DB) error {
 	for _, s := range p.storables {
 		err = s.Rollback(tx)
 		if err != nil {
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			return err
 		}
 	}
 
-	err = tx.Commit()
+	err = tx.Commit(context.Background())
 	if err != nil {
 		return errors.Wrap(err, "could not commit rollback transaction")
 	}
@@ -76,7 +79,7 @@ func (p *Processor) rollbackAll(db *sql.DB) error {
 }
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
-func (p *Processor) Store(db *sql.DB) error {
+func (p *Processor) Store(db  *pgxpool.Pool) error {
 	exists, err := p.checkBlockExists(db)
 	if err != nil {
 		return err
@@ -125,27 +128,27 @@ func (p *Processor) Store(db *sql.DB) error {
 	return nil
 }
 
-func (p *Processor) storeAll(db *sql.DB) error {
-	tx, err := db.Begin()
+func (p *Processor) storeAll(db *pgxpool.Pool) error {
+	tx, err := db.BeginTx(context.Background(),pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
 	err = p.storeBlock(tx)
 	if err != nil {
-		tx.Rollback()
+		tx.Rollback(context.Background())
 		return err
 	}
 
 	for _, s := range p.storables {
 		err = s.SaveToDatabase(tx)
 		if err != nil {
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			return err
 		}
 	}
 
-	err = tx.Commit()
+	err = tx.Commit(context.Background())
 	if err != nil {
 		return errors.Wrap(err, "could not save data to db")
 	}
@@ -153,18 +156,18 @@ func (p *Processor) storeAll(db *sql.DB) error {
 	return nil
 }
 
-func (p *Processor) storeBlock(tx *sql.Tx) error {
+func (p *Processor) storeBlock(tx pgx.Tx) error {
 	p.logger.Trace("storing block")
 	start := time.Now()
 	defer func() { p.logger.WithField("duration", time.Since(start)).Debug("done storing block") }()
 
-	stmt, err := tx.Prepare(pq.CopyIn("blocks", "number", "block_hash", "parent_block_hash", "block_creation_time"))
+	stmt, err := tx.Prepare(context.Background(),pq.CopyIn("blocks", "number", "block_hash", "parent_block_hash", "block_creation_time"))
 	if err != nil {
 		return err
 	}
 
 	b := p.Block
-
+	err := tx.
 	_, err = stmt.Exec(b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
 	if err != nil {
 		return err

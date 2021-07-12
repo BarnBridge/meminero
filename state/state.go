@@ -1,10 +1,9 @@
 package state
 
 import (
-	"database/sql"
-
 	"github.com/barnbridge/smartbackend/types"
 	"github.com/go-redis/redis"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -12,7 +11,7 @@ import (
 type Manager struct {
 	redis  *redis.Client
 	logger *logrus.Entry
-	db     *sql.DB
+	db      *pgxpool.Pool
 
 	Tokens        map[string]types.Token
 	monitoredAccounts []string
@@ -20,7 +19,7 @@ type Manager struct {
 
 var instance *Manager
 
-func Init(db *sql.DB) error {
+func Init(db  *pgxpool.Pool) error {
 	if instance != nil {
 		return nil
 	}

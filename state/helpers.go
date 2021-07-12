@@ -1,10 +1,12 @@
 package state
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
 	"github.com/go-redis/redis"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/pressly/goose"
 	"github.com/sirupsen/logrus"
@@ -35,6 +37,26 @@ func NewPostgres() (*sql.DB, error) {
 	log.Info("connected to postgres successfuly")
 
 	return db, nil
+}
+
+func NewPGX() (*pgxpool.Pool,error) {
+	var log = logrus.WithField("module", "state")
+
+	log.Info("connecting pgx")
+	dbpool, err := pgxpool.Connect(context.Background(), viper.GetString("db.connection-string"))
+	if err != nil {
+		return nil, errors.Wrap(err, "could not init db connection")
+	}
+
+	err = dbpool.Ping(context.Background())
+	if err != nil {
+		return nil, errors.Wrap(err, "could not ping database")
+	}
+
+
+	log.Info("connected to pgx successfuly")
+
+	return dbpool, nil
 }
 
 func automigrate(db *sql.DB) error {

@@ -2,12 +2,12 @@ package glue
 
 import (
 	"context"
-	"database/sql"
 	"sync"
 	"time"
 
 	"github.com/alethio/web3-go/validator"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
@@ -21,14 +21,14 @@ import (
 type Glue struct {
 	state   *state.Manager
 	scraper *scraper.Scraper
-	db      *sql.DB
+	db       *pgxpool.Pool
 	eth        *ethclient.Client
 	logger  *logrus.Entry
 
 	stopMu sync.Mutex
 }
 
-func New(db *sql.DB, state *state.Manager) (*Glue, error) {
+func New(db *pgxpool.Pool, state *state.Manager) (*Glue, error) {
     logger:=  logrus.WithField("module", "glue")
 	s, err := scraper.New()
 	if err != nil {

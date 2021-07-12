@@ -1,7 +1,7 @@
 package types
 
 import (
-	"database/sql"
+	"github.com/jackc/pgx/v4"
 )
 
 // Storable
@@ -10,7 +10,7 @@ import (
 // output: processed/derived/enhanced data stored directly to the db
 type Storable interface {
 	Execute() error
-	Rollback(tx *sql.Tx) error
-	SaveToDatabase(tx *sql.Tx) error
+	Rollback(pgx  pgx.Tx) error
+	SaveToDatabase(tx pgx.Tx) error
 	Result() interface{}
 }
