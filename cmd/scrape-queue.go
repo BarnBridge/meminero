@@ -10,7 +10,6 @@ import (
 	"github.com/barnbridge/smartbackend/integrity"
 	"github.com/barnbridge/smartbackend/state"
 	"github.com/barnbridge/smartbackend/state/queuekeeper"
-
 	"github.com/spf13/cobra"
 )
 
@@ -21,12 +20,12 @@ var scrapeQueueCmd = &cobra.Command{
 		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 		defer stop()
 
-		database, err := state.NewPostgres()
+		database, err := state.NewPGX()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		state, err := state.NewManager()
+		state, err := state.NewManager(database)
 		if err != nil {
 			log.Fatal(err)
 		}

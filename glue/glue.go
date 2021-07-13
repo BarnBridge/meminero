@@ -66,7 +66,13 @@ func (g *Glue) ScrapeSingleBlock(b int64) error {
 
 	log.Debug("block is valid; processing")
 
-	p, err := processor.New(blk,g.eth)
+	log.Debug("updating state cache")
+	err = g.state.RefreshCache()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	p, err := processor.New(blk,g.eth,g.state)
 	if err != nil {
 		return errors.Wrap(err, "could not init processor")
 	}
@@ -74,11 +80,6 @@ func (g *Glue) ScrapeSingleBlock(b int64) error {
 	err = p.Store(g.db)
 	if err != nil {
 		return errors.Wrap(err, "could not store block")
-	}
-
-	err = state.Init(g.db)
-	if err != nil {
-		log.Fatal(err)
 	}
 
 	log.WithField("duration", time.Since(start)).Info("done processing block")

@@ -29,7 +29,12 @@ var resetCmd = &cobra.Command{
 			}
 		}
 
-		r, err := state.NewManager()
+		database, err := state.NewPGX()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		r, err := state.NewManager(database)
 		if err != nil {
 			log.Fatal(err)
 		}

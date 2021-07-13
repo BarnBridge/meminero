@@ -1,9 +1,13 @@
 package integrity
 
-import "github.com/pkg/errors"
+import (
+	"context"
+
+	"github.com/pkg/errors"
+)
 
 func (c *Checker) checkBrokenHashChain(start, end int64) ([]int64, error) {
-	rows, err := c.db.Query(`
+	rows, err := c.db.Query(context.Background(),`
 		with a as (
 			select number
 			from blocks as t1

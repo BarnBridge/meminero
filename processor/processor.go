@@ -2,14 +2,12 @@ package processor
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	"github.com/barnbridge/smartbackend/state"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
@@ -22,16 +20,18 @@ type Processor struct {
 	Block *types.Block
 
 	eth   *ethclient.Client
+	state *state.Manager
 
 	logger *logrus.Entry
 
 	storables []types.Storable
 }
 
-func New(raw *types.RawData, eth *ethclient.Client) (*Processor, error) {
+func New(raw *types.RawData, eth *ethclient.Client,state *state.Manager) (*Processor, error) {
 	p := &Processor{
 		Raw:    raw,
 		eth: eth,
+		state: state,
 		logger: logrus.WithField("module", "processor"),
 	}
 
@@ -40,10 +40,6 @@ func New(raw *types.RawData, eth *ethclient.Client) (*Processor, error) {
 		return nil, err
 	}
 
-	err = state.Refresh()
-	if err != nil {
-		return nil, errors.Wrap(err, "could not refresh state")
-	}
 	p.registerStorables()
 
 	return p, nil
@@ -161,27 +157,14 @@ func (p *Processor) storeBlock(tx pgx.Tx) error {
 	start := time.Now()
 	defer func() { p.logger.WithField("duration", time.Since(start)).Debug("done storing block") }()
 
-	stmt, err := tx.Prepare(context.Background(),pq.CopyIn("blocks", "number", "block_hash", "parent_block_hash", "block_creation_time"))
-	if err != nil {
-		return err
-	}
 
 	b := p.Block
-	err := tx.
-	_, err = stmt.Exec(b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
+
+	_, err := tx.Exec(context.Background(),"insert into blocks(number,block_hash,parent_block_hash,block_creation_time) values($1,$2,$3,$4)",b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec()
-	if err != nil {
-		return err
-	}
-
-	err = stmt.Close()
-	if err != nil {
-		return err
-	}
 
 	return nil
 }

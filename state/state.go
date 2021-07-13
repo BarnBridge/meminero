@@ -19,25 +19,11 @@ type Manager struct {
 
 var instance *Manager
 
-func Init(db  *pgxpool.Pool) error {
-	if instance != nil {
-		return nil
-	}
-
-	instance = &Manager{db: db}
-
-	return nil
-}
-
-func Refresh() error {
-	return nil
-}
-
-
 // NewManager instantiates a new task manager and also takes care of the redis connection management
 // it subscribes to the best block tracker for new blocks which it'll add to the redis queue automatically
-func NewManager() (*Manager, error) {
+func NewManager(db *pgxpool.Pool) (*Manager, error) {
 	m := &Manager{
+		db:     db,
 		logger: logrus.WithField("module", "state"),
 	}
 
@@ -46,9 +32,19 @@ func NewManager() (*Manager, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "could not setup redis connection")
 	}
-
+	m.monitoredAccounts = nil
 	return m, nil
 }
+
+func (m *Manager) RefreshCache() error {
+	err := m.loadAllAccounts()
+	if err != nil {
+		return errors.Wrap(err,"could not fetch monitored accounts")
+	}
+
+	return nil
+}
+
 
 func (m *Manager) Close() error {
 	return m.redis.Close()

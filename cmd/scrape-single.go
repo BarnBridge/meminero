@@ -23,7 +23,7 @@ var scrapeSingleCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		state, err := state.NewManager()
+		state, err := state.NewManager(database)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -49,7 +49,7 @@ func init() {
 	addRedisFlags(scrapeSingleCmd)
 	addFeatureFlags(scrapeSingleCmd)
 	addETHFlags(scrapeSingleCmd)
-	addAccountERC20TransfersFlags(scrapeQueueCmd)
+	addAccountERC20TransfersFlags(scrapeSingleCmd)
 
 	scrapeSingleCmd.Flags().Int64("block", -1, "The block to scrape")
 }
