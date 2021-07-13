@@ -21,7 +21,7 @@ begin
                  select address, sum(amount) as balance
                  from transfers
                  where (select count(*) from smart_yield.pools where sy_address = address) > 0
-    group by address;
+                 group by address;
 
 end;
 $$;
@@ -50,16 +50,16 @@ $$
 declare
     total_balance double precision;
 begin
-    select into total_balance sum(balance::numeric(78, 18) / pow(10, ( select underlying_decimals
-                                                                       from smart_yield.pools
-                                                                       where sy_address = pool
-                                                                       limit 1 )) * ( select jtoken_price / pow(10, 18)
-                                                                                      from smart_yield.state
-                                                                                      where pool_address = pool
-                                                                                        and block_timestamp <= to_timestamp(ts)
-                                                                                      order by block_timestamp desc
-                                                                                      limit 1 ) *
-                                  ( select smart_yield.pool_underlying_price_at_ts(pool, ts) ))
+    select into total_balance sum(balance::numeric(78, 18) / pow(10, (select underlying_decimals
+                                                                      from smart_yield.pools
+                                                                      where sy_address = pool
+                                                                      limit 1)) * (select jtoken_price / pow(10, 18)
+                                                                                   from smart_yield.state
+                                                                                   where pool_address = pool
+                                                                                     and block_timestamp <= to_timestamp(ts)
+                                                                                   order by block_timestamp desc
+                                                                                   limit 1) *
+                                  (select smart_yield.pool_underlying_price_at_ts(pool, ts)))
     from smart_yield.junior_active_positions_at_ts(user_address, ts);
 
     return total_balance;

@@ -111,16 +111,16 @@ $$
 declare
     value numeric(78);
 begin
-    with values as ( select action_type, sum(amount) as amount
-                     from governance.barn_staking_actions
-                     where included_in_block < ( select number
-                                                 from blocks
-                                                 where block_creation_time < ts
-                                                 order by block_creation_time desc
-                                                 limit 1 )
-                     group by action_type )
-    select into value coalesce(( select amount from values where action_type = 'DEPOSIT' ),0) -
-                      coalesce(( select amount from values where action_type = 'WITHDRAW' ),0);
+    with values as (select action_type, sum(amount) as amount
+                    from governance.barn_staking_actions
+                    where included_in_block < (select number
+                                               from blocks
+                                               where block_creation_time < ts
+                                               order by block_creation_time desc
+                                               limit 1)
+                    group by action_type)
+    select into value coalesce((select amount from values where action_type = 'DEPOSIT'), 0) -
+                      coalesce((select amount from values where action_type = 'WITHDRAW'), 0);
 
     return value;
 end;

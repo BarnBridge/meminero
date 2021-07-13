@@ -41,8 +41,11 @@ declare
     value double precision;
 begin
     select into value sum(
-                                      smart_yield.staked_amount_at_ts_by_reward_pool(pool_address, user_address, ts)::numeric(78, 18) /
-                                      pow(10, ( select underlying_decimals from smart_yield.pools as p where p.sy_address = rp.pool_token_address )) *
+                                      smart_yield.staked_amount_at_ts_by_reward_pool(pool_address, user_address,
+                                                                                     ts)::numeric(78, 18) /
+                                      pow(10, (select underlying_decimals
+                                               from smart_yield.pools as p
+                                               where p.sy_address = rp.pool_token_address)) *
                                       smart_yield.jtoken_price_scaled_at_ts(pool_token_address, ts) *
                                       smart_yield.pool_underlying_price_at_ts(pool_token_address, ts))
     from smart_yield.reward_pools as rp;

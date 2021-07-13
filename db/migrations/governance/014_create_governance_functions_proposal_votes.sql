@@ -12,9 +12,9 @@ $$
 begin
     return query
         select distinct v.user_id,
-                        first_value(v.support) over (partition by v.user_id order by v.block_timestamp desc)         as support,
+                        first_value(v.support) over (partition by v.user_id order by v.block_timestamp desc) as support,
                         first_value(v.block_timestamp)
-                        over (partition by v.user_id order by v.block_timestamp desc)                                as block_timestamp,
+                        over (partition by v.user_id order by v.block_timestamp desc)                        as block_timestamp,
                         v.power
         from governance.votes v
         where proposal_id = id

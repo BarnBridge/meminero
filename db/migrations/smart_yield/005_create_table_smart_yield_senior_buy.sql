@@ -7,11 +7,11 @@ create table smart_yield.senior_entry_events
     underlying_in       numeric(78),
     gain                numeric(78),
     for_days            bigint,
+    block_timestamp     bigint      not null,
+    included_in_block   bigint      not null,
     tx_hash             text        not null,
     tx_index            integer     not null,
     log_index           integer     not null,
-    block_timestamp     bigint      not null,
-    included_in_block   bigint      not null,
     created_at          timestamp default now()
 );
 
