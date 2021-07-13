@@ -6,10 +6,10 @@ create table smart_yield.rewards_staking_actions
     balance_after     numeric(78),
     action_type       reward_action not null,
     pool_address      text          not null,
+    block_timestamp   bigint        not null,
     tx_hash           text          not null,
     tx_index          integer       not null,
     log_index         integer       not null,
-    block_timestamp   bigint        not null,
     included_in_block bigint        not null
 );
 

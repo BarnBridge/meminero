@@ -8,11 +8,11 @@ create table smart_yield.transaction
     amount                   numeric(78),
     tranche                  text                  not null,
     transaction_type         sy_tx_history_tx_type not null,
+    block_timestamp          bigint                not null,
+    included_in_block        bigint                not null,
     tx_hash                  text                  not null,
     tx_index                 integer               not null,
     log_index                integer               not null,
-    block_timestamp          bigint                not null,
-    included_in_block        bigint                not null,
     created_at               timestamp default now()
 );
 

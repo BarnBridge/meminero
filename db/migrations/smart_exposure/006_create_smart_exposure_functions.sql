@@ -2,7 +2,7 @@ create function smart_exposure.active_position_at_ts(user_address text, ts bigin
     returns TABLE
             (
                 etoken_address text,
-                balance         numeric
+                balance        numeric
             )
     language plpgsql
 as
@@ -127,7 +127,7 @@ declare
     pool_state_last_rebalance           bigint;
     tranche_state_token_a_liquidity     double precision;
     tranche_state_token_b_liquidity     double precision;
-    tranche_state_e_token_price          double precision;
+    tranche_state_e_token_price         double precision;
     tranche_state_current_ratio         double precision;
     tranche_state_token_a_current_ratio double precision;
     tranche_state_token_b_current_ratio double precision;
@@ -231,7 +231,7 @@ begin
                                                               from smart_exposure.tranche_state s
                                                               where s.etoken_address = a.etoken_address
                                                                 and s.block_timestamp <= to_timestamp(ts)
-                                                              limit 1),0))
+                                                              limit 1), 0))
     from smart_exposure.active_position_at_ts(addr, ts) a;
 
     return value;
@@ -249,7 +249,7 @@ begin
                                                               from smart_exposure.tranche_state s
                                                               where s.etoken_address = a.etoken_address
                                                                 and s.block_timestamp <= to_timestamp(ts)
-                                                              limit 1),0))
+                                                              limit 1), 0))
     from smart_exposure.active_position_at_ts(addr, ts) a
     where a.etoken_address in (select etoken_address from smart_exposure.tranches where pool_address = _pool_address);
     return value;

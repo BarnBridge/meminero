@@ -5,11 +5,11 @@ create table smart_yield.erc721_transfers
     sender            text    not null,
     receiver          text    not null,
     token_id          bigint  not null,
+    block_timestamp   bigint  not null,
+    included_in_block bigint  not null,
     tx_hash           text    not null,
     tx_index          integer not null,
     log_index         integer not null,
-    block_timestamp   bigint  not null,
-    included_in_block bigint  not null,
     created_at        timestamp default now()
 );
 

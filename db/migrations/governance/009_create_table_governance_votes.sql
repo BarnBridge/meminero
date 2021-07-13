@@ -5,11 +5,10 @@ create table governance.votes
     support           boolean     not null,
     power             numeric(78) not null,
     block_timestamp   bigint      not null,
+    included_in_block bigint      not null,
     tx_hash           text        not null,
     tx_index          integer     not null,
     log_index         integer     not null,
-    logged_by         text        not null,
-    included_in_block bigint      not null,
     created_at        timestamp default now()
 );
 

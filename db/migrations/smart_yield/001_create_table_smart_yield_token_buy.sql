@@ -5,11 +5,11 @@ create table smart_yield.junior_entry_events
     underlying_in     numeric(78),
     tokens_out        numeric(78),
     fee               numeric(78),
+    block_timestamp   bigint  not null,
+    included_in_block bigint  not null,
     tx_hash           text    not null,
     tx_index          integer not null,
     log_index         integer not null,
-    block_timestamp   bigint  not null,
-    included_in_block bigint  not null,
     created_at        timestamp default now()
 );
 

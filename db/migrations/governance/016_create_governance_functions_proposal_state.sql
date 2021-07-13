@@ -57,15 +57,16 @@ begin
 
     select into eta event_data -> 'eta' as eta
     from governance.proposal_events
-    where proposal_id = id and event_type = 'QUEUED';
+    where proposal_id = id
+      and event_type = 'QUEUED';
 
     if (select extract(epoch from now())) < eta then return 'QUEUED'; end if;
 
     -- check if there's a abrogation proposal that passed
     if (select count(*) from governance.abrogation_proposals where proposal_id = id) > 0 then
         select into abrogationProposalQuorum governance.bond_staked_at_ts(to_timestamp((select create_time - 1
-                                                                             from governance.abrogation_proposals
-                                                                             where proposal_id = id))) / 2;
+                                                                                        from governance.abrogation_proposals
+                                                                                        where proposal_id = id))) / 2;
 
         if coalesce((select sum(power) from governance.abrogation_proposal_votes(id) where support = true), 0) >=
            abrogationProposalQuorum then
