@@ -1,7 +1,6 @@
 create type governance.action_type as enum ('DEPOSIT','WITHDRAW');
 create table governance.barn_staking_actions
 (
-    address           text                   not null,
     user_address      text                   not null,
     action_type       governance.action_type not null,
     amount            numeric(78)            not null,
