@@ -15,6 +15,9 @@ create table smart_exposure.tranche_state
     included_in_block     bigint not null
 );
 
+create index tranche_state_etoken_address_idx
+    on smart_exposure.tranche_state (etoken_address asc, block_timestamp desc);
+
 ---- create above / drop below ----
 
 drop table if exists smart_exposure.tranche_state;
