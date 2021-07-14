@@ -9,9 +9,9 @@ create table smart_exposure.pools
     token_b_symbol   text   not null,
     token_b_decimals bigint not null,
     start_at_block   bigint not null,
+
     created_at       timestamp default now()
 );
-
 
 ---- create above / drop below ----
 
