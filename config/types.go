@@ -5,13 +5,14 @@ import (
 )
 
 type database struct {
-	Host        string
-	Port        string
-	SSLMode     string
-	DBName      string
-	User        string
-	Password    string
-	Automigrate bool
+	Host           string
+	Port           string
+	SSLMode        string
+	DBName         string
+	User           string
+	Password       string
+	Automigrate    bool
+	MigrationsPath string `mapstructure:"migrations-path"`
 
 	ConnectionString string `mapstructure:"connection-string"`
 }

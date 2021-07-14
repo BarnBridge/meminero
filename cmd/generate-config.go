@@ -52,7 +52,6 @@ func init() {
 
 	addDBFlags(generateConfigCmd)
 	addRedisFlags(generateConfigCmd)
-	addAPIFlags(generateConfigCmd)
 	addFeatureFlags(generateConfigCmd)
 	addETHFlags(generateConfigCmd)
 }
