@@ -21,15 +21,15 @@ import (
 type Glue struct {
 	state   *state.Manager
 	scraper *scraper.Scraper
-	db       *pgxpool.Pool
-	eth        *ethclient.Client
+	db      *pgxpool.Pool
+	eth     *ethclient.Client
 	logger  *logrus.Entry
 
 	stopMu sync.Mutex
 }
 
 func New(db *pgxpool.Pool, state *state.Manager) (*Glue, error) {
-    logger:=  logrus.WithField("module", "glue")
+	logger := logrus.WithField("module", "glue")
 	s, err := scraper.New()
 	if err != nil {
 		return nil, errors.Wrap(err, "could not init scraper")
@@ -44,8 +44,8 @@ func New(db *pgxpool.Pool, state *state.Manager) (*Glue, error) {
 		state:   state,
 		scraper: s,
 		db:      db,
-		eth: eth,
-		logger: logger,
+		eth:     eth,
+		logger:  logger,
 	}, nil
 }
 
@@ -72,7 +72,7 @@ func (g *Glue) ScrapeSingleBlock(b int64) error {
 		log.Fatal(err)
 	}
 
-	p, err := processor.New(blk,g.eth,g.state)
+	p, err := processor.New(blk, g.eth, g.state)
 	if err != nil {
 		return errors.Wrap(err, "could not init processor")
 	}

@@ -13,7 +13,7 @@ func (m *Manager) IsMonitoredAccount(log gethtypes.Log) bool {
 		return false
 	}
 
-	for _, a := range m.monitoredAccounts{
+	for _, a := range m.monitoredAccounts {
 		if len(log.Topics) >= 3 {
 			if utils.NormalizeAddress(a) == utils.Topic2Address(log.Topics[1].String()) ||
 				utils.NormalizeAddress(a) == utils.Topic2Address(log.Topics[2].String()) {
@@ -25,8 +25,8 @@ func (m *Manager) IsMonitoredAccount(log gethtypes.Log) bool {
 }
 
 func (m *Manager) loadAllAccounts() error {
-	rows, err := m.db.Query(context.Background(),`select address from monitored_accounts`)
-	if err != nil { 
+	rows, err := m.db.Query(context.Background(), `select address from monitored_accounts`)
+	if err != nil {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}
 

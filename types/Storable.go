@@ -10,7 +10,7 @@ import (
 // output: processed/derived/enhanced data stored directly to the db
 type Storable interface {
 	Execute() error
-	Rollback(pgx  pgx.Tx) error
+	Rollback(pgx pgx.Tx) error
 	SaveToDatabase(tx pgx.Tx) error
 	Result() interface{}
 }

@@ -56,7 +56,6 @@ func Trim0x(str string) string {
 	return strings.TrimPrefix(str, "0x")
 }
 
-
 func Topic2Address(topic string) string {
 	topic = Trim0x(topic)
 	return "0x" + strings.ToLower(topic[24:])

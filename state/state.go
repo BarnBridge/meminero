@@ -11,9 +11,9 @@ import (
 type Manager struct {
 	redis  *redis.Client
 	logger *logrus.Entry
-	db      *pgxpool.Pool
+	db     *pgxpool.Pool
 
-	Tokens        map[string]types.Token
+	Tokens            map[string]types.Token
 	monitoredAccounts []string
 }
 
@@ -39,12 +39,11 @@ func NewManager(db *pgxpool.Pool) (*Manager, error) {
 func (m *Manager) RefreshCache() error {
 	err := m.loadAllAccounts()
 	if err != nil {
-		return errors.Wrap(err,"could not fetch monitored accounts")
+		return errors.Wrap(err, "could not fetch monitored accounts")
 	}
 
 	return nil
 }
-
 
 func (m *Manager) Close() error {
 	return m.redis.Close()

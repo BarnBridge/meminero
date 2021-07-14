@@ -11,22 +11,22 @@ import (
 
 func (s *Storable) checkTokenExists(tokenAddress string) error {
 	//var count int64
-/*	err := s.db.QueryRow(context.Background(),`select count(*) from erc20_tokens where token_address = $1`, tokenAddress).Scan(&count)
-	if err != nil {
-		return err
-	} else if count > 0 {
-		return nil
-	}
+	/*	err := s.db.QueryRow(context.Background(),`select count(*) from erc20_tokens where token_address = $1`, tokenAddress).Scan(&count)
+		if err != nil {
+			return err
+		} else if count > 0 {
+			return nil
+		}
 
-	token, err := s.getToken(tokenAddress)
-	if err != nil {
-		return err
-	}
+		token, err := s.getToken(tokenAddress)
+		if err != nil {
+			return err
+		}
 
-	err = storeToken(*token, tx)
-	if err != nil {
-		return err
-	}*/
+		err = storeToken(*token, tx)
+		if err != nil {
+			return err
+		}*/
 
 	return nil
 }
@@ -63,4 +63,3 @@ func storeToken(token types.Token, tx *sql.Tx) error {
 	return nil
 
 }
-

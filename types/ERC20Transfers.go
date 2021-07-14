@@ -13,4 +13,3 @@ type ERC20Transfer struct {
 	TransactionIndex int64
 	LogIndex         int64
 }
-

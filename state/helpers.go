@@ -39,7 +39,7 @@ func NewPostgres() (*sql.DB, error) {
 	return db, nil
 }
 
-func NewPGX() (*pgxpool.Pool,error) {
+func NewPGX() (*pgxpool.Pool, error) {
 	var log = logrus.WithField("module", "state")
 
 	log.Info("connecting pgx")
@@ -52,7 +52,6 @@ func NewPGX() (*pgxpool.Pool,error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "could not ping database")
 	}
-
 
 	log.Info("connected to pgx successfuly")
 

@@ -68,7 +68,7 @@ func (p *Processor) parseReceipts() error {
 			return err
 		}
 
-		for  _, log := range receipt.Logs {
+		for _, log := range receipt.Logs {
 			logEntry, err := p.parseLog(log)
 			if err != nil {
 				return errors.Wrap(err, "could not parse log")

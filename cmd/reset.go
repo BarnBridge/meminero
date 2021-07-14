@@ -55,7 +55,7 @@ var resetCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		_, err = d.Connection().Exec(context.Background(),`
+		_, err = d.Connection().Exec(context.Background(), `
 			drop schema public cascade;
 			create schema public;
 		

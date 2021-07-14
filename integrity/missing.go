@@ -7,7 +7,7 @@ import (
 )
 
 func (c *Checker) checkMissingBlocks(start, end int64) ([]int64, error) {
-	rows, err := c.db.Query(context.Background(),`
+	rows, err := c.db.Query(context.Background(), `
 		select x.number
 		from generate_series($1::bigint, $2::bigint) as x(number)
 				 left join (select number from blocks where number between $1 and $2) b on x.number = b.number

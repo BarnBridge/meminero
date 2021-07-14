@@ -27,11 +27,11 @@ type Processor struct {
 	storables []types.Storable
 }
 
-func New(raw *types.RawData, eth *ethclient.Client,state *state.Manager) (*Processor, error) {
+func New(raw *types.RawData, eth *ethclient.Client, state *state.Manager) (*Processor, error) {
 	p := &Processor{
 		Raw:    raw,
-		eth: eth,
-		state: state,
+		eth:    eth,
+		state:  state,
 		logger: logrus.WithField("module", "processor"),
 	}
 
@@ -45,13 +45,13 @@ func New(raw *types.RawData, eth *ethclient.Client,state *state.Manager) (*Proce
 	return p, nil
 }
 
-func (p *Processor) rollbackAll(db  *pgxpool.Pool) error {
-	tx, err := db.BeginTx(context.Background(),pgx.TxOptions{})
+func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
+	tx, err := db.BeginTx(context.Background(), pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
-	_, err = tx.Exec(context.Background(),"delete from blocks where number = $1", p.Block.Number)
+	_, err = tx.Exec(context.Background(), "delete from blocks where number = $1", p.Block.Number)
 	if err != nil {
 		return errors.Wrap(err, "could not remove block from database")
 	}
@@ -75,7 +75,7 @@ func (p *Processor) rollbackAll(db  *pgxpool.Pool) error {
 }
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
-func (p *Processor) Store(db  *pgxpool.Pool) error {
+func (p *Processor) Store(db *pgxpool.Pool) error {
 	exists, err := p.checkBlockExists(db)
 	if err != nil {
 		return err
@@ -125,7 +125,7 @@ func (p *Processor) Store(db  *pgxpool.Pool) error {
 }
 
 func (p *Processor) storeAll(db *pgxpool.Pool) error {
-	tx, err := db.BeginTx(context.Background(),pgx.TxOptions{})
+	tx, err := db.BeginTx(context.Background(), pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
@@ -157,14 +157,12 @@ func (p *Processor) storeBlock(tx pgx.Tx) error {
 	start := time.Now()
 	defer func() { p.logger.WithField("duration", time.Since(start)).Debug("done storing block") }()
 
-
 	b := p.Block
 
-	_, err := tx.Exec(context.Background(),"insert into blocks(number,block_hash,parent_block_hash,block_creation_time) values($1,$2,$3,$4)",b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
+	_, err := tx.Exec(context.Background(), "insert into blocks(number,block_hash,parent_block_hash,block_creation_time) values($1,$2,$3,$4)", b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
 	if err != nil {
 		return err
 	}
-
 
 	return nil
 }
