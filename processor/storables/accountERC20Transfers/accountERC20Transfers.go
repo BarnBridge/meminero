@@ -1,6 +1,8 @@
 package accountERC20Transfers
 
 import (
+	"context"
+
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/state"
 	"github.com/barnbridge/smartbackend/types"
@@ -55,12 +57,16 @@ func (s *Storable) Execute() error {
 		return errors.Wrap(err, "could not decode erc20 transfers logs")
 	}
 
+	s.processed.blockNumber = s.block.Number
+	s.processed.blockTimestamp = 0
 
 	return nil
 }
 
-func (s *Storable) Rollback(pgx pgx.Tx) error {
-	return nil
+func (s *Storable) Rollback(tx pgx.Tx) error {
+	_, err := tx.Exec(context.Background(),`delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
+
+	return err
 }
 
 func (s *Storable) SaveToDatabase(tx pgx.Tx) error {
