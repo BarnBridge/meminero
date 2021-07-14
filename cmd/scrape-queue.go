@@ -6,6 +6,7 @@ import (
 	"os/signal"
 
 	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/smartbackend/db"
 	"github.com/barnbridge/smartbackend/glue"
 	"github.com/barnbridge/smartbackend/integrity"
 	"github.com/barnbridge/smartbackend/state"
@@ -20,12 +21,12 @@ var scrapeQueueCmd = &cobra.Command{
 		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 		defer stop()
 
-		database, err := state.NewPGX()
+		db, err := db.New()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		state, err := state.NewManager(database)
+		state, err := state.NewManager(db.Connection())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -36,7 +37,7 @@ var scrapeQueueCmd = &cobra.Command{
 		}
 
 		if config.Store.Feature.Integrity.Enabled {
-			integrityChecker := integrity.NewChecker(database, tracker, state)
+			integrityChecker := integrity.NewChecker(db.Connection(), tracker, state)
 			go integrityChecker.Run(ctx)
 		}
 
@@ -48,7 +49,7 @@ var scrapeQueueCmd = &cobra.Command{
 			go keeper.Run(ctx)
 		}
 
-		g, err := glue.New(database, state)
+		g, err := glue.New(db.Connection(), state)
 		if err != nil {
 			log.Fatal(err)
 		}
