@@ -3,7 +3,6 @@ package processor
 import (
 	"sort"
 	"strconv"
-	"time"
 
 	web3types "github.com/alethio/web3-go/types"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -52,7 +51,7 @@ func (p *Processor) parseBlockData() error {
 	if err != nil {
 		return errors.Wrap(err, "could not decode block timestamp")
 	}
-	b.BlockCreationTime = types.DatetimeToJSONUnix(time.Unix(timestamp, 0))
+	b.BlockCreationTime = timestamp
 
 	p.Block = &b
 

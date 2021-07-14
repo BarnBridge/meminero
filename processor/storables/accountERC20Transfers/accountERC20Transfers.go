@@ -57,9 +57,6 @@ func (s *Storable) Execute() error {
 		return errors.Wrap(err, "could not decode erc20 transfers logs")
 	}
 
-	s.processed.blockNumber = s.block.Number
-	s.processed.blockTimestamp = 0
-
 	return nil
 }
 
