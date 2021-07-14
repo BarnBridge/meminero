@@ -50,7 +50,7 @@ func (g *GovStorable) handleProposals(logs []web3types.Log, tx pgx.Tx,governance
 		return err
 	}
 
-	_, err = tx.CopyFrom(
+	/*_, err = tx.CopyFrom(
 		context.Background(),
 		pgx.Identifier{"proposals"},
 		[]string{"proposal_id", "proposer","description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"},
@@ -59,7 +59,8 @@ func (g *GovStorable) handleProposals(logs []web3types.Log, tx pgx.Tx,governance
 				g.Preprocessed.BlockTimestamp,proposals[aps[i].ProposalId.String()],proposals[i].Raw.BlockHash.String(),
 				aps[i].Raw.TxIndex,aps[i].Raw.TxIndex,g.Preprocessed.BlockNumber}, nil
 		}),
-	)
+	)*/
+	tx.
 	if err != nil {
 		return errors.Wrap(err,"could not store abrogration_proposals")
 	}
