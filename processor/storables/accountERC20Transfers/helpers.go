@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/barnbridge/smartbackend/utils"
-	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -20,12 +20,7 @@ func (s *Storable) storeTransfers(tx pgx.Tx) error {
 	var rows [][]interface{}
 
 	for _, t := range s.processed.transfers{
-		var value pgtype.Numeric
-		err := value.Set(t.Value.String())
-
-		if err != nil {
-			return err
-		}
+		value :=decimal.NewFromBigInt(t.Value,0)
 
 		rows = append(rows, []interface{}{
 			utils.NormalizeAddress(t.Raw.Address.String()),

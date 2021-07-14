@@ -13,11 +13,9 @@ type Manager struct {
 	logger *logrus.Entry
 	db     *pgxpool.Pool
 
-	Tokens            map[string]types.Token
+	Tokens            []types.Token
 	monitoredAccounts []string
 }
-
-var instance *Manager
 
 // NewManager instantiates a new task manager and also takes care of the redis connection management
 // it subscribes to the best block tracker for new blocks which it'll add to the redis queue automatically
@@ -32,7 +30,7 @@ func NewManager(db *pgxpool.Pool) (*Manager, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "could not setup redis connection")
 	}
-	m.monitoredAccounts = nil
+
 	return m, nil
 }
 
@@ -42,6 +40,10 @@ func (m *Manager) RefreshCache() error {
 		return errors.Wrap(err, "could not fetch monitored accounts")
 	}
 
+	err = m.loadAllTokens()
+	if err != nil {
+		return errors.Wrap(err,"could not fetch tokens")
+	}
 	return nil
 }
 

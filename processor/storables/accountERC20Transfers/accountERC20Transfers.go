@@ -43,11 +43,18 @@ func (s *Storable) Execute() error {
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
 			if erc20Decoder.IsERC20TransferEvent(&log) && s.state.IsMonitoredAccount(log) {
-				err := s.checkTokenExists(utils.NormalizeAddress(log.Address.String()))
-				if err != nil {
-					continue
-				}
+				exists := s.state.CheckTokenExists(log)
+				if !exists {
+					token,err := s.getToken(utils.NormalizeAddress(log.Address.String()))
+					if err != nil {
+						continue
+					}
 
+					err = s.state.StoreToken(*token)
+					if err != nil {
+						return err
+					}
+				}
 				logs = append(logs, log)
 			}
 		}
