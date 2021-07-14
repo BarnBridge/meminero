@@ -2,6 +2,7 @@ package processor
 
 import (
 	"database/sql"
+	"strconv"
 
 	"github.com/pkg/errors"
 )
@@ -37,3 +38,21 @@ func (p *Processor) checkBlockReorged(db *sql.DB) (bool, error) {
 
 	return false, nil
 }
+
+//preprocess transform blockTimestamp and blockNumber from string to int64
+
+func preprocess(blockNumber string,blockTimestamp string) (error,int64,int64) {
+
+	number, err := strconv.ParseInt(blockNumber, 0, 64)
+	if err != nil {
+		return errors.Wrap(err, "unable to process block number"),-1,-1
+	}
+
+	timestamp, err := strconv.ParseInt(blockTimestamp, 0, 64)
+	if err != nil {
+		return errors.Wrap(err, "could not parse block timestamp"),-1,-1;
+	}
+
+	return nil,number,timestamp
+}
+

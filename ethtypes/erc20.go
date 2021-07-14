@@ -6,6 +6,7 @@ package ethtypes
 import (
 	"math/big"
 
+	web3types "github.com/alethio/web3-go/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/lacasian/ethwheels/ethgen"
@@ -44,13 +45,22 @@ func (d *ERC20Decoder) IsERC20ApprovalEvent(log *types.Log) bool {
 	return log.Topics[0] == d.ERC20ApprovalEventID()
 }
 
-func (d *ERC20Decoder) ERC20ApprovalEvent(log types.Log) (ERC20ApprovalEvent, error) {
+func (d *ERC20Decoder) ERC20ApprovalEventW3(w3l web3types.Log) (ERC20ApprovalEvent, error) {
+	l, err := ethgen.W3LogToLog(w3l)
+	if err != nil {
+		return ERC20ApprovalEvent{}, err
+	}
+
+	return d.ERC20ApprovalEvent(l)
+}
+
+func (d *ERC20Decoder) ERC20ApprovalEvent(l types.Log) (ERC20ApprovalEvent, error) {
 	var out ERC20ApprovalEvent
-	if !d.IsERC20ApprovalEvent(&log) {
+	if !d.IsERC20ApprovalEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
-	err := d.UnpackLog(&out, "Approval", log)
-	out.Raw = log
+	err := d.UnpackLog(&out, "Approval", l)
+	out.Raw = l
 	return out, err
 }
 
@@ -72,12 +82,21 @@ func (d *ERC20Decoder) IsERC20TransferEvent(log *types.Log) bool {
 	return log.Topics[0] == d.ERC20TransferEventID()
 }
 
-func (d *ERC20Decoder) ERC20TransferEvent(log types.Log) (ERC20TransferEvent, error) {
+func (d *ERC20Decoder) ERC20TransferEventW3(w3l web3types.Log) (ERC20TransferEvent, error) {
+	l, err := ethgen.W3LogToLog(w3l)
+	if err != nil {
+		return ERC20TransferEvent{}, err
+	}
+
+	return d.ERC20TransferEvent(l)
+}
+
+func (d *ERC20Decoder) ERC20TransferEvent(l types.Log) (ERC20TransferEvent, error) {
 	var out ERC20TransferEvent
-	if !d.IsERC20TransferEvent(&log) {
+	if !d.IsERC20TransferEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
-	err := d.UnpackLog(&out, "Transfer", log)
-	out.Raw = log
+	err := d.UnpackLog(&out, "Transfer", l)
+	out.Raw = l
 	return out, err
 }
