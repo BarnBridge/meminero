@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/barnbridge/smartbackend/db"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -18,17 +19,17 @@ var scrapeSingleCmd = &cobra.Command{
 			log.Fatal("No block was specified")
 		}
 
-		database, err := state.NewPGX()
+		database, err := db.New()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		state, err := state.NewManager(database)
+		state, err := state.NewManager(database.Connection())
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		g, err := glue.New(database, state)
+		g, err := glue.New(database.Connection(), state)
 		if err != nil {
 			log.Fatal(err)
 		}
