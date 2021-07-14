@@ -1,10 +1,12 @@
 create table smart_yield.junior_instant_withdraw_events
 (
-    sy_address        text    not null,
+    pool_address      text    not null,
+
     seller_address    text    not null,
     tokens_in         numeric(78),
     underlying_out    numeric(78),
     forfeits          numeric(78),
+
     block_timestamp   bigint  not null,
     included_in_block bigint  not null,
     tx_hash           text    not null,

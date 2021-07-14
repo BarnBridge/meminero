@@ -4,6 +4,7 @@ create table public.erc20_transfers
     sender            text    not null,
     receiver          text    not null,
     value             numeric(78),
+
     block_timestamp   bigint  not null,
     included_in_block bigint  not null,
     tx_hash           text    not null,
@@ -12,11 +13,9 @@ create table public.erc20_transfers
     created_at        timestamp default now()
 );
 
-create index erc20_transfers_sender_idx
-    on public.erc20_transfers (sender asc, block_timestamp desc);
+create index erc20_transfers_sender_idx on public.erc20_transfers (sender asc, block_timestamp desc);
 
-create index erc20_transfers_receiver_idx
-    on public.erc20_transfers (receiver asc, block_timestamp desc);
+create index erc20_transfers_receiver_idx on public.erc20_transfers (receiver asc, block_timestamp desc);
 
 
 ---- create above / drop below ----

@@ -6,6 +6,7 @@ create table governance.barn_delegate_changes
     receiver                     text                 not null,
     amount                       numeric(78)          not null,
     receiver_new_delegated_power numeric(78)          not null,
+
     block_timestamp              bigint,
     included_in_block            bigint               not null,
     tx_hash                      text                 not null,
@@ -14,8 +15,7 @@ create table governance.barn_delegate_changes
     created_at                   timestamp default now()
 );
 
-create index user_delegated_power_idx
-    on governance.barn_delegate_changes (receiver asc, included_in_block desc, log_index desc);
+create index user_delegated_power_idx on governance.barn_delegate_changes (receiver asc, included_in_block desc, log_index desc);
 
 
 ---- create above / drop below ----

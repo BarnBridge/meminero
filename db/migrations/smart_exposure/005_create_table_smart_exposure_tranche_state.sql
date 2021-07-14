@@ -1,7 +1,5 @@
 create table smart_exposure.tranche_state
 (
-    included_in_block     bigint not null,
-    block_timestamp       bigint not null,
     pool_address          text   not null,
     etoken_address        text   not null,
     token_a_liquidity     double precision,
@@ -11,7 +9,10 @@ create table smart_exposure.tranche_state
     amount_b_conversion   numeric(78),
     etoken_price          double precision,
     token_a_current_ratio double precision,
-    token_b_current_ratio double precision
+    token_b_current_ratio double precision,
+
+    block_timestamp       bigint not null,
+    included_in_block     bigint not null
 );
 
 ---- create above / drop below ----

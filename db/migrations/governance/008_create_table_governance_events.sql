@@ -1,11 +1,13 @@
 create type event_type as enum ('CREATED','QUEUED','EXECUTED','CANCELED');
+
 create table governance.proposal_events
 (
     proposal_id       bigint     not null,
     caller            text       not null,
     event_type        event_type not null,
-    block_timestamp   bigint     not null,
     event_data        jsonb,
+
+    block_timestamp   bigint     not null,
     included_in_block bigint     not null,
     tx_hash           text       not null,
     tx_index          integer    not null,
@@ -14,8 +16,7 @@ create table governance.proposal_events
 );
 
 
-create index proposal_events_id_event_type_idx
-    on governance.proposal_events (proposal_id, event_type);
+create index proposal_events_id_event_type_idx on governance.proposal_events (proposal_id, event_type);
 
 ---- create above / drop below ----
 

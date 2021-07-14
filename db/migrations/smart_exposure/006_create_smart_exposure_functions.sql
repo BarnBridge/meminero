@@ -8,15 +8,15 @@ create function smart_exposure.active_position_at_ts(user_address text, ts bigin
 as
 $$
 begin
-    return query with transfers as (select token_address as address, -value as amount
-                                    from public.erc20_transfers
-                                    where sender = user_address
-                                      and block_timestamp <= ts
-                                    union all
-                                    select etoken_address as address, value as amount
-                                    from public.erc20_transfers
-                                    where receiver = user_address
-                                      and block_timestamp <= ts)
+    return query with transfers as ( select token_address as address, -value as amount
+                                     from public.erc20_transfers
+                                     where sender = user_address
+                                       and block_timestamp <= ts
+                                     union all
+                                     select etoken_address as address, value as amount
+                                     from public.erc20_transfers
+                                     where receiver = user_address
+                                       and block_timestamp <= ts )
                  select address, sum(amount) as balance
                  from transfers
                  group by address;
@@ -38,14 +38,14 @@ begin
     select into target_ratio t.target_ratio::numeric(78, 18)
     from smart_exposure.tranches t
     where t.etoken_address = _etoken_address;
-    return query
-        select date_trunc(_date_trunc, block_timestamp)::timestamp           as point,
-               avg(1 - ((ts.current_ratio::numeric(78, 18)) / target_ratio)) as deviation
-        from smart_exposure.tranche_state ts
-        where ts.etoken_address = _etoken_address
-          and ts.block_timestamp > start
-        group by point
-        order by point;
+
+    return query select date_trunc(_date_trunc, block_timestamp)::timestamp           as point,
+                        avg(1 - ((ts.current_ratio::numeric(78, 18)) / target_ratio)) as deviation
+                 from smart_exposure.tranche_state ts
+                 where ts.etoken_address = _etoken_address
+                   and ts.block_timestamp > start
+                 group by point
+                 order by point;
 end
 $$;
 
@@ -59,14 +59,13 @@ create function smart_exposure.get_token_price_chart(_token_address text, start 
 as
 $$
 begin
-    return query
-        select date_trunc(_date_trunc, to_timestamp(block_timestamp)::date)::timestamp as point,
-               avg(price_usd)                                                          as token_price
-        from public.token_prices
-        where token_address = _token_address
-          and block_timestamp > start
-        group by point
-        order by point;
+    return query select date_trunc(_date_trunc, to_timestamp(block_timestamp)::date)::timestamp as point,
+                        avg(price_usd)                                                          as token_price
+                 from public.token_prices
+                 where token_address = _token_address
+                   and block_timestamp > start
+                 group by point
+                 order by point;
 end
 $$;
 
@@ -176,62 +175,59 @@ begin
     order by block_timestamp desc
     limit 1;
 
-    select into tranche_state_token_a_liquidity, tranche_state_token_b_liquidity,tranche_state_e_token_price,tranche_state_current_ratio,
-        tranche_state_token_a_current_ratio,tranche_state_token_b_current_ratio,tranche_state_included_in_block,tranche_state_block_timestamp ts.token_a_liquidity,
-                                                                                                                                              ts.token_b_liquidity,
-                                                                                                                                              ts.etoken_price,
-                                                                                                                                              ts.current_ratio,
-                                                                                                                                              ts.token_a_current_ratio,
-                                                                                                                                              ts.token_b_current_ratio,
-                                                                                                                                              ts.included_in_block,
-                                                                                                                                              ts.block_timestamp
+    select into tranche_state_token_a_liquidity, tranche_state_token_b_liquidity,tranche_state_e_token_price,tranche_state_current_ratio, tranche_state_token_a_current_ratio,tranche_state_token_b_current_ratio,tranche_state_included_in_block,tranche_state_block_timestamp ts.token_a_liquidity,
+                                                                                                                                                                                                                                                                                ts.token_b_liquidity,
+                                                                                                                                                                                                                                                                                ts.etoken_price,
+                                                                                                                                                                                                                                                                                ts.current_ratio,
+                                                                                                                                                                                                                                                                                ts.token_a_current_ratio,
+                                                                                                                                                                                                                                                                                ts.token_b_current_ratio,
+                                                                                                                                                                                                                                                                                ts.included_in_block,
+                                                                                                                                                                                                                                                                                ts.block_timestamp
     from smart_exposure.tranche_state ts
     where ts.etoken_address = _etoken_address
     order by block_timestamp desc
     limit 1;
-    return query
-        select s_factor_e,
-               target_ratio,
-               token_a_ratio,
-               token_a_address,
-               token_a_symbol,
-               token_a_decimals,
-               token_a_price_usd,
-               token_a_included_in_block,
-               token_a_block_timestamp,
-               token_b_address,
-               token_b_price_usd,
-               token_b_included_in_block,
-               token_b_block_timestamp,
-               token_b_ratio,
-               token_b_symbol,
-               token_b_decimals,
-               pool_state_rebalancing_interval,
-               pool_state_rebalancing_condition,
-               pool_state_last_rebalance,
-               tranche_state_token_a_liquidity,
-               tranche_state_token_b_liquidity,
-               tranche_state_e_token_price,
-               tranche_state_current_ratio,
-               tranche_state_token_a_current_ratio,
-               tranche_state_token_b_current_ratio,
-               tranche_state_included_in_block,
-               tranche_state_block_timestamp;
+    return query select s_factor_e,
+                        target_ratio,
+                        token_a_ratio,
+                        token_a_address,
+                        token_a_symbol,
+                        token_a_decimals,
+                        token_a_price_usd,
+                        token_a_included_in_block,
+                        token_a_block_timestamp,
+                        token_b_address,
+                        token_b_price_usd,
+                        token_b_included_in_block,
+                        token_b_block_timestamp,
+                        token_b_ratio,
+                        token_b_symbol,
+                        token_b_decimals,
+                        pool_state_rebalancing_interval,
+                        pool_state_rebalancing_condition,
+                        pool_state_last_rebalance,
+                        tranche_state_token_a_liquidity,
+                        tranche_state_token_b_liquidity,
+                        tranche_state_e_token_price,
+                        tranche_state_current_ratio,
+                        tranche_state_token_a_current_ratio,
+                        tranche_state_token_b_current_ratio,
+                        tranche_state_included_in_block,
+                        tranche_state_block_timestamp;
 end
 $$;
 
 create function smart_exposure.user_portfolio_value(addr text, ts bigint) returns double precision
-    language plpgsql
-as
+    language plpgsql as
 $$
 declare
     value double precision;
 begin
-    select into value sum(coalesce(a.balance / pow(10, 18) * (select etoken_price
-                                                              from smart_exposure.tranche_state s
-                                                              where s.etoken_address = a.etoken_address
-                                                                and s.block_timestamp <= to_timestamp(ts)
-                                                              limit 1), 0))
+    select into value sum(coalesce(a.balance / pow(10, 18) * ( select etoken_price
+                                                               from smart_exposure.tranche_state s
+                                                               where s.etoken_address = a.etoken_address
+                                                                 and s.block_timestamp <= to_timestamp(ts)
+                                                               limit 1 ), 0))
     from smart_exposure.active_position_at_ts(addr, ts) a;
 
     return value;
@@ -239,19 +235,18 @@ end;
 $$;
 
 create function smart_exposure.user_portfolio_value_by_pool(addr text, ts bigint, _pool_address text) returns double precision
-    language plpgsql
-as
+    language plpgsql as
 $$
 declare
     value double precision;
 begin
-    select into value sum(coalesce(a.balance / pow(10, 18) * (select etoken_price
-                                                              from smart_exposure.tranche_state s
-                                                              where s.etoken_address = a.etoken_address
-                                                                and s.block_timestamp <= to_timestamp(ts)
-                                                              limit 1), 0))
+    select into value sum(coalesce(a.balance / pow(10, 18) * ( select etoken_price
+                                                               from smart_exposure.tranche_state s
+                                                               where s.etoken_address = a.etoken_address
+                                                                 and s.block_timestamp <= to_timestamp(ts)
+                                                               limit 1 ), 0))
     from smart_exposure.active_position_at_ts(addr, ts) a
-    where a.etoken_address in (select etoken_address from smart_exposure.tranches where pool_address = _pool_address);
+    where a.etoken_address in ( select etoken_address from smart_exposure.tranches where pool_address = _pool_address );
     return value;
 end;
 $$;

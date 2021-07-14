@@ -4,6 +4,7 @@ create table governance.barn_delegate_actions
     sender            text                 not null,
     receiver          text                 not null,
     action_type       delegate_action_type not null,
+
     block_timestamp   bigint               not null,
     included_in_block bigint               not null,
     tx_hash           text                 not null,
@@ -12,8 +13,7 @@ create table governance.barn_delegate_actions
     created_at        timestamp default now()
 );
 
-create index user_delegation_idx
-    on governance.barn_delegate_actions (sender asc, included_in_block desc, log_index desc);
+create index user_delegation_idx on governance.barn_delegate_actions (sender asc, included_in_block desc, log_index desc);
 
 
 ---- create above / drop below ----

@@ -22,10 +22,8 @@ $$
 declare
     value numeric(78);
 begin
-    select into value case
-                          when block_timestamp + for_days * 24 * 60 * 60 <= ts
-                              then underlying_in + gain
-                          else underlying_in end
+    select into value case when block_timestamp + for_days * 24 * 60 * 60 <= ts then underlying_in + gain
+                           else underlying_in end
     from smart_yield.senior_entry_events
     where senior_bond_address = token_address
       and senior_bond_id = token_id;
@@ -58,8 +56,7 @@ declare
 begin
     select into price price_usd
     from public.token_prices p
-    where p.token_address =
-          (select underlying_address from smart_yield.pools where senior_bond_address = addr)
+    where p.token_address = ( select underlying_address from smart_yield.pools where senior_bond_address = addr )
       and block_timestamp <= ts
     order by block_timestamp desc
     limit 1;
@@ -94,16 +91,12 @@ $$
 declare
     value double precision;
 begin
-    select into value coalesce(
-                              sum(
-                                              smart_yield.senior_bond_value_at_ts(token_address, token_id, ts)::numeric(78, 18) /
-                                              pow(10, (select underlying_decimals
-                                                       from smart_yield.pools
-                                                       where senior_bond_address = token_address)) *
-                                              smart_yield.senior_underlying_price_at_ts(token_address, ts)
-                                  ),
-                              0
-                          ) as senior_portfolio_value
+    select into value coalesce(sum(smart_yield.senior_bond_value_at_ts(token_address, token_id, ts)::numeric(78, 18) /
+                                   pow(10, ( select underlying_decimals
+                                             from smart_yield.pools
+                                             where senior_bond_address = token_address )) *
+                                   smart_yield.senior_underlying_price_at_ts(token_address, ts)),
+                               0) as senior_portfolio_value
     from smart_yield.senior_portfolio_at_ts(addr, ts);
 
     return value;

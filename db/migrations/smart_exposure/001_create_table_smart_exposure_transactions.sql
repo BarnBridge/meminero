@@ -6,6 +6,7 @@ create table smart_exposure.transactions
     amount_a          numeric(78),
     amount_b          numeric(78),
     transaction_type  public.staking_action_type not null,
+
     block_timestamp   bigint                     not null,
     included_in_block bigint                     not null,
     tx_hash           text                       not null,

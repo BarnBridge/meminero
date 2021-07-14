@@ -4,6 +4,7 @@ create table governance.abrogation_proposals
     creator           text    not null,
     create_time       bigint  not null,
     description       text    not null,
+
     included_in_block bigint  not null,
     tx_hash           text    not null,
     tx_index          integer not null,
@@ -11,9 +12,7 @@ create table governance.abrogation_proposals
     created_at        timestamp default now()
 );
 
-create index abrogation_proposals_proposal_id_idx
-    on governance.abrogation_proposals (proposal_id desc);
-
+create index abrogation_proposals_proposal_id_idx on governance.abrogation_proposals (proposal_id desc);
 
 ---- create above / drop below ----
 
