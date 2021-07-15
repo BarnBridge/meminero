@@ -1,3 +1,4 @@
+//go:generate go run ../main.go generate-eth-types --ethtypes.abi-folder ../ethtypes/_source --ethtypes.package-path ../ethtypes
 
 package cmd
 
