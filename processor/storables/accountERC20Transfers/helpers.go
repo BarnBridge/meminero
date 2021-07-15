@@ -3,9 +3,10 @@ package accountERC20Transfers
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/utils"
 	"github.com/jackc/pgx/v4"
 	"github.com/shopspring/decimal"
+
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 const (

@@ -1,17 +1,21 @@
 package state
 
 import (
-	"github.com/barnbridge/smartbackend/types"
+	"sync"
+
 	"github.com/go-redis/redis"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/barnbridge/smartbackend/types"
 )
 
 type Manager struct {
 	redis  *redis.Client
 	logger *logrus.Entry
 	db     *pgxpool.Pool
+	mu     *sync.Mutex
 
 	Tokens            []types.Token
 	monitoredAccounts []string
@@ -23,6 +27,7 @@ func NewManager(db *pgxpool.Pool) (*Manager, error) {
 	m := &Manager{
 		db:     db,
 		logger: logrus.WithField("module", "state"),
+		mu:     new(sync.Mutex),
 	}
 
 	var err error
@@ -35,6 +40,9 @@ func NewManager(db *pgxpool.Pool) (*Manager, error) {
 }
 
 func (m *Manager) RefreshCache() error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
 	err := m.loadAllAccounts()
 	if err != nil {
 		return errors.Wrap(err, "could not fetch monitored accounts")
@@ -42,8 +50,9 @@ func (m *Manager) RefreshCache() error {
 
 	err = m.loadAllTokens()
 	if err != nil {
-		return errors.Wrap(err,"could not fetch tokens")
+		return errors.Wrap(err, "could not fetch tokens")
 	}
+
 	return nil
 }
 

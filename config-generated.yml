@@ -39,9 +39,6 @@ feature:
         lag: 10
     # Enable this if the scraper should replace existing blocks instead of skipping them
     replace-blocks: false
-    uncles:
-        # Enable/disable uncles scraping
-        enabled: true
 # Display debug messages
 logging: '*=info'
 accountERC20Transfers:

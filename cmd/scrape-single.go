@@ -1,9 +1,12 @@
 package cmd
 
 import (
-	"github.com/barnbridge/smartbackend/db"
+	"context"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/barnbridge/smartbackend/db"
 
 	"github.com/barnbridge/smartbackend/glue"
 	"github.com/barnbridge/smartbackend/state"
@@ -34,7 +37,7 @@ var scrapeSingleCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		err = g.ScrapeSingleBlock(block)
+		err = g.ScrapeSingleBlock(context.Background(), block)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -50,7 +53,9 @@ func init() {
 	addRedisFlags(scrapeSingleCmd)
 	addFeatureFlags(scrapeSingleCmd)
 	addETHFlags(scrapeSingleCmd)
-	addAccountERC20TransfersFlags(scrapeSingleCmd)
+	addGenerateETHTypesFlags(scrapeSingleCmd)
+
+	addStorableAccountERC20TransfersFlags(scrapeSingleCmd)
 
 	scrapeSingleCmd.Flags().Int64("block", -1, "The block to scrape")
 }

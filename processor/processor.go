@@ -4,12 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/barnbridge/smartbackend/state"
-	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/sync/errgroup"
+
+	"github.com/barnbridge/smartbackend/state"
 
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/types"
@@ -19,18 +20,15 @@ type Processor struct {
 	Raw   *types.RawData
 	Block *types.Block
 
-	eth   *ethclient.Client
-	state *state.Manager
-
+	state  *state.Manager
 	logger *logrus.Entry
 
 	storables []types.Storable
 }
 
-func New(raw *types.RawData, eth *ethclient.Client, state *state.Manager) (*Processor, error) {
+func New(raw *types.RawData, state *state.Manager) (*Processor, error) {
 	p := &Processor{
 		Raw:    raw,
-		eth:    eth,
 		state:  state,
 		logger: logrus.WithField("module", "processor"),
 	}
@@ -75,7 +73,7 @@ func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
 }
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
-func (p *Processor) Store(db *pgxpool.Pool) error {
+func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 	exists, err := p.checkBlockExists(db)
 	if err != nil {
 		return err
@@ -109,12 +107,30 @@ func (p *Processor) Store(db *pgxpool.Pool) error {
 		}
 	}
 
+	start := time.Now()
+	p.logger.Info("executing storables")
+
+	wg, _ := errgroup.WithContext(ctx)
+
 	for _, s := range p.storables {
-		err = s.Execute()
-		if err != nil {
-			return err
-		}
+		s := s
+
+		wg.Go(func() error {
+			err = s.Execute()
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
 	}
+
+	err = wg.Wait()
+	if err != nil {
+		return errors.Wrap(err, "got error executing sotrables")
+	}
+
+	p.logger.WithField("duration", time.Since(start)).Info("done executing storables")
 
 	err = p.storeAll(db)
 	if err != nil {

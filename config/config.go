@@ -11,8 +11,8 @@ type store struct {
 	API      api      `mapstructure:"api"`
 	Feature  features `mapstructure:"feature"`
 	ETH      eth      `mapstructure:"eth"`
-
-	AccountERC20Transfers accountERC20Transfers
+	EthTypes ethtypes `mapstructure:"ethtypes"`
+	Storable storable `mapstructure:"storable"`
 }
 
 var Store store

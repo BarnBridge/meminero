@@ -96,21 +96,6 @@ func (s *Scraper) Exec(block int64) (*types.RawData, error) {
 		return nil, errs[0]
 	}
 
-	if config.Store.Feature.Uncles.Enabled {
-		log.Debug("getting uncles")
-		start = time.Now()
-		for idx := range dataBlock.Uncles {
-			dataUncle, err := s.conn.GetUncleByBlockHashAndIndex(b.Block.Hash, "0x"+strconv.FormatInt(int64(idx), 16))
-			if err != nil {
-				log.Error(err)
-				return nil, err
-			}
-
-			b.Uncles = append(b.Uncles, dataUncle)
-		}
-		log.WithField("duration", time.Since(start)).Debugf("got %d uncles", len(b.Uncles))
-	}
-
 	log.Debug("done scraping block")
 
 	return b, nil

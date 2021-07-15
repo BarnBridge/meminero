@@ -25,7 +25,6 @@ func addRedisFlags(cmd *cobra.Command) {
 }
 
 func addFeatureFlags(cmd *cobra.Command) {
-	cmd.Flags().Bool("feature.uncles.enabled", true, "Enable/disable uncles scraping")
 	cmd.Flags().Bool("feature.integrity.enabled", true, "Enable/disable the integrity checker")
 	cmd.Flags().Bool("feature.queuekeeper.enabled", true, "Enable/disable the queue keeper (watch new heads and store into the queue)")
 	cmd.Flags().Int64("feature.queuekeeper.lag", 10, "The amount of blocks to lag behind the tip of the chain")
@@ -43,6 +42,6 @@ func addGenerateETHTypesFlags(cmd *cobra.Command) {
 	cmd.Flags().String("ethtypes.package-path", "ethtypes", "Path where to generate packages. Final folder represents package name")
 }
 
-func addAccountERC20TransfersFlags(cmd *cobra.Command) {
-	cmd.Flags().Bool("accountERC20Transfers", true, "Enable/disable erc20 transfers scraping")
+func addStorableAccountERC20TransfersFlags(cmd *cobra.Command) {
+	cmd.Flags().Bool("storable.accountERC20Transfers.enabled", true, "Enable/disable erc20 transfers scraping")
 }

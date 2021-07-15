@@ -3,51 +3,58 @@ package accountERC20Transfers
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/state"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/barnbridge/smartbackend/eth"
+	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/state"
+	"github.com/barnbridge/smartbackend/types"
 )
 
 type Storable struct {
-	block   *types.Block
-	ethConn *ethclient.Client
-	state   *state.Manager
-	logger  *logrus.Entry
+	block *types.Block
+
+	state  *state.Manager
+	logger *logrus.Entry
 
 	processed struct {
-		transfers      []ethtypes.ERC20TransferEvent
-		blockNumber    int64
-		blockTimestamp int64
+		transfers []ethtypes.ERC20TransferEvent
 	}
 }
 
-func New(block *types.Block, ethConn *ethclient.Client, state *state.Manager) *Storable {
+func New(block *types.Block, state *state.Manager) *Storable {
 	return &Storable{
-		block:   block,
-		ethConn: ethConn,
-		state:   state,
-		logger:  logrus.WithField("module", "storable(account_erc20_transfers)"),
+		block:  block,
+		state:  state,
+		logger: logrus.WithField("module", "storable(account_erc20_transfers)"),
 	}
-
 }
 
 func (s *Storable) Execute() error {
-	var logs []gethtypes.Log
 	erc20Decoder := ethtypes.NewERC20Decoder()
+
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
-			if erc20Decoder.IsERC20TransferEvent(&log) && s.state.IsMonitoredAccount(log) {
-				exists := s.state.CheckTokenExists(log)
+			if erc20Decoder.IsERC20TransferEvent(&log) {
+				erc20Transfer, err := erc20Decoder.ERC20TransferEvent(log)
+				if err != nil {
+					return errors.Wrap(err, "could not decode erc20 transfer")
+				}
+
+				if !s.state.IsMonitoredAccount(erc20Transfer.From.String()) &&
+					!s.state.IsMonitoredAccount(erc20Transfer.To.String()) {
+					continue
+				}
+
+				s.processed.transfers = append(s.processed.transfers, erc20Transfer)
+
+				exists := s.state.CheckTokenExists(log.Address.String())
 				if !exists {
-					token,err := s.getToken(utils.NormalizeAddress(log.Address.String()))
+					token, err := eth.GetERC20TokenFromChain(log.Address.String())
 					if err != nil {
-						continue
+						return err
 					}
 
 					err = s.state.StoreToken(*token)
@@ -55,20 +62,15 @@ func (s *Storable) Execute() error {
 						return err
 					}
 				}
-				logs = append(logs, log)
 			}
 		}
-	}
-	err := s.decodeLogs(logs, erc20Decoder)
-	if err != nil {
-		return errors.Wrap(err, "could not decode erc20 transfers logs")
 	}
 
 	return nil
 }
 
 func (s *Storable) Rollback(tx pgx.Tx) error {
-	_, err := tx.Exec(context.Background(),`delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
+	_, err := tx.Exec(context.Background(), `delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
 
 	return err
 }

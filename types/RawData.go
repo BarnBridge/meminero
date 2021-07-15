@@ -7,5 +7,4 @@ import (
 type RawData struct {
 	Block    web3types.Block
 	Receipts RawReceipts
-	Uncles   []web3types.Block
 }

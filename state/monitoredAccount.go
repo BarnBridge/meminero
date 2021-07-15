@@ -3,26 +3,10 @@ package state
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/utils"
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/smartbackend/utils"
 )
-
-func (m *Manager) IsMonitoredAccount(log gethtypes.Log) bool {
-	if len(m.monitoredAccounts) == 0 {
-		return false
-	}
-
-	for _, a := range m.monitoredAccounts {
-		if len(log.Topics) >= 3 {
-			if utils.NormalizeAddress(a) == utils.Topic2Address(log.Topics[1].String()) ||
-				utils.NormalizeAddress(a) == utils.Topic2Address(log.Topics[2].String()) {
-				return true
-			}
-		}
-	}
-	return false
-}
 
 func (m *Manager) loadAllAccounts() error {
 	rows, err := m.db.Query(context.Background(), `select address from monitored_accounts`)
@@ -38,10 +22,23 @@ func (m *Manager) loadAllAccounts() error {
 			return errors.Wrap(err, "could no scan monitored accounts from database")
 		}
 
-		accounts = append(accounts, a)
+		accounts = append(accounts, utils.NormalizeAddress(a))
 	}
 
 	m.monitoredAccounts = accounts
 
 	return nil
+}
+
+func (m *Manager) IsMonitoredAccount(addr string) bool {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	for _, a := range m.monitoredAccounts {
+		if utils.NormalizeAddress(a) == utils.NormalizeAddress(addr) {
+			return true
+		}
+	}
+
+	return false
 }
