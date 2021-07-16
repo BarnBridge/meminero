@@ -15,7 +15,7 @@ func (m *Manager) loadAllTokens() error {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}
 
-	m.Tokens= make (map[string]types.Token)
+	m.Tokens = make(map[string]types.Token)
 	for rows.Next() {
 		var t types.Token
 		err := rows.Scan(&t.Address, &t.Symbol, &t.Decimals, &t.AggregatorAddress, &t.PriceProviderType)
@@ -45,7 +45,7 @@ func (m *Manager) StoreToken(token types.Token) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	_, err := m.db.Exec(context.Background(), `insert into tokens (address,symbol,decimals,aggregator_address,price_provider_type) values ($1,$2,$3,$4,$5)`,utils.NormalizeAddress(token.Address), token.Symbol, token.Decimals, token.AggregatorAddress, token.PriceProviderType)
+	_, err := m.db.Exec(context.Background(), `insert into tokens (address,symbol,decimals,aggregator_address,price_provider_type) values ($1,$2,$3,$4,$5)`, utils.NormalizeAddress(token.Address), token.Symbol, token.Decimals, token.AggregatorAddress, token.PriceProviderType)
 	if err != nil {
 		return err
 	}

@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (c *Checker) checkMissingBlocks(ctx context.Context,start, end int64) ([]int64, error) {
+func (c *Checker) checkMissingBlocks(ctx context.Context, start, end int64) ([]int64, error) {
 	rows, err := c.db.Query(ctx, `
 		select x.number
 		from generate_series($1::bigint, $2::bigint) as x(number)

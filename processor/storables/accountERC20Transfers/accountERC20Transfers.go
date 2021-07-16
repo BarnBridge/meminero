@@ -33,12 +33,10 @@ func New(block *types.Block, state *state.Manager) *Storable {
 }
 
 func (s *Storable) Execute() error {
-	erc20Decoder := ethtypes.NewERC20Decoder()
-
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
-			if erc20Decoder.IsERC20TransferEvent(&log) {
-				erc20Transfer, err := erc20Decoder.ERC20TransferEvent(log)
+			if ethtypes.ERC20.IsERC20TransferEvent(&log) {
+				erc20Transfer, err := ethtypes.ERC20.ERC20TransferEvent(log)
 				if err != nil {
 					return errors.Wrap(err, "could not decode erc20 transfer")
 				}

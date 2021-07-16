@@ -24,14 +24,13 @@ func (m *Manager) loadAllAccounts() error {
 		m.monitoredAccounts[a] = true
 	}
 
-
 	return nil
 }
 
 func (m *Manager) IsMonitoredAccount(addr string) bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.monitoredAccounts[utils.NormalizeAddress(addr)]{
+	if m.monitoredAccounts[utils.NormalizeAddress(addr)] {
 		return true
 	}
 

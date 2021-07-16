@@ -86,12 +86,12 @@ func (c *Checker) lifecycle(ctx context.Context) error {
 		return nil
 	}
 
-	missing, err := c.checkMissingBlocks(ctx,checkpoint, highestBlock)
+	missing, err := c.checkMissingBlocks(ctx, checkpoint, highestBlock)
 	if err != nil {
 		return err
 	}
 
-	broken, err := c.checkBrokenHashChain(ctx,checkpoint, highestBlock)
+	broken, err := c.checkBrokenHashChain(ctx, checkpoint, highestBlock)
 	if err != nil {
 		return err
 	}

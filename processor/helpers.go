@@ -25,7 +25,7 @@ func (p *Processor) checkBlockExists(ctx context.Context, db *pgxpool.Pool) (boo
 // checkBlockReorged verifies if the current block matches any block in the database on number
 // this is meant to be used in order to detect if the database contains a blocks with the same number
 // but different hash if the checkBlockExists function returns false
-func (p *Processor) checkBlockReorged(ctx context.Context,db *pgxpool.Pool) (bool, error) {
+func (p *Processor) checkBlockReorged(ctx context.Context, db *pgxpool.Pool) (bool, error) {
 	var count int
 	err := db.QueryRow(ctx, `select count(*) from blocks where number = $1`, p.Block.Number).Scan(&count)
 	if err != nil {
