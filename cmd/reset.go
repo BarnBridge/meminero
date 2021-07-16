@@ -29,14 +29,14 @@ var resetCmd = &cobra.Command{
 			}
 		}
 
-		r, err := state.NewManager()
+		stateManager, err := state.NewManager(nil)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		fmt.Print("Deleting todo queue from redis ... ")
 
-		err = r.Reset()
+		err = stateManager.Reset()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -45,12 +45,12 @@ var resetCmd = &cobra.Command{
 
 		fmt.Print("Truncating database ... ")
 
-		d, err := db.New()
+		database, err := db.New()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		_, err = d.Connection().Exec(context.Background(),`
+		_, err = database.Connection().Exec(context.Background(), `
 			drop schema public cascade;
 			create schema public;
 		

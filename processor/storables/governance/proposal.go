@@ -2,31 +2,27 @@ package governance
 
 import (
 	"context"
-	"database/sql"
 	"encoding/hex"
 	"fmt"
 	"math/big"
 	"sync"
 
-	web3types "github.com/alethio/web3-go/types"
-	"github.com/barnbridge/smartbackend/contracts"
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/types"
-	"github.com/jackc/pgx/v4"
-	"github.com/lib/pq"
-
 	"github.com/barnbridge/smartbackend/utils"
 	"github.com/ethereum/go-ethereum/common"
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/jackc/pgx/v4"
 
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 )
 
-func (g *GovStorable) handleProposals(logs []web3types.Log, tx pgx.Tx,governanceDecoder *ethtypes.GovernanceDecoder) error {
+func (g *GovStorable) handleProposals(logs []gethtypes.Log,governanceDecoder *ethtypes.GovernanceDecoder) error {
 	var createdProposals []ethtypes.GovernanceProposalCreatedEvent
 	for _, log := range logs {
-		if 	governanceDecoder.IsGovernanceProposalCreatedEvent(log) {
-			p ,err :=governanceDecoder.GovernanceProposalCreatedEventW3(log)
+		if 	governanceDecoder.IsGovernanceProposalCreatedEvent(&log) {
+			p ,err :=governanceDecoder.GovernanceProposalCreatedEvent(log)
 			if err != nil {
 				return errors.Wrap(err,"could not decode proposal created event")
 			}
@@ -50,49 +46,10 @@ func (g *GovStorable) handleProposals(logs []web3types.Log, tx pgx.Tx,governance
 		return err
 	}
 
-	actionsJsonStringArray := []map[string]types.JSONStringArray
-	for i,p := range proposals {
-		a := actions[i]
-		var targets, values, signatures, calldatas types.JSONStringArray
 
-		for i := 0; i < len(a.Targets); i++ {
-			targets = append(targets, a.Targets[i].String())
-			values = append(values, a.Values[i].String())
-			signatures = append(signatures, a.Signatures[i])
-			calldatas = append(calldatas, hex.EncodeToString(a.Calldatas[i]))
-		}
-		actionsJsonStringArray["targets"]
-	}
 
-	/*_, err = tx.CopyFrom(
-		context.Background(),
-		pgx.Identifier{"proposals"},
-		[]string{"proposal_id", "proposer","description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"},
-		pgx.CopyFromSlice(len(proposals), func(i int) ([]interface{}, error) {
-			return []interface{}{proposals[i].ProposalId.String(),proposals[i].Caller.String(),
-				g.Preprocessed.BlockTimestamp,proposals[aps[i].ProposalId.String()],proposals[i].Raw.BlockHash.String(),
-				aps[i].Raw.TxIndex,aps[i].Raw.TxIndex,g.Preprocessed.BlockNumber}, nil
-		}),
-	)*/
-	tx.
-	if err != nil {
-		return errors.Wrap(err,"could not store abrogration_proposals")
-	}
-	stmt, err := tx.Prepare(context.Background(),pq.CopyIn("governance_proposals", "proposal_id", "proposer", "description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"))
-	if err != nil {
-		return errors.Wrap(err, "could not prepare statement")
-	}
-	for i, p := range proposals {
-		a := actions[i]
-		var targets, values, signatures, calldatas types.JSONStringArray
 
-		for i := 0; i < len(a.Targets); i++ {
-			targets = append(targets, a.Targets[i].String())
-			values = append(values, a.Values[i].String())
-			signatures = append(signatures, a.Signatures[i])
-			calldatas = append(calldatas, hex.EncodeToString(a.Calldatas[i]))
-		}
-	}
+
 	//var jobs []*notifications.Job
 	/*
 	stmt, err := tx.Prepare(pq.CopyIn("governance_proposals", "proposal_id", "proposer", "description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"))
@@ -223,4 +180,49 @@ func (g *GovStorable) getProposalsDetails(wg *errgroup.Group, mu *sync.Mutex,pro
 			return nil
 		})
 	}
+}
+
+func (g *GovStorable) storeProposals(tx pgx.Tx) error {
+	var rows [][]interface{}
+	for i,p := range g.Processed.proposals {
+
+		var targets, values, signatures, calldatas types.JSONStringArray
+		a := g.Processed.proposalsActions[i]
+		for i := 0; i < len(a.Targets); i++ {
+			targets = append(targets, a.Targets[i].String())
+			values = append(values, a.Values[i].String())
+			signatures = append(signatures, a.Signatures[i])
+			calldatas = append(calldatas, hex.EncodeToString(a.Calldatas[i]))
+		}
+		rows = append(rows, []interface{}{
+			p.Id.Int64(),
+			utils.NormalizeAddress(p.Proposer.String()),
+			p.Description,
+			p.Title,
+			p.CreateTime.Int64(),
+			targets,
+			values,
+			signatures,
+			calldatas,
+			p.WarmUpDuration.Int64(),
+			p.ActiveDuration.Int64(),
+			p.QueueDuration.Int64(),
+			p.GracePeriodDuration.Int64(),
+			p.AcceptanceThreshold.Int64(),
+			p.MinQuorum.Int64(),
+			g.Preprocessed.BlockTimestamp,
+			g.Preprocessed.BlockNumber,
+		})
+	}
+
+	_, err := tx.CopyFrom(
+		context.Background(),
+		pgx.Identifier{"proposals"},
+		[]string{"proposal_id", "proposer","description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"},
+		pgx.CopyFromSlice(len(g.Processed.proposals), func(i int) ([]interface{}, error) {
+			return []interface{}{rows}, nil
+		}),
+	)
+
+	return err
 }

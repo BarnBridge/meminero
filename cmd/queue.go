@@ -11,7 +11,7 @@ var queueCmd = &cobra.Command{
 	Use:   "queue",
 	Short: "Manually add a block to the todo queue",
 	Run: func(cmd *cobra.Command, args []string) {
-		r, err := state.NewManager()
+		r, err := state.NewManager(nil)
 		if err != nil {
 			log.Fatal(err)
 		}

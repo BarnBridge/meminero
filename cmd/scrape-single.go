@@ -1,8 +1,12 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/barnbridge/smartbackend/db"
 
 	"github.com/barnbridge/smartbackend/glue"
 	"github.com/barnbridge/smartbackend/state"
@@ -18,22 +22,22 @@ var scrapeSingleCmd = &cobra.Command{
 			log.Fatal("No block was specified")
 		}
 
-		database, err := state.NewPostgres()
+		database, err := db.New()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		state, err := state.NewManager()
+		state, err := state.NewManager(database.Connection())
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		g, err := glue.New(database, state)
+		g, err := glue.New(database.Connection(), state)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		err = g.ScrapeSingleBlock(block)
+		err = g.ScrapeSingleBlock(context.Background(), block)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -49,6 +53,9 @@ func init() {
 	addRedisFlags(scrapeSingleCmd)
 	addFeatureFlags(scrapeSingleCmd)
 	addETHFlags(scrapeSingleCmd)
+	addGenerateETHTypesFlags(scrapeSingleCmd)
+
+	addStorableAccountERC20TransfersFlags(scrapeSingleCmd)
 
 	scrapeSingleCmd.Flags().Int64("block", -1, "The block to scrape")
 }

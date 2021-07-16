@@ -3,9 +3,10 @@ package processor
 import (
 	"sort"
 	"strconv"
-	"time"
 
 	web3types "github.com/alethio/web3-go/types"
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/lacasian/ethwheels/ethgen"
 	"github.com/pkg/errors"
 
 	"github.com/barnbridge/smartbackend/types"
@@ -50,7 +51,7 @@ func (p *Processor) parseBlockData() error {
 	if err != nil {
 		return errors.Wrap(err, "could not decode block timestamp")
 	}
-	b.BlockCreationTime = types.DatetimeToJSONUnix(time.Unix(timestamp, 0))
+	b.BlockCreationTime = timestamp
 
 	p.Block = &b
 
@@ -66,13 +67,13 @@ func (p *Processor) parseReceipts() error {
 			return err
 		}
 
-		for i, log := range receipt.Logs {
-			logEntry, err := p.parseLog(*storableTx, log, i)
+		for _, log := range receipt.Logs {
+			logEntry, err := p.parseLog(log)
 			if err != nil {
 				return errors.Wrap(err, "could not parse log")
 			}
 
-			storableTx.LogEntries = append(storableTx.LogEntries, *logEntry)
+			storableTx.LogEntries = append(storableTx.LogEntries, logEntry)
 		}
 
 		sort.Sort(storableTx.LogEntries)
@@ -155,30 +156,6 @@ func (p *Processor) parseTx(tx web3types.Transaction, receipt web3types.Receipt)
 	return sTx, nil
 }
 
-func (p *Processor) parseLog(tx types.Tx, log web3types.Log, index int) (*types.LogEntry, error) {
-	l := &types.LogEntry{}
-	l.IncludedInBlock = tx.IncludedInBlock
-	l.TxHash = utils.Trim0x(tx.TxHash)
-	l.LogIndex = int32(index) // = transaction log index
-
-	l.LogData = types.ByteArray(utils.Trim0x(log.Data))
-	l.LoggedBy = utils.NormalizeAddress(log.Address)
-
-	if len(log.Topics) > 0 {
-		l.Topic0 = utils.Trim0x(log.Topics[0])
-	}
-
-	if len(log.Topics) > 1 {
-		l.Topic1 = utils.Trim0x(log.Topics[1])
-	}
-
-	if len(log.Topics) > 2 {
-		l.Topic2 = utils.Trim0x(log.Topics[2])
-	}
-
-	if len(log.Topics) > 3 {
-		l.Topic3 = utils.Trim0x(log.Topics[3])
-	}
-
-	return l, nil
+func (p *Processor) parseLog(log web3types.Log) (gethtypes.Log, error) {
+	return ethgen.W3LogToLog(log)
 }

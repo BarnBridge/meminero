@@ -61,7 +61,7 @@ func (db *DB) Migrate(ctx context.Context) error {
 	}
 
 	for _, f := range files {
-		if !f.IsDir() || f.Name() == "public"{
+		if !f.IsDir() || f.Name() == "public" {
 			continue
 		}
 

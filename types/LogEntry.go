@@ -1,5 +1,9 @@
 package types
 
+import (
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+)
+
 type LogEntry struct {
 	TxHash          string
 	LogIndex        int32
@@ -12,8 +16,8 @@ type LogEntry struct {
 	IncludedInBlock int64
 }
 
-type LogEntries []LogEntry
+type LogEntries []gethtypes.Log
 
 func (l LogEntries) Len() int           { return len(l) }
-func (l LogEntries) Less(i, j int) bool { return l[i].LogIndex < l[j].LogIndex }
+func (l LogEntries) Less(i, j int) bool { return l[i].Index < l[j].Index }
 func (l LogEntries) Swap(i, j int)      { l[i], l[j] = l[j], l[i] }

@@ -1,8 +1,7 @@
 package governance
 
 import (
-"database/sql"
-"strconv"
+	"database/sql"
 	"time"
 
 	"github.com/alethio/web3-go/ethrpc"
@@ -10,15 +9,15 @@ import (
 	"github.com/barnbridge/smartbackend/types"
 	"github.com/barnbridge/smartbackend/utils"
 	"github.com/ethereum/go-ethereum/accounts/abi"
-"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/ethereum/go-ethereum/log"
-"github.com/sirupsen/logrus"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/log"
+	"github.com/sirupsen/logrus"
 )
 
 type GovStorable struct {
 	config Config
-	Raw    *types.Block
+	block  *types.Block
 	govAbi abi.ABI
 
 	ethConn *ethclient.Client
@@ -29,15 +28,20 @@ type GovStorable struct {
 		BlockTimestamp int64
 		BlockNumber    int64
 	}
+	Processed struct {
+		proposals []Proposal
+		proposalsActions []ProposalActions
+		abrProposals []ethtypes.GovernanceAbrogationProposalStartedEvent
+	}
 }
 
-func New(config Config, raw *types.Block, govAbi abi.ABI,  ethConn *ethclient.Client) *GovStorable {
+func New(config Config, block *types.Block, govAbi abi.ABI,  ethConn *ethclient.Client) *GovStorable {
 	return &GovStorable{
 		config:  config,
-		Raw:     raw,
+		block:   block,
 		ethConn: ethConn,
-		govAbi: govAbi,
-		logger: logrus.WithField("module", "storable(governance)"),
+		govAbi:  govAbi,
+		logger:  logrus.WithField("module", "storable(governance)"),
 	}
 }
 
@@ -51,9 +55,9 @@ func (g GovStorable) Execute(tx *sql.Tx) error {
 
 	governanceDecoder :=ethtypes.NewGovernanceDecoder()
 	var govLogs []gethtypes.Log
-	for _, data := range g.Raw.Txs {
+	for _, data := range g.block.Txs {
 		for _, log := range data.LogEntries {
-			if utils.CleanUpHex(log.LoggedBy) == utils.CleanUpHex(g.config.GovernanceAddress) {
+			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(g.config.GovernanceAddress) {
 				govLogs = append(govLogs, log)
 			}
 		}
@@ -64,7 +68,7 @@ func (g GovStorable) Execute(tx *sql.Tx) error {
 		return nil
 	}
 
-	err := g.handleProposals(govLogs, tx,governanceDecoder)
+	err := g.handleProposals(govLogs,governanceDecoder)
 	if err != nil {
 		return err
 	}

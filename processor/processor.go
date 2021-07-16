@@ -1,12 +1,16 @@
 package processor
 
 import (
-	"database/sql"
+	"context"
 	"time"
 
-	"github.com/lib/pq"
+	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/sync/errgroup"
+
+	"github.com/barnbridge/smartbackend/state"
 
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/types"
@@ -16,14 +20,16 @@ type Processor struct {
 	Raw   *types.RawData
 	Block *types.Block
 
+	state  *state.Manager
 	logger *logrus.Entry
 
 	storables []types.Storable
 }
 
-func New(raw *types.RawData) (*Processor, error) {
+func New(raw *types.RawData, state *state.Manager) (*Processor, error) {
 	p := &Processor{
 		Raw:    raw,
+		state:  state,
 		logger: logrus.WithField("module", "processor"),
 	}
 
@@ -37,13 +43,13 @@ func New(raw *types.RawData) (*Processor, error) {
 	return p, nil
 }
 
-func (p *Processor) rollbackAll(db *sql.DB) error {
-	tx, err := db.Begin()
+func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
+	tx, err := db.BeginTx(context.Background(), pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
-	_, err = tx.Exec("delete from blocks where number = $1", p.Block.Number)
+	_, err = tx.Exec(context.Background(), "delete from blocks where number = $1", p.Block.Number)
 	if err != nil {
 		return errors.Wrap(err, "could not remove block from database")
 	}
@@ -51,12 +57,12 @@ func (p *Processor) rollbackAll(db *sql.DB) error {
 	for _, s := range p.storables {
 		err = s.Rollback(tx)
 		if err != nil {
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			return err
 		}
 	}
 
-	err = tx.Commit()
+	err = tx.Commit(context.Background())
 	if err != nil {
 		return errors.Wrap(err, "could not commit rollback transaction")
 	}
@@ -67,7 +73,7 @@ func (p *Processor) rollbackAll(db *sql.DB) error {
 }
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
-func (p *Processor) Store(db *sql.DB) error {
+func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 	exists, err := p.checkBlockExists(db)
 	if err != nil {
 		return err
@@ -101,12 +107,30 @@ func (p *Processor) Store(db *sql.DB) error {
 		}
 	}
 
+	start := time.Now()
+	p.logger.Info("executing storables")
+
+	wg, _ := errgroup.WithContext(ctx)
+
 	for _, s := range p.storables {
-		err = s.Execute()
-		if err != nil {
-			return err
-		}
+		s := s
+
+		wg.Go(func() error {
+			err = s.Execute()
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
 	}
+
+	err = wg.Wait()
+	if err != nil {
+		return errors.Wrap(err, "got error executing sotrables")
+	}
+
+	p.logger.WithField("duration", time.Since(start)).Info("done executing storables")
 
 	err = p.storeAll(db)
 	if err != nil {
@@ -116,27 +140,27 @@ func (p *Processor) Store(db *sql.DB) error {
 	return nil
 }
 
-func (p *Processor) storeAll(db *sql.DB) error {
-	tx, err := db.Begin()
+func (p *Processor) storeAll(db *pgxpool.Pool) error {
+	tx, err := db.BeginTx(context.Background(), pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
 	err = p.storeBlock(tx)
 	if err != nil {
-		tx.Rollback()
+		tx.Rollback(context.Background())
 		return err
 	}
 
 	for _, s := range p.storables {
 		err = s.SaveToDatabase(tx)
 		if err != nil {
-			tx.Rollback()
+			tx.Rollback(context.Background())
 			return err
 		}
 	}
 
-	err = tx.Commit()
+	err = tx.Commit(context.Background())
 	if err != nil {
 		return errors.Wrap(err, "could not save data to db")
 	}
@@ -144,29 +168,14 @@ func (p *Processor) storeAll(db *sql.DB) error {
 	return nil
 }
 
-func (p *Processor) storeBlock(tx *sql.Tx) error {
+func (p *Processor) storeBlock(tx pgx.Tx) error {
 	p.logger.Trace("storing block")
 	start := time.Now()
 	defer func() { p.logger.WithField("duration", time.Since(start)).Debug("done storing block") }()
 
-	stmt, err := tx.Prepare(pq.CopyIn("blocks", "number", "block_hash", "parent_block_hash", "block_creation_time"))
-	if err != nil {
-		return err
-	}
-
 	b := p.Block
 
-	_, err = stmt.Exec(b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
-	if err != nil {
-		return err
-	}
-
-	_, err = stmt.Exec()
-	if err != nil {
-		return err
-	}
-
-	err = stmt.Close()
+	_, err := tx.Exec(context.Background(), "insert into blocks(number,block_hash,parent_block_hash,block_creation_time) values($1,$2,$3,$4)", b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
 	if err != nil {
 		return err
 	}

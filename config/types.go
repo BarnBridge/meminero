@@ -30,9 +30,6 @@ type api struct {
 }
 
 type features struct {
-	Uncles struct {
-		Enabled bool
-	}
 	Integrity struct {
 		Enabled bool
 	}
@@ -45,4 +42,9 @@ type features struct {
 
 type eth struct {
 	bestblock.Config `mapstructure:"client"`
+}
+
+type ethtypes struct {
+	AbiFolder   string `mapstructure:"abi-folder"`
+	PackagePath string `mapstructure:"package-path"`
 }
