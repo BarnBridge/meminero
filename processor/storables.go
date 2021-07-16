@@ -9,6 +9,6 @@ import (
 // Only the storables that are registered will be executed when the Store function is called
 func (p *Processor) registerStorables() {
 	if config.Store.Storable.AccountERC20Transfers.Enabled {
-		p.storables = append(p.storables, accountERC20Transfers.New(p.ctx, p.Block, p.state))
+		p.storables = append(p.storables, accountERC20Transfers.New(p.Block, p.state))
 	}
 }
