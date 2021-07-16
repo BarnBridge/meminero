@@ -74,7 +74,7 @@ func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
 func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
-	exists, err := p.checkBlockExists(db)
+	exists, err := p.checkBlockExists(ctx,db)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 			return err
 		}
 	} else {
-		reorged, err := p.checkBlockReorged(db)
+		reorged, err := p.checkBlockReorged(ctx,db)
 		if err != nil {
 			return err
 		}

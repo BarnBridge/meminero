@@ -15,7 +15,7 @@ func (m *Manager) loadAllTokens() error {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}
 
-	tokens := make (map[string]types.Token)
+	m.Tokens= make (map[string]types.Token)
 	for rows.Next() {
 		var t types.Token
 		err := rows.Scan(&t.Address, &t.Symbol, &t.Decimals, &t.AggregatorAddress, &t.PriceProviderType)
@@ -24,10 +24,8 @@ func (m *Manager) loadAllTokens() error {
 		}
 		t.Address = utils.NormalizeAddress(t.Address)
 		t.AggregatorAddress = utils.NormalizeAddress(t.AggregatorAddress)
-		tokens[t.Address] = t
+		m.Tokens[t.Address] = t
 	}
-
-	m.Tokens = tokens
 
 	return nil
 }

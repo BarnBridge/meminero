@@ -6,8 +6,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (c *Checker) checkBrokenHashChain(start, end int64) ([]int64, error) {
-	rows, err := c.db.Query(context.Background(), `
+func (c *Checker) checkBrokenHashChain(ctx context.Context,start, end int64) ([]int64, error) {
+	rows, err := c.db.Query(ctx, `
 		with a as (
 			select number
 			from blocks as t1
