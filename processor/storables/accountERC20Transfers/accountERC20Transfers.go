@@ -18,16 +18,19 @@ type Storable struct {
 
 	state  *state.Manager
 	logger *logrus.Entry
+	ctx    context.Context
 
 	processed struct {
 		transfers []ethtypes.ERC20TransferEvent
+
 	}
 }
 
-func New(block *types.Block, state *state.Manager) *Storable {
+func New(block *types.Block, state *state.Manager, ctx context.Context) *Storable {
 	return &Storable{
 		block:  block,
 		state:  state,
+		ctx: ctx,
 		logger: logrus.WithField("module", "storable(account_erc20_transfers)"),
 	}
 }
@@ -55,7 +58,7 @@ func (s *Storable) Execute() error {
 						return err
 					}
 
-					err = s.state.StoreToken(*token)
+					err = s.state.StoreToken(s.ctx,*token)
 					if err != nil {
 						return err
 					}
@@ -68,7 +71,7 @@ func (s *Storable) Execute() error {
 }
 
 func (s *Storable) Rollback(tx pgx.Tx) error {
-	_, err := tx.Exec(context.Background(), `delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
+	_, err := tx.Exec(s.ctx, `delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
 
 	return err
 }

@@ -19,6 +19,7 @@ import (
 type Processor struct {
 	Raw   *types.RawData
 	Block *types.Block
+	ctx   context.Context
 
 	state  *state.Manager
 	logger *logrus.Entry
@@ -26,10 +27,11 @@ type Processor struct {
 	storables []types.Storable
 }
 
-func New(raw *types.RawData, state *state.Manager) (*Processor, error) {
+func New(raw *types.RawData, state *state.Manager,ctx context.Context) (*Processor, error) {
 	p := &Processor{
 		Raw:    raw,
 		state:  state,
+		ctx: ctx,
 		logger: logrus.WithField("module", "processor"),
 	}
 
@@ -44,12 +46,12 @@ func New(raw *types.RawData, state *state.Manager) (*Processor, error) {
 }
 
 func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
-	tx, err := db.BeginTx(context.Background(), pgx.TxOptions{})
+	tx, err := db.BeginTx(p.ctx,pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
-	_, err = tx.Exec(context.Background(), "delete from blocks where number = $1", p.Block.Number)
+	_, err = tx.Exec(p.ctx, "delete from blocks where number = $1", p.Block.Number)
 	if err != nil {
 		return errors.Wrap(err, "could not remove block from database")
 	}
@@ -57,12 +59,12 @@ func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
 	for _, s := range p.storables {
 		err = s.Rollback(tx)
 		if err != nil {
-			tx.Rollback(context.Background())
+			tx.Rollback(p.ctx)
 			return err
 		}
 	}
 
-	err = tx.Commit(context.Background())
+	err = tx.Commit(p.ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not commit rollback transaction")
 	}
@@ -73,8 +75,8 @@ func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
 }
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
-func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
-	exists, err := p.checkBlockExists(ctx,db)
+func (p *Processor) Store( db *pgxpool.Pool) error {
+	exists, err := p.checkBlockExists(p.ctx, db)
 	if err != nil {
 		return err
 	}
@@ -92,7 +94,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 			return err
 		}
 	} else {
-		reorged, err := p.checkBlockReorged(ctx,db)
+		reorged, err := p.checkBlockReorged(p.ctx, db)
 		if err != nil {
 			return err
 		}
@@ -110,7 +112,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 	start := time.Now()
 	p.logger.Info("executing storables")
 
-	wg, _ := errgroup.WithContext(ctx)
+	wg, _ := errgroup.WithContext(p.ctx)
 
 	for _, s := range p.storables {
 		s := s
@@ -141,26 +143,26 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 }
 
 func (p *Processor) storeAll(db *pgxpool.Pool) error {
-	tx, err := db.BeginTx(context.Background(), pgx.TxOptions{})
+	tx, err := db.BeginTx(p.ctx, pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
 	err = p.storeBlock(tx)
 	if err != nil {
-		tx.Rollback(context.Background())
+		tx.Rollback(p.ctx)
 		return err
 	}
 
 	for _, s := range p.storables {
 		err = s.SaveToDatabase(tx)
 		if err != nil {
-			tx.Rollback(context.Background())
+			tx.Rollback(p.ctx)
 			return err
 		}
 	}
 
-	err = tx.Commit(context.Background())
+	err = tx.Commit(p.ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not save data to db")
 	}
@@ -175,7 +177,7 @@ func (p *Processor) storeBlock(tx pgx.Tx) error {
 
 	b := p.Block
 
-	_, err := tx.Exec(context.Background(), "insert into blocks(number,block_hash,parent_block_hash,block_creation_time) values($1,$2,$3,$4)", b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
+	_, err := tx.Exec(p.ctx, "insert into blocks(number,block_hash,parent_block_hash,block_creation_time) values($1,$2,$3,$4)", b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
 	if err != nil {
 		return err
 	}
