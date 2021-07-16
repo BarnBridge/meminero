@@ -9,8 +9,8 @@ import (
 	"github.com/barnbridge/smartbackend/utils"
 )
 
-func (m *Manager) loadAllTokens() error {
-	rows, err := m.db.Query(context.Background(), `select address,symbol,decimals,aggregator_address,price_provider_type from tokens`)
+func (m *Manager) loadAllTokens(ctx context.Context) error {
+	rows, err := m.db.Query(ctx, `select address,symbol,decimals,aggregator_address,price_provider_type from tokens`)
 	if err != nil {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}
@@ -41,11 +41,11 @@ func (m *Manager) CheckTokenExists(addr string) bool {
 	return false
 }
 
-func (m *Manager) StoreToken(token types.Token) error {
+func (m *Manager) StoreToken(ctx context.Context, token types.Token) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	_, err := m.db.Exec(context.Background(), `insert into tokens (address,symbol,decimals,aggregator_address,price_provider_type) values ($1,$2,$3,$4,$5)`, utils.NormalizeAddress(token.Address), token.Symbol, token.Decimals, token.AggregatorAddress, token.PriceProviderType)
+	_, err := m.db.Exec(ctx, `insert into tokens (address,symbol,decimals,aggregator_address,price_provider_type) values ($1,$2,$3,$4,$5)`, utils.NormalizeAddress(token.Address), token.Symbol, token.Decimals, token.AggregatorAddress, token.PriceProviderType)
 	if err != nil {
 		return err
 	}

@@ -32,7 +32,7 @@ func New(block *types.Block, state *state.Manager) *Storable {
 	}
 }
 
-func (s *Storable) Execute() error {
+func (s *Storable) Execute(ctx context.Context) error {
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
 			if ethtypes.ERC20.IsERC20TransferEvent(&log) {
@@ -55,7 +55,7 @@ func (s *Storable) Execute() error {
 						return err
 					}
 
-					err = s.state.StoreToken(*token)
+					err = s.state.StoreToken(ctx, *token)
 					if err != nil {
 						return err
 					}
@@ -67,14 +67,14 @@ func (s *Storable) Execute() error {
 	return nil
 }
 
-func (s *Storable) Rollback(tx pgx.Tx) error {
-	_, err := tx.Exec(context.Background(), `delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
+func (s *Storable) Rollback(ctx context.Context,tx pgx.Tx) error {
+	_, err := tx.Exec(ctx, `delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
 
 	return err
 }
 
-func (s *Storable) SaveToDatabase(tx pgx.Tx) error {
-	err := s.storeTransfers(tx)
+func (s *Storable) SaveToDatabase(ctx context.Context,tx pgx.Tx) error {
+	err := s.storeTransfers(ctx,tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store erc20transfers")
 	}

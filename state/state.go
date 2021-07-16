@@ -1,6 +1,7 @@
 package state
 
 import (
+	"context"
 	"sync"
 
 	"github.com/go-redis/redis"
@@ -39,16 +40,16 @@ func NewManager(db *pgxpool.Pool) (*Manager, error) {
 	return m, nil
 }
 
-func (m *Manager) RefreshCache() error {
+func (m *Manager) RefreshCache(ctx context.Context) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	err := m.loadAllAccounts()
+	err := m.loadAllAccounts(ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not fetch monitored accounts")
 	}
 
-	err = m.loadAllTokens()
+	err = m.loadAllTokens(ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not fetch tokens")
 	}

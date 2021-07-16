@@ -7,8 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (m *Manager) loadAllAccounts() error {
-	rows, err := m.db.Query(context.Background(), `select address from monitored_accounts`)
+func (m *Manager) loadAllAccounts(ctx context.Context) error {
+	rows, err := m.db.Query(ctx, `select address from monitored_accounts`)
 	if err != nil {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}

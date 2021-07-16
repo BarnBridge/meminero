@@ -43,26 +43,26 @@ func New(raw *types.RawData, state *state.Manager) (*Processor, error) {
 	return p, nil
 }
 
-func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
-	tx, err := db.BeginTx(context.Background(), pgx.TxOptions{})
+func (p *Processor) rollbackAll(ctx context.Context,db *pgxpool.Pool) error {
+	tx, err := db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
-	_, err = tx.Exec(context.Background(), "delete from blocks where number = $1", p.Block.Number)
+	_, err = tx.Exec(ctx, "delete from blocks where number = $1", p.Block.Number)
 	if err != nil {
 		return errors.Wrap(err, "could not remove block from database")
 	}
 
 	for _, s := range p.storables {
-		err = s.Rollback(tx)
+		err = s.Rollback(ctx,tx)
 		if err != nil {
 			tx.Rollback(context.Background())
 			return err
 		}
 	}
 
-	err = tx.Commit(context.Background())
+	err = tx.Commit(ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not commit rollback transaction")
 	}
@@ -87,7 +87,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 	if config.Store.Feature.ReplaceBlocks {
 		p.logger.WithField("block", p.Block.Number).Warn("removing any old versions of block from db because feature flag is enabled")
 
-		err = p.rollbackAll(db)
+		err = p.rollbackAll(ctx,db)
 		if err != nil {
 			return err
 		}
@@ -100,7 +100,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 		if reorged {
 			p.logger.WithField("block", p.Block.Number).Warn("detected reorged block")
 
-			err = p.rollbackAll(db)
+			err = p.rollbackAll(ctx,db)
 			if err != nil {
 				return err
 			}
@@ -116,7 +116,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 		s := s
 
 		wg.Go(func() error {
-			err = s.Execute()
+			err = s.Execute(ctx)
 			if err != nil {
 				return err
 			}
@@ -132,7 +132,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 
 	p.logger.WithField("duration", time.Since(start)).Info("done executing storables")
 
-	err = p.storeAll(db)
+	err = p.storeAll(ctx,db)
 	if err != nil {
 		return err
 	}
@@ -140,27 +140,27 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 	return nil
 }
 
-func (p *Processor) storeAll(db *pgxpool.Pool) error {
-	tx, err := db.BeginTx(context.Background(), pgx.TxOptions{})
+func (p *Processor) storeAll(ctx context.Context,db *pgxpool.Pool) error {
+	tx, err := db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
-	err = p.storeBlock(tx)
+	err = p.storeBlock(ctx,tx)
 	if err != nil {
-		tx.Rollback(context.Background())
+		tx.Rollback(ctx)
 		return err
 	}
 
 	for _, s := range p.storables {
-		err = s.SaveToDatabase(tx)
+		err = s.SaveToDatabase(ctx,tx)
 		if err != nil {
-			tx.Rollback(context.Background())
+			tx.Rollback(ctx)
 			return err
 		}
 	}
 
-	err = tx.Commit(context.Background())
+	err = tx.Commit(ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not save data to db")
 	}
@@ -168,14 +168,14 @@ func (p *Processor) storeAll(db *pgxpool.Pool) error {
 	return nil
 }
 
-func (p *Processor) storeBlock(tx pgx.Tx) error {
+func (p *Processor) storeBlock(ctx context.Context,tx pgx.Tx) error {
 	p.logger.Trace("storing block")
 	start := time.Now()
 	defer func() { p.logger.WithField("duration", time.Since(start)).Debug("done storing block") }()
 
 	b := p.Block
 
-	_, err := tx.Exec(context.Background(), "insert into blocks(number,block_hash,parent_block_hash,block_creation_time) values($1,$2,$3,$4)", b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
+	_, err := tx.Exec(ctx, "insert into blocks(number,block_hash,parent_block_hash,block_creation_time) values($1,$2,$3,$4)", b.Number, b.BlockHash, b.ParentBlockHash, b.BlockCreationTime)
 	if err != nil {
 		return err
 	}

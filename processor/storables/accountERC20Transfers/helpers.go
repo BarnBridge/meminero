@@ -14,7 +14,7 @@ const (
 	AmountOut = "OUT"
 )
 
-func (s *Storable) storeTransfers(tx pgx.Tx) error {
+func (s *Storable) storeTransfers(ctx context.Context,tx pgx.Tx) error {
 	if len(s.processed.transfers) == 0 {
 		return nil
 	}
@@ -49,7 +49,7 @@ func (s *Storable) storeTransfers(tx pgx.Tx) error {
 	}
 
 	_, err := tx.CopyFrom(
-		context.Background(),
+		ctx,
 		pgx.Identifier{"account_erc20_transfers"},
 		[]string{"token_address", "account", "counterparty", "amount", "tx_direction", "tx_hash", "tx_index", "log_index", "included_in_block", "block_timestamp"},
 		pgx.CopyFromSlice(len(rows), func(i int) ([]interface{}, error) {
