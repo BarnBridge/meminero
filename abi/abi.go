@@ -19,24 +19,24 @@ type store struct {
 
 var instance *store
 
-func Store() *store {
-	if instance == nil {
-		instance = &store{
-			abis: make(map[string]abi.ABI),
-			mu:   new(sync.Mutex),
-		}
+func Init() {
+	if instance != nil {
+		return
 	}
 
-	return instance
+	instance = &store{
+		abis: make(map[string]abi.ABI),
+		mu:   new(sync.Mutex),
+	}
 }
 
-func (s *store) Get(name string) (*abi.ABI, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+func Get(name string) (*abi.ABI, error) {
+	instance.mu.Lock()
+	defer instance.mu.Unlock()
 
 	name = strings.ToLower(name)
 
-	a, exists := s.abis[name]
+	a, exists := instance.abis[name]
 	if exists {
 		return &a, nil
 	}
@@ -59,7 +59,7 @@ func (s *store) Get(name string) (*abi.ABI, error) {
 				return nil, errors.Wrap(err, "could not decode abi")
 			}
 
-			s.abis[name] = a
+			instance.abis[name] = a
 
 			return &a, nil
 		}

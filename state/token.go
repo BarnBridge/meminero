@@ -15,18 +15,17 @@ func (m *Manager) loadAllTokens() error {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}
 
-	var tokens []types.Token
+	m.Tokens = make(map[string]types.Token)
 	for rows.Next() {
 		var t types.Token
 		err := rows.Scan(&t.Address, &t.Symbol, &t.Decimals, &t.AggregatorAddress, &t.PriceProviderType)
 		if err != nil {
 			return errors.Wrap(err, "could no scan monitored accounts from database")
 		}
-
-		tokens = append(tokens, t)
+		t.Address = utils.NormalizeAddress(t.Address)
+		t.AggregatorAddress = utils.NormalizeAddress(t.AggregatorAddress)
+		m.Tokens[t.Address] = t
 	}
-
-	m.Tokens = tokens
 
 	return nil
 }
@@ -35,10 +34,8 @@ func (m *Manager) CheckTokenExists(addr string) bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	for _, a := range m.Tokens {
-		if utils.NormalizeAddress(a.Address) == utils.NormalizeAddress(addr) {
-			return true
-		}
+	if _, exists := m.Tokens[utils.NormalizeAddress(addr)]; exists {
+		return true
 	}
 
 	return false
@@ -48,12 +45,12 @@ func (m *Manager) StoreToken(token types.Token) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	_, err := m.db.Exec(context.Background(), `insert into tokens (address,symbol,decimals,aggregator_address,price_provider_type) values ($1,$2,$3,$4,$5)`, token.Address, token.Symbol, token.Decimals, token.AggregatorAddress, token.PriceProviderType)
+	_, err := m.db.Exec(context.Background(), `insert into tokens (address,symbol,decimals,aggregator_address,price_provider_type) values ($1,$2,$3,$4,$5)`, utils.NormalizeAddress(token.Address), token.Symbol, token.Decimals, token.AggregatorAddress, token.PriceProviderType)
 	if err != nil {
 		return err
 	}
 
-	m.Tokens = append(m.Tokens, token)
+	m.Tokens[utils.NormalizeAddress(token.Address)] = token
 
 	return nil
 }

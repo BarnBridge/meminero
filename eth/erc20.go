@@ -12,7 +12,7 @@ import (
 )
 
 func GetERC20TokenFromChain(addr string) (*types.Token, error) {
-	a, err := abiStore.Store().Get("erc20")
+	a, err := abiStore.Get("erc20")
 	if err != nil {
 		return nil, errors.Wrap(err, "could not find abi")
 	}

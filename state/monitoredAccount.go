@@ -3,9 +3,8 @@ package state
 import (
 	"context"
 
-	"github.com/pkg/errors"
-
 	"github.com/barnbridge/smartbackend/utils"
+	"github.com/pkg/errors"
 )
 
 func (m *Manager) loadAllAccounts() error {
@@ -14,18 +13,16 @@ func (m *Manager) loadAllAccounts() error {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}
 
-	var accounts []string
+	m.monitoredAccounts = make(map[string]bool)
 	for rows.Next() {
 		var a string
 		err := rows.Scan(&a)
 		if err != nil {
 			return errors.Wrap(err, "could no scan monitored accounts from database")
 		}
-
-		accounts = append(accounts, utils.NormalizeAddress(a))
+		a = utils.NormalizeAddress(a)
+		m.monitoredAccounts[a] = true
 	}
-
-	m.monitoredAccounts = accounts
 
 	return nil
 }
@@ -33,11 +30,8 @@ func (m *Manager) loadAllAccounts() error {
 func (m *Manager) IsMonitoredAccount(addr string) bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-
-	for _, a := range m.monitoredAccounts {
-		if utils.NormalizeAddress(a) == utils.NormalizeAddress(addr) {
-			return true
-		}
+	if m.monitoredAccounts[utils.NormalizeAddress(addr)] {
+		return true
 	}
 
 	return false
