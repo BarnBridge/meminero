@@ -27,7 +27,7 @@ type Processor struct {
 	storables []types.Storable
 }
 
-func New(raw *types.RawData, state *state.Manager, ctx context.Context) (*Processor, error) {
+func New(ctx context.Context,raw *types.RawData, state *state.Manager) (*Processor, error) {
 	p := &Processor{
 		Raw:    raw,
 		state:  state,

@@ -25,7 +25,7 @@ type Storable struct {
 	}
 }
 
-func New(block *types.Block, state *state.Manager, ctx context.Context) *Storable {
+func New(ctx context.Context, block *types.Block, state *state.Manager) *Storable {
 	return &Storable{
 		block:  block,
 		state:  state,

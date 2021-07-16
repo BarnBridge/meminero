@@ -64,7 +64,7 @@ func (g *Glue) ScrapeSingleBlock(ctx context.Context, b int64) error {
 		log.Fatal(err)
 	}
 
-	p, err := processor.New(blk, g.state, ctx)
+	p, err := processor.New(ctx, blk, g.state)
 	if err != nil {
 		return errors.Wrap(err, "could not init processor")
 	}
