@@ -8,6 +8,8 @@ import (
 	"github.com/alethio/web3-go/validator"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/sirupsen/logrus"
 
 	"github.com/barnbridge/smartbackend/processor"
@@ -16,6 +18,18 @@ import (
 	"github.com/barnbridge/smartbackend/types"
 )
 
+var (
+	metricsScrapingDuration = promauto.NewHistogram(prometheus.HistogramOpts{
+		Name:    "scraper_scrape_duration_ms",
+		Help:    "How long did it take to scrape the data from the node",
+		Buckets: []float64{100, 500, 1000, 2000, 4000, 8000},
+	})
+	metricsProcessingDuration = promauto.NewHistogram(prometheus.HistogramOpts{
+		Name:    "scraper_processing_duration_ms",
+		Help:    "How long did it take to process the data",
+		Buckets: []float64{1, 10, 50, 100, 500, 1000, 2000, 4000},
+	})
+)
 type Glue struct {
 	state   *state.Manager
 	scraper *scraper.Scraper
@@ -58,6 +72,10 @@ func (g *Glue) ScrapeSingleBlock(ctx context.Context, b int64) error {
 
 	log.Debug("block is valid; processing")
 
+	metricsScrapingDuration.Observe(float64(time.Since(start) / time.Millisecond))
+
+	startProcessing := time.Now()
+
 	log.Debug("updating state cache")
 	err = g.state.RefreshCache(ctx)
 	if err != nil {
@@ -74,6 +92,7 @@ func (g *Glue) ScrapeSingleBlock(ctx context.Context, b int64) error {
 		return errors.Wrap(err, "could not store block")
 	}
 
+	metricsProcessingDuration.Observe(float64(time.Since(startProcessing) / time.Millisecond))
 	log.WithField("duration", time.Since(start)).Info("done processing block")
 
 	return nil

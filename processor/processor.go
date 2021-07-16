@@ -127,7 +127,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 
 	err = wg.Wait()
 	if err != nil {
-		return errors.Wrap(err, "got error executing sotrables")
+		return errors.Wrap(err, "got error executing storables")
 	}
 
 	p.logger.WithField("duration", time.Since(start)).Info("done executing storables")

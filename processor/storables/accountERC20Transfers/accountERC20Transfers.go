@@ -5,12 +5,22 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/sirupsen/logrus"
 
 	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/state"
 	"github.com/barnbridge/smartbackend/types"
+)
+
+var (
+	metricsTransfersProcessed = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "scraper_erc20_transfers_total",
+		Help: "Number of ERC20 transfers detected",
+	})
+
 )
 
 type Storable struct {
@@ -79,6 +89,7 @@ func (s *Storable) SaveToDatabase(ctx context.Context,tx pgx.Tx) error {
 		return errors.Wrap(err, "could not store erc20transfers")
 	}
 
+	metricsTransfersProcessed.Add(float64(len(s.processed.transfers)))
 	return nil
 }
 

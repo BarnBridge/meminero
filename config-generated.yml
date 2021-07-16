@@ -1,10 +1,3 @@
-api:
-    # Enable development cors for HTTP API
-    dev-cors: false
-    # Allowed host for HTTP API dev cors
-    dev-cors-host: ""
-    # HTTP API port
-    port: "3001"
 db:
     # Enable/disable the automatic migrations feature
     automigrate: true
@@ -12,6 +5,8 @@ db:
     dbname: name
     # Database host
     host: localhost
+    # Path to migrations directory
+    migrations-path: db/migrations
     # Database password (also allowed via PG_PASSWORD env)
     password: ""
     # Database port
@@ -28,6 +23,11 @@ eth:
         poll-interval: 15s
         # WS endpoint of JSON-RPC enabled Ethereum node (provide this only if you want to use websocket subscription for tracking best block)
         ws: ""
+ethtypes:
+    # Folder containing ABI JSONs
+    abi-folder: ethtypes/_source
+    # Path where to generate packages. Final folder represents package name
+    package-path: ethtypes
 feature:
     integrity:
         # Enable/disable the integrity checker
@@ -41,8 +41,9 @@ feature:
     replace-blocks: false
 # Display debug messages
 logging: '*=info'
-accountERC20Transfers:
-    enabled: true
+metrics:
+    # Port on which to serve Prometheus metrics
+    port: 9909
 redis:
     # The name of the list to be used for task management
     list: todo
@@ -50,4 +51,6 @@ redis:
     password: ""
     # Redis server URL
     server: localhost:6379
-
+storable:
+    accounterc20transfers:
+        enabled: true

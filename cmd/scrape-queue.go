@@ -2,9 +2,12 @@ package cmd
 
 import (
 	"context"
+	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 
 	"github.com/barnbridge/smartbackend/abi"
@@ -23,6 +26,18 @@ var scrapeQueueCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 		defer stop()
+
+		listenOn := fmt.Sprintf(":%d", config.Store.Metrics.Port)
+		sm := http.NewServeMux()
+		sm.Handle("/metrics", promhttp.Handler())
+		metricsSrv := &http.Server{Addr: listenOn, Handler: sm}
+		go func() {
+			log.Infof("serving metrics on %s", listenOn)
+			err := metricsSrv.ListenAndServe()
+			if err != nil && ctx.Err() == nil {
+				log.Fatal(err)
+			}
+		}()
 
 		abi.Init()
 
@@ -66,7 +81,11 @@ var scrapeQueueCmd = &cobra.Command{
 
 		go g.Run(ctx)
 
+		// TODO i think listening to ctx done like this does not leave time for threads to exit cleanly
 		<-ctx.Done()
+
+		// cleanup
+		_ = metricsSrv.Close()
 
 		log.Info("Work done. Goodbye!")
 	},
@@ -77,6 +96,7 @@ func init() {
 
 	addDBFlags(scrapeQueueCmd)
 	addRedisFlags(scrapeQueueCmd)
+	addMetricsFlags(scrapeQueueCmd)
 	addFeatureFlags(scrapeQueueCmd)
 	addETHFlags(scrapeQueueCmd)
 	addGenerateETHTypesFlags(scrapeQueueCmd)
