@@ -41,7 +41,7 @@ func (m *Manager) CheckTokenExists(addr string) bool {
 	return false
 }
 
-func (m *Manager) StoreToken(ctx context.Context,token types.Token) error {
+func (m *Manager) StoreToken(ctx context.Context, token types.Token) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 

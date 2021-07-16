@@ -27,11 +27,11 @@ type Processor struct {
 	storables []types.Storable
 }
 
-func New(raw *types.RawData, state *state.Manager,ctx context.Context) (*Processor, error) {
+func New(raw *types.RawData, state *state.Manager, ctx context.Context) (*Processor, error) {
 	p := &Processor{
 		Raw:    raw,
 		state:  state,
-		ctx: ctx,
+		ctx:    ctx,
 		logger: logrus.WithField("module", "processor"),
 	}
 
@@ -46,7 +46,7 @@ func New(raw *types.RawData, state *state.Manager,ctx context.Context) (*Process
 }
 
 func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
-	tx, err := db.BeginTx(p.ctx,pgx.TxOptions{})
+	tx, err := db.BeginTx(p.ctx, pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
@@ -75,7 +75,7 @@ func (p *Processor) rollbackAll(db *pgxpool.Pool) error {
 }
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
-func (p *Processor) Store( db *pgxpool.Pool) error {
+func (p *Processor) Store(db *pgxpool.Pool) error {
 	exists, err := p.checkBlockExists(p.ctx, db)
 	if err != nil {
 		return err

@@ -22,7 +22,6 @@ type Storable struct {
 
 	processed struct {
 		transfers []ethtypes.ERC20TransferEvent
-
 	}
 }
 
@@ -30,7 +29,7 @@ func New(block *types.Block, state *state.Manager, ctx context.Context) *Storabl
 	return &Storable{
 		block:  block,
 		state:  state,
-		ctx: ctx,
+		ctx:    ctx,
 		logger: logrus.WithField("module", "storable(account_erc20_transfers)"),
 	}
 }
@@ -58,7 +57,7 @@ func (s *Storable) Execute() error {
 						return err
 					}
 
-					err = s.state.StoreToken(s.ctx,*token)
+					err = s.state.StoreToken(s.ctx, *token)
 					if err != nil {
 						return err
 					}
