@@ -11,11 +11,6 @@ import (
 
 func CallContractFunction(a abi.ABI, addr string, methodName string, methodArgs []interface{}, result interface{}) func() error {
 	return func() error {
-		err := ensureInstance()
-		if err != nil {
-			return err
-		}
-
 		input, err := ABIGenerateInput(a, methodName, methodArgs...)
 		if err != nil {
 			return errors.Wrap(err, "could not generate input for contract call")
@@ -36,11 +31,6 @@ func CallContractFunction(a abi.ABI, addr string, methodName string, methodArgs 
 }
 
 func CallRawAtBlock(address string, fnc string, block int64) (string, error) {
-	err := ensureInstance()
-	if err != nil {
-		return "", err
-	}
-
 	var result string
 
 	obj := make(map[string]string)
@@ -48,7 +38,7 @@ func CallRawAtBlock(address string, fnc string, block int64) (string, error) {
 	obj["data"] = fnc
 	obj["gas"] = ethrpc.DefaultCallGas
 
-	err = instance.ethrpc.MakeRequest(&result, ethrpc.ETHCall, obj, fmt.Sprintf("0x%x", block))
+	err := instance.ethrpc.MakeRequest(&result, ethrpc.ETHCall, obj, fmt.Sprintf("0x%x", block))
 	if err != nil {
 		return "", errors.Wrapf(err, "could not make rpc request (%s.%s)", address, fnc)
 	}
@@ -61,11 +51,6 @@ func CallRawAtBlock(address string, fnc string, block int64) (string, error) {
 }
 
 func CallRaw(address string, fnc string) (string, error) {
-	err := ensureInstance()
-	if err != nil {
-		return "", err
-	}
-
 	var result string
 
 	obj := make(map[string]string)
@@ -73,7 +58,7 @@ func CallRaw(address string, fnc string) (string, error) {
 	obj["data"] = fnc
 	obj["gas"] = ethrpc.DefaultCallGas
 
-	err = instance.ethrpc.MakeRequest(&result, ethrpc.ETHCall, obj)
+	err := instance.ethrpc.MakeRequest(&result, ethrpc.ETHCall, obj)
 	if err != nil {
 		return "", errors.Wrapf(err, "could not make rpc request (%s.%s)", address, fnc)
 	}

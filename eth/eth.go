@@ -16,7 +16,7 @@ type conn struct {
 
 var instance *conn
 
-func ensureInstance() error {
+func Init() error {
 	if instance == nil {
 		batchLoader, err := httprpc.NewBatchLoader(0, 4*time.Millisecond)
 		if err != nil {

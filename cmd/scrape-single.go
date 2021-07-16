@@ -6,7 +6,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/barnbridge/smartbackend/abi"
 	"github.com/barnbridge/smartbackend/db"
+	"github.com/barnbridge/smartbackend/eth"
 
 	"github.com/barnbridge/smartbackend/glue"
 	"github.com/barnbridge/smartbackend/state"
@@ -20,6 +22,13 @@ var scrapeSingleCmd = &cobra.Command{
 
 		if block == -1 {
 			log.Fatal("No block was specified")
+		}
+
+		abi.Init()
+
+		err := eth.Init()
+		if err != nil {
+			log.Fatal(err)
 		}
 
 		database, err := db.New()

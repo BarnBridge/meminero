@@ -7,8 +7,10 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/barnbridge/smartbackend/abi"
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/db"
+	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/glue"
 	"github.com/barnbridge/smartbackend/integrity"
 	"github.com/barnbridge/smartbackend/state"
@@ -21,6 +23,13 @@ var scrapeQueueCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 		defer stop()
+
+		abi.Init()
+
+		err := eth.Init()
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		db, err := db.New()
 		if err != nil {
