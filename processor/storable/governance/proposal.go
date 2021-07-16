@@ -50,6 +50,20 @@ func (g *GovStorable) handleProposals(logs []web3types.Log, tx pgx.Tx,governance
 		return err
 	}
 
+	actionsJsonStringArray := []map[string]types.JSONStringArray
+	for i,p := range proposals {
+		a := actions[i]
+		var targets, values, signatures, calldatas types.JSONStringArray
+
+		for i := 0; i < len(a.Targets); i++ {
+			targets = append(targets, a.Targets[i].String())
+			values = append(values, a.Values[i].String())
+			signatures = append(signatures, a.Signatures[i])
+			calldatas = append(calldatas, hex.EncodeToString(a.Calldatas[i]))
+		}
+		actionsJsonStringArray["targets"]
+	}
+
 	/*_, err = tx.CopyFrom(
 		context.Background(),
 		pgx.Identifier{"proposals"},

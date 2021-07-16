@@ -9,8 +9,7 @@ create function yield_farming.yf_sum_actions_by_token(a_type staking_action_type
 as
 $$
 begin
-    return query select sum(yf.amount),
-                        date_trunc(scale, to_timestamp(block_timestamp)) as wk
+    return query select sum(yf.amount), date_trunc(scale, to_timestamp(block_timestamp)) as wk
                  from yield_farming.transactions yf
                  where action_type = a_type
                    and token_address = _token_address

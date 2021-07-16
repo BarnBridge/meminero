@@ -1,14 +1,18 @@
 package db
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
+	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/log/logrusadapter"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	shopspring "github.com/jackc/pgtype/ext/shopspring-numeric"
 
 	"github.com/barnbridge/smartbackend/config"
 )
@@ -52,6 +56,15 @@ func (db *DB) pgxPoolConfig() (*pgxpool.Config, error) {
 
 	pgxCfg.ConnConfig.Logger = logrusadapter.NewLogger(logrus.WithField("module", "pgx"))
 	pgxCfg.ConnConfig.LogLevel = pgx.LogLevelWarn
+	pgxCfg.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
+		conn.ConnInfo().RegisterDataType(pgtype.DataType{
+			Value: &shopspring.Numeric{},
+			Name:  "numeric",
+			OID:   pgtype.NumericOID,
+		})
+
+		return nil
+	}
 
 	return pgxCfg, nil
 }

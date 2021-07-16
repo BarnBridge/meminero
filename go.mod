@@ -11,6 +11,7 @@ require (
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jackc/pgproto3/v2 v2.1.0 // indirect
+	github.com/jackc/pgtype v1.7.0 // indirect
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/jackc/tern v1.12.5
 	github.com/lacasian/ethwheels v0.0.3
