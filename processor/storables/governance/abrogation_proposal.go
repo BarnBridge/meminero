@@ -2,23 +2,22 @@ package governance
 
 import (
 	"context"
-	"fmt"
-	"sync"
 
-	web3types "github.com/alethio/web3-go/types"
+	abiStore "github.com/barnbridge/smartbackend/abi"
+	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/utils"
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 )
 
-func (g *GovStorable) handleAbrogationProposal(logs []web3types.Log, tx pgx.Tx,governanceDecoder *ethtypes.GovernanceDecoder) error {
+func (g *GovStorable) handleAbrogationProposal(ctx context.Context,logs []gethtypes.Log) error {
 	var aps []ethtypes.GovernanceAbrogationProposalStartedEvent
 
 	for _, log := range logs {
-		if governanceDecoder.IsGovernanceAbrogationProposalStartedEvent(log) {
-			cp ,err := governanceDecoder.GovernanceAbrogationProposalStartedEvent(log)
+		if ethtypes.Governance.IsGovernanceAbrogationProposalStartedEvent(&log) {
+			cp ,err :=  ethtypes.Governance.GovernanceAbrogationProposalStartedEvent(log)
 			if err != nil {
 				return errors.Wrap(err,"could not decode abrogation proposal started event")
 			}
@@ -31,27 +30,11 @@ func (g *GovStorable) handleAbrogationProposal(logs []web3types.Log, tx pgx.Tx,g
 		return nil
 	}
 
-	var wg = &errgroup.Group{}
-	var mu = &sync.Mutex{}
-	apsDescription := make(map[string]string)
-	g.getAPDescriptions(wg,mu,aps,apsDescription)
-	err := wg.Wait()
+	err := g.getAPDescriptionsFromChain(ctx,aps)
 	if err != nil {
 		return err
 	}
 
-
-	_, err = tx.CopyFrom(
-		context.Background(),
-		pgx.Identifier{"abrogation_proposals"},
-		[]string{"proposal_id", "creator","create_time","description","tx_hash","tx_index","log_index","included_in_block"},
-		pgx.CopyFromSlice(len(aps), func(i int) ([]interface{}, error) {
-			return []interface{}{aps[i].ProposalId.String(),aps[i].Caller.String(), g.Preprocessed.BlockTimestamp,apsDescription[aps[i].ProposalId.String()],aps[i].Raw.BlockHash.String(),aps[i].Raw.TxIndex,aps[i].Raw.TxIndex,g.Preprocessed.BlockNumber}, nil
-		}),
-	)
-	if err != nil {
-		return errors.Wrap(err,"could not store abrogration_proposals")
-	}
 	//var jobs []*notifications.Job
 /*	for _, cp := range aps {
 		_, err = stmt.Exec(cp.ProposalID.Int64(), cp.Caller.String(), cp.CreateTime, cp.Description, cp.TransactionHash, cp.TransactionIndex, cp.LogIndex, cp.LoggedBy, g.Preprocessed.BlockNumber)
@@ -85,27 +68,52 @@ func (g *GovStorable) handleAbrogationProposal(logs []web3types.Log, tx pgx.Tx,g
 	return nil
 }
 
-func (g *GovStorable) getAPDescriptions(wg *errgroup.Group,  mu *sync.Mutex,aps []ethtypes.GovernanceAbrogationProposalStartedEvent, results map[string]string) {
+func (g *GovStorable) getAPDescriptionsFromChain(ctx context.Context,aps []ethtypes.GovernanceAbrogationProposalStartedEvent) error{
 	for _, ap :=range aps {
 		ap := ap
-		wg.Go(func() error {
-			input, err := utils.ABIGenerateInput(g.govAbi, "abrogationProposals", ap.ProposalId)
-			if err != nil {
-				return err
-			}
-			data, err := utils.CallAtBlock(g.ethRPC,g.config.GovernanceAddress , input, g.Preprocessed.BlockNumber)
-			if err != nil {
-				return  errors.Wrap(err, fmt.Sprintf("could not call %g.%g", g.config.GovernanceAddress, "abrogationProposals"))
-			}
+		a, err := abiStore.Get("erc20")
+		if err != nil {
+			return  errors.Wrap(err, "could not find abi")
+		}
+		var description string
 
-			decoded, err := utils.DecodeFunctionOutput(g.govAbi, "abrogationProposals", data)
-			if err != nil {
-				return  errors.Wrap(err, fmt.Sprintf("could not decode output from %g.%g", g.config.GovernanceAddress, "abrogationProposals"))
-			}
-			mu.Lock()
-			results[ap.ProposalId.String()] = decoded["description"].(string)
-			mu.Unlock()
-			return nil
+		wg, _ := errgroup.WithContext(ctx)
+
+		wg.Go(eth.CallContractFunction(*a,g.config.GovernanceAddress,"abrogationProposals", []interface{}{ap.ProposalId},&description))
+		err = wg.Wait()
+		if err != nil {
+			return errors.Wrap(err, "could not get token info")
+		}
+		g.Processed.abrProposalsDescription[ap.ProposalId.String()] = description
+	}
+	return nil
+}
+
+func (g *GovStorable) storeAbrogrationProposals(ctx context.Context,tx pgx.Tx) error {
+	var rows [][]interface{}
+	for _,ap := range g.Processed.abrProposals {
+		rows = append(rows, []interface{}{
+			ap.ProposalId.Int64(),
+			ap.Caller.String(),
+			g.block.BlockCreationTime,
+			g.Processed.abrProposalsDescription[ap.ProposalId.String()],
+			ap.Raw.TxHash.String(),
+			ap.Raw.TxIndex,
+			ap.Raw.Index,
+			ap.Raw.BlockNumber,
 		})
 	}
+	_, err := tx.CopyFrom(
+		ctx,
+		pgx.Identifier{"abrogation_proposals"},
+		[]string{"proposal_id", "creator","create_time","description","tx_hash","tx_index","log_index","included_in_block"},
+		pgx.CopyFromSlice(len(g.Processed.abrProposals), func(i int) ([]interface{}, error) {
+			return []interface{}{rows}, nil
+		}),
+	)
+	if err != nil {
+		return errors.Wrap(err,"could not store abrogration_proposals")
+	}
+
+	return nil
 }

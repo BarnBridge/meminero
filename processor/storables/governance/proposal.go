@@ -3,14 +3,12 @@ package governance
 import (
 	"context"
 	"encoding/hex"
-	"fmt"
-	"math/big"
-	"sync"
 
+	abiStore "github.com/barnbridge/smartbackend/abi"
+	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/types"
 	"github.com/barnbridge/smartbackend/utils"
-	"github.com/ethereum/go-ethereum/common"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 
@@ -18,11 +16,11 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func (g *GovStorable) handleProposals(logs []gethtypes.Log,governanceDecoder *ethtypes.GovernanceDecoder) error {
+func (g *GovStorable) handleProposals(ctx context.Context,logs []gethtypes.Log) error {
 	var createdProposals []ethtypes.GovernanceProposalCreatedEvent
 	for _, log := range logs {
-		if 	governanceDecoder.IsGovernanceProposalCreatedEvent(&log) {
-			p ,err :=governanceDecoder.GovernanceProposalCreatedEvent(log)
+		if 	ethtypes.Governance.IsGovernanceProposalCreatedEvent(&log) {
+			p ,err :=ethtypes.Governance.GovernanceProposalCreatedEvent(log)
 			if err != nil {
 				return errors.Wrap(err,"could not decode proposal created event")
 			}
@@ -36,18 +34,10 @@ func (g *GovStorable) handleProposals(logs []gethtypes.Log,governanceDecoder *et
 		return nil
 	}
 
-	var wg = &errgroup.Group{}
-	var mu = &sync.Mutex{}
-	var proposals []Proposal
-	var actions []ProposalActions
-	g.getProposalsDetails(wg,mu,createdProposals,proposals,actions)
-	err := wg.Wait()
+	err := g.getProposalsDetailsFromChain(ctx,createdProposals)
 	if err != nil {
 		return err
 	}
-
-
-
 
 
 	//var jobs []*notifications.Job
@@ -113,76 +103,30 @@ func (g *GovStorable) handleProposals(logs []gethtypes.Log,governanceDecoder *et
 	return nil
 }
 
-func (g *GovStorable) getProposalsDetails(wg *errgroup.Group, mu *sync.Mutex,proposals []ethtypes.GovernanceProposalCreatedEvent, results []Proposal,actions []ProposalActions) {
-	for _, p := range proposals {
+func (g *GovStorable) getProposalsDetailsFromChain(ctx context.Context, createdEvents []ethtypes.GovernanceProposalCreatedEvent) error {
+	for _, p := range createdEvents {
 		p := p
-		wg.Go(func() error {
-			input, err := utils.ABIGenerateInput(g.govAbi, "proposals",p.ProposalId )
-			if err != nil {
-				return err
-			}
-			data, err := utils.CallAtBlock(g.ethRPC,g.config.GovernanceAddress , input, g.Preprocessed.BlockNumber)
-			if err != nil {
-				return  errors.Wrap(err, fmt.Sprintf("could not call %g.%g", g.config.GovernanceAddress, "proposals"))
-			}
+		a,err := abiStore.Get("governance")
+		if err != nil {
+			return errors.Wrap(err,"could not find governance abi")
+		}
+		wg, _ := errgroup.WithContext(ctx)
+		var proposal Proposal
+		var proposalAction ProposalActions
+		wg.Go(eth.CallContractFunction(*a,g.config.GovernanceAddress,"proposals", []interface{}{p.ProposalId},&proposal))
+		wg.Go(eth.CallContractFunction(*a,g.config.GovernanceAddress,"getActions", []interface{}{p.ProposalId},&proposalAction))
+		err = wg.Wait()
+		if err != nil {
+			return errors.Wrap(err,"could not get proposals info")
+		}
+		g.Processed.proposals = append(g.Processed.proposals, proposal)
+		g.Processed.proposalsActions = append(g.Processed.proposalsActions, proposalAction)
 
-			decoded, err := utils.DecodeFunctionOutput(g.govAbi, "proposals", data)
-			if err != nil {
-				return  errors.Wrap(err, fmt.Sprintf("could not decode output from %g.%g", g.config.GovernanceAddress, "proposals"))
-			}
-
-			mu.Lock()
-			results = append(results, Proposal{
-				Id: decoded["id"].(*big.Int),
-				Proposer: decoded["proposer"].(common.Address),
-				Description: decoded["description"].(string),
-				Title: decoded["title"].(string),
-				CreateTime: decoded["createTime"].(*big.Int),
-				Eta: decoded["eta"].(*big.Int),
-				ForVotes: decoded["forVotes"].(*big.Int),
-				AgainstVotes: decoded["againstVotes"].(*big.Int),
-				Canceled: decoded["canceled"].(bool),
-				Executed: decoded["executed"].(bool),
-				ProposalParameters: ProposalParameters{
-					WarmUpDuration: decoded["warmUpDuration"].(*big.Int),
-					ActiveDuration: decoded["activeDuration"].(*big.Int),
-					QueueDuration: decoded["queueDuration"].(*big.Int),
-					GracePeriodDuration: decoded["gracePeriodDuration"].(*big.Int),
-					AcceptanceThreshold: decoded["acceptanceThreshold"].(*big.Int),
-					MinQuorum: decoded["minQuorum"].(*big.Int),
-				}})
-			mu.Unlock()
-			return nil
-		})
-		wg.Go(func() error {
-
-			input, err := utils.ABIGenerateInput(g.govAbi, "getActions",p.ProposalId )
-			if err != nil {
-				return err
-			}
-			data, err := utils.CallAtBlock(g.ethRPC,g.config.GovernanceAddress , input, g.Preprocessed.BlockNumber)
-			if err != nil {
-				return  errors.Wrap(err, fmt.Sprintf("could not call %g.%g", g.config.GovernanceAddress, "getActions"))
-			}
-
-			decoded, err := utils.DecodeFunctionOutput(g.govAbi, "proposals", data)
-			if err != nil {
-				return  errors.Wrap(err, fmt.Sprintf("could not decode output from %g.%g", g.config.GovernanceAddress, "getActions"))
-			}
-			mu.Lock()
-			actions = append(actions, ProposalActions{
-				Targets: decoded["targets"].([]common.Address),
-				Values: decoded["values"].([]*big.Int),
-				Signatures: decoded["signatures"].([]string),
-				Calldatas: decoded["calldatas"].([][]byte),
-			})
-			mu.Unlock()
-			return nil
-		})
 	}
+	return nil
 }
 
-func (g *GovStorable) storeProposals(tx pgx.Tx) error {
+func (g *GovStorable) storeProposals(ctx context.Context,tx pgx.Tx) error {
 	var rows [][]interface{}
 	for i,p := range g.Processed.proposals {
 
@@ -210,13 +154,13 @@ func (g *GovStorable) storeProposals(tx pgx.Tx) error {
 			p.GracePeriodDuration.Int64(),
 			p.AcceptanceThreshold.Int64(),
 			p.MinQuorum.Int64(),
-			g.Preprocessed.BlockTimestamp,
-			g.Preprocessed.BlockNumber,
+			g.block.BlockCreationTime,
+			g.block.Number,
 		})
 	}
 
 	_, err := tx.CopyFrom(
-		context.Background(),
+		ctx,
 		pgx.Identifier{"proposals"},
 		[]string{"proposal_id", "proposer","description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"},
 		pgx.CopyFromSlice(len(g.Processed.proposals), func(i int) ([]interface{}, error) {

@@ -1,7 +1,7 @@
 package governance
 
 import (
-	"database/sql"
+	"context"
 	"time"
 
 	"github.com/alethio/web3-go/ethrpc"
@@ -12,6 +12,8 @@ import (
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -24,14 +26,11 @@ type GovStorable struct {
 	ethRPC *ethrpc.ETH
 	logger              *logrus.Entry
 
-	Preprocessed struct {
-		BlockTimestamp int64
-		BlockNumber    int64
-	}
 	Processed struct {
 		proposals []Proposal
 		proposalsActions []ProposalActions
 		abrProposals []ethtypes.GovernanceAbrogationProposalStartedEvent
+		abrProposalsDescription map[string]string
 	}
 }
 
@@ -45,7 +44,7 @@ func New(config Config, block *types.Block, govAbi abi.ABI,  ethConn *ethclient.
 	}
 }
 
-func (g GovStorable) Execute(tx *sql.Tx) error {
+func (g GovStorable) Execute(ctx context.Context) error {
 	g.logger.Trace("executing")
 	start := time.Now()
 	defer func() {
@@ -53,7 +52,6 @@ func (g GovStorable) Execute(tx *sql.Tx) error {
 			Trace("done")
 	}()
 
-	governanceDecoder :=ethtypes.NewGovernanceDecoder()
 	var govLogs []gethtypes.Log
 	for _, data := range g.block.Txs {
 		for _, log := range data.LogEntries {
@@ -68,30 +66,55 @@ func (g GovStorable) Execute(tx *sql.Tx) error {
 		return nil
 	}
 
-	err := g.handleProposals(govLogs,governanceDecoder)
+	err := g.handleProposals(ctx,govLogs)
 	if err != nil {
 		return err
 	}
 
-	err = g.handleEvents(govLogs, tx)
+
+	err = g.handleAbrogationProposal(ctx,govLogs)
 	if err != nil {
 		return err
 	}
 
-	err = g.handleVotes(govLogs, tx)
+/*	err = g.handleEvents(govLogs, tx)
+	if err != nil {
+		return err
+	}*/
+
+/*	err = g.handleVotes(govLogs, tx)
 	if err != nil {
 		return err
 	}
 
-	err := g.handleAbrogationProposal(govLogs, tx,governanceDecoder)
-	if err != nil {
-		return err
-	}
 
 	err = g.handleAbrogationProposalVotes(govLogs, tx)
 	if err != nil {
 		return err
-	}
+	}*/
 
 	return nil
+}
+
+func (g *GovStorable) Rollback(ctx context.Context,tx pgx.Tx) error {
+	_, err := tx.Exec(ctx, `delete from account_erc20_transfers where included_in_block = $1`, g.block.Number)
+
+	return err
+}
+
+func (g *GovStorable) SaveToDatabase(ctx context.Context,tx pgx.Tx) error {
+	err := g.storeProposals(ctx,tx)
+	if err != nil {
+		return errors.Wrap(err, "could not store proposals")
+	}
+
+	err = g.storeAbrogrationProposals(ctx,tx)
+	if err != nil {
+		return errors.Wrap(err,"could not store abrogration proposals")
+	}
+	return nil
+}
+
+func (g *GovStorable) Result() interface{} {
+	return g.Processed
 }
