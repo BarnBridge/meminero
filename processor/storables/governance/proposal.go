@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 
 	abiStore "github.com/barnbridge/smartbackend/abi"
+	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/types"
@@ -113,8 +114,8 @@ func (g *GovStorable) getProposalsDetailsFromChain(ctx context.Context, createdE
 		wg, _ := errgroup.WithContext(ctx)
 		var proposal Proposal
 		var proposalAction ProposalActions
-		wg.Go(eth.CallContractFunction(*a,g.config.GovernanceAddress,"proposals", []interface{}{p.ProposalId},&proposal))
-		wg.Go(eth.CallContractFunction(*a,g.config.GovernanceAddress,"getActions", []interface{}{p.ProposalId},&proposalAction))
+		wg.Go(eth.CallContractFunction(*a,utils.NormalizeAddress(config.Store.Storable.Governance.GovernanceAddress),"proposals", []interface{}{p.ProposalId},&proposal))
+		wg.Go(eth.CallContractFunction(*a,utils.NormalizeAddress(config.Store.Storable.Governance.GovernanceAddress),"getActions", []interface{}{p.ProposalId},&proposalAction))
 		err = wg.Wait()
 		if err != nil {
 			return errors.Wrap(err,"could not get proposals info")

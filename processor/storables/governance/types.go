@@ -34,3 +34,17 @@ type ProposalActions struct {
 	Signatures []string
 	Calldatas  [][]byte
 }
+
+type ProposalEvent struct {
+	BaseLog
+	ProposalID *big.Int
+	Caller     common.Address
+	Eta        *big.Int
+	EventType ActionType
+}
+
+type BaseLog struct {
+	TransactionHash  string
+	TransactionIndex int64
+	LogIndex         int64
+}

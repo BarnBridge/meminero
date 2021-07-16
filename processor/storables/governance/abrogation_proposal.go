@@ -4,8 +4,10 @@ import (
 	"context"
 
 	abiStore "github.com/barnbridge/smartbackend/abi"
+	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -79,7 +81,7 @@ func (g *GovStorable) getAPDescriptionsFromChain(ctx context.Context,aps []ethty
 
 		wg, _ := errgroup.WithContext(ctx)
 
-		wg.Go(eth.CallContractFunction(*a,g.config.GovernanceAddress,"abrogationProposals", []interface{}{ap.ProposalId},&description))
+		wg.Go(eth.CallContractFunction(*a,utils.NormalizeAddress(config.Store.Storable.Governance.GovernanceAddress),"abrogationProposals", []interface{}{ap.ProposalId},&description))
 		err = wg.Wait()
 		if err != nil {
 			return errors.Wrap(err, "could not get token info")
