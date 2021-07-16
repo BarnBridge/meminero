@@ -16,7 +16,7 @@ type Tx struct {
 	MsgStatus         string
 	Creates           string
 	TxLogsBloom       ByteArray
-	BlockCreationTime DatetimeToJSONUnix
+	BlockCreationTime int64
 
 	LogEntries LogEntries
 }

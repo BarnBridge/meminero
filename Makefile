@@ -3,8 +3,7 @@ VERSION := "$(shell git describe --abbrev=0 --tags 2> /dev/null || echo 'v0.0.0'
 build:
 	go build -ldflags "-X main.buildVersion=$(VERSION)"
 
-run:
-	go run main.go
-
-reset:
-	go run main.go reset --force
+reset: build
+	./smartbackend reset --force
+	./smartbackend migrate
+	./smartbackend sync-accounts --file ./accounts.kovan.json

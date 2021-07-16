@@ -54,4 +54,6 @@ func init() {
 	addRedisFlags(generateConfigCmd)
 	addFeatureFlags(generateConfigCmd)
 	addETHFlags(generateConfigCmd)
+	addGenerateETHTypesFlags(generateConfigCmd)
+	addStorableAccountERC20TransfersFlags(generateConfigCmd)
 }

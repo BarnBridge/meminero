@@ -1,7 +1,9 @@
 package types
 
 import (
-	"database/sql"
+	"context"
+
+	"github.com/jackc/pgx/v4"
 )
 
 // Storable
@@ -9,8 +11,8 @@ import (
 // input: raw Ethereum data + a database transaction
 // output: processed/derived/enhanced data stored directly to the db
 type Storable interface {
-	Execute() error
-	Rollback(tx *sql.Tx) error
-	SaveToDatabase(tx *sql.Tx) error
+	Execute(ctx context.Context) error
+	Rollback(ctx context.Context,pgx pgx.Tx) error
+	SaveToDatabase(ctx context.Context,tx pgx.Tx) error
 	Result() interface{}
 }

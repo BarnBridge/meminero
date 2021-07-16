@@ -2,15 +2,14 @@ package glue
 
 import (
 	"context"
-	"database/sql"
 	"sync"
 	"time"
 
 	"github.com/alethio/web3-go/validator"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/processor"
 	"github.com/barnbridge/smartbackend/scraper"
 	"github.com/barnbridge/smartbackend/state"
@@ -20,13 +19,15 @@ import (
 type Glue struct {
 	state   *state.Manager
 	scraper *scraper.Scraper
-	db      *sql.DB
+	db      *pgxpool.Pool
 	logger  *logrus.Entry
 
 	stopMu sync.Mutex
 }
 
-func New(db *sql.DB, state *state.Manager) (*Glue, error) {
+func New(db *pgxpool.Pool, state *state.Manager) (*Glue, error) {
+	logger := logrus.WithField("module", "glue")
+
 	s, err := scraper.New()
 	if err != nil {
 		return nil, errors.Wrap(err, "could not init scraper")
@@ -36,11 +37,11 @@ func New(db *sql.DB, state *state.Manager) (*Glue, error) {
 		state:   state,
 		scraper: s,
 		db:      db,
-		logger:  logrus.WithField("module", "glue"),
+		logger:  logger,
 	}, nil
 }
 
-func (g *Glue) ScrapeSingleBlock(b int64) error {
+func (g *Glue) ScrapeSingleBlock(ctx context.Context, b int64) error {
 	log := g.logger.WithField("block", b)
 	log.Info("processing block")
 
@@ -57,12 +58,18 @@ func (g *Glue) ScrapeSingleBlock(b int64) error {
 
 	log.Debug("block is valid; processing")
 
-	p, err := processor.New(blk)
+	log.Debug("updating state cache")
+	err = g.state.RefreshCache(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	p, err := processor.New(blk, g.state)
 	if err != nil {
 		return errors.Wrap(err, "could not init processor")
 	}
 
-	err = p.Store(g.db)
+	err = p.Store(ctx,g.db)
 	if err != nil {
 		return errors.Wrap(err, "could not store block")
 	}
@@ -83,7 +90,7 @@ func (g *Glue) Run(ctx context.Context) {
 
 		g.stopMu.Lock()
 
-		err = g.ScrapeSingleBlock(b)
+		err = g.ScrapeSingleBlock(ctx, b)
 		if err != nil {
 			g.logger.Error(err)
 			g.mustRequeueTask(b)
@@ -106,9 +113,6 @@ func (g *Glue) validateBlock(log *logrus.Entry, blk *types.RawData) (bool, error
 	v := validator.New()
 	v.LoadBlock(blk.Block)
 	v.LoadReceipts(blk.Receipts)
-	if config.Store.Feature.Uncles.Enabled {
-		v.LoadUncles(blk.Uncles)
-	}
 
 	return v.Run()
 }

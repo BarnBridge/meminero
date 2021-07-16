@@ -1,60 +1,14 @@
 package state
 
 import (
-	"database/sql"
 	"time"
 
 	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
-	"github.com/pressly/goose"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 
 	"github.com/barnbridge/smartbackend/config"
 )
-
-func NewPostgres() (*sql.DB, error) {
-	var log = logrus.WithField("module", "state")
-
-	log.Info("connecting to postgres")
-	db, err := sql.Open("postgres", viper.GetString("db.connection-string"))
-	if err != nil {
-		return nil, errors.Wrap(err, "could not init db connection")
-	}
-
-	err = db.Ping()
-	if err != nil {
-		return nil, errors.Wrap(err, "could not ping database")
-	}
-
-	err = automigrate(db)
-	if err != nil {
-		return nil, err
-	}
-
-	log.Info("connected to postgres successfuly")
-
-	return db, nil
-}
-
-func automigrate(db *sql.DB) error {
-	var log = logrus.WithField("module", "state")
-
-	if !config.Store.Database.Automigrate {
-		return nil
-	}
-
-	log.Info("attempting automatic execution of migrations")
-
-	err := goose.Up(db, "/")
-	if err != nil && err != goose.ErrNoNextVersion {
-		return errors.Wrap(err, "could not execute migrations")
-	}
-
-	log.Info("database version is up to date")
-
-	return nil
-}
 
 func NewRedis() (*redis.Client, error) {
 	var log = logrus.WithField("module", "state")

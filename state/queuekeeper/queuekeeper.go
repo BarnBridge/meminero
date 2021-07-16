@@ -5,9 +5,9 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/lacasian/ethwheels/bestblock"
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/state"
+	"github.com/lacasian/ethwheels/bestblock"
 )
 
 type Keeper struct {
