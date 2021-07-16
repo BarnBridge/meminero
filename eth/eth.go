@@ -17,25 +17,27 @@ type conn struct {
 var instance *conn
 
 func Init() error {
-	if instance == nil {
-		batchLoader, err := httprpc.NewBatchLoader(0, 4*time.Millisecond)
-		if err != nil {
-			return errors.Wrap(err, "could not init batch loader")
-		}
+	if instance != nil {
+		return nil
+	}
 
-		provider, err := httprpc.NewWithLoader(config.Store.ETH.HTTP, batchLoader)
-		if err != nil {
-			return errors.Wrap(err, "could not init ethprc http provider")
-		}
+	batchLoader, err := httprpc.NewBatchLoader(0, 4*time.Millisecond)
+	if err != nil {
+		return errors.Wrap(err, "could not init batch loader")
+	}
 
-		eth, err := ethrpc.New(provider)
-		if err != nil {
-			return errors.Wrap(err, "could not create ethrpc")
-		}
+	provider, err := httprpc.NewWithLoader(config.Store.ETH.HTTP, batchLoader)
+	if err != nil {
+		return errors.Wrap(err, "could not init ethprc http provider")
+	}
 
-		instance = &conn{
-			ethrpc: eth,
-		}
+	eth, err := ethrpc.New(provider)
+	if err != nil {
+		return errors.Wrap(err, "could not create ethrpc")
+	}
+
+	instance = &conn{
+		ethrpc: eth,
 	}
 
 	return nil

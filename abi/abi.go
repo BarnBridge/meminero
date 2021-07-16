@@ -20,6 +20,10 @@ type store struct {
 var instance *store
 
 func Init() {
+	if instance != nil {
+		return
+	}
+
 	instance = &store{
 		abis: make(map[string]abi.ABI),
 		mu:   new(sync.Mutex),
