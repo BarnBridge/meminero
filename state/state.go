@@ -17,8 +17,8 @@ type Manager struct {
 	db     *pgxpool.Pool
 	mu     *sync.Mutex
 
-	Tokens            []types.Token
-	monitoredAccounts []string
+	Tokens            map[string]types.Token
+	monitoredAccounts map[string]bool
 }
 
 // NewManager instantiates a new task manager and also takes care of the redis connection management
