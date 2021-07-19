@@ -10,7 +10,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 
-	"github.com/barnbridge/smartbackend/abi"
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/db"
 	"github.com/barnbridge/smartbackend/eth"
@@ -38,8 +37,6 @@ var scrapeQueueCmd = &cobra.Command{
 				log.Fatal(err)
 			}
 		}()
-
-		abi.Init()
 
 		err := eth.Init()
 		if err != nil {
