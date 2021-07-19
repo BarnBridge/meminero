@@ -23,6 +23,10 @@ type redis struct {
 	Password string
 }
 
+type metrics struct {
+	Port int64
+}
+
 type api struct {
 	Port        string
 	DevCors     bool   `mapstructure:"dev-cors"`

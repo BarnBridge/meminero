@@ -24,6 +24,10 @@ func addRedisFlags(cmd *cobra.Command) {
 	cmd.Flags().String("redis.password", "", "Redis password")
 }
 
+func addMetricsFlags(cmd *cobra.Command) {
+	cmd.Flags().Int64("metrics.port", 9909, "Port on which to serve Prometheus metrics")
+}
+
 func addFeatureFlags(cmd *cobra.Command) {
 	cmd.Flags().Bool("feature.integrity.enabled", true, "Enable/disable the integrity checker")
 	cmd.Flags().Bool("feature.queuekeeper.enabled", true, "Enable/disable the queue keeper (watch new heads and store into the queue)")
