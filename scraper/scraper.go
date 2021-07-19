@@ -8,12 +8,21 @@ import (
 
 	"github.com/alethio/web3-go/ethrpc/provider/httprpc"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/types"
 
 	"github.com/alethio/web3-go/ethrpc"
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	metricsTaskDuration = promauto.NewSummaryVec(prometheus.SummaryOpts{
+		Name: "scraper_get_task_duration",
+		Help: "Duration of different tasks executed by the scraper",
+	}, []string{"task"})
 )
 
 type Scraper struct {
@@ -63,6 +72,7 @@ func (s *Scraper) Exec(block int64) (*types.RawData, error) {
 	}
 	b.Block = dataBlock
 	log.WithField("duration", time.Since(start)).Debug("got block")
+	recordDuration("block", start)
 
 	log.Debug("getting receipts")
 	start = time.Now()
@@ -95,8 +105,14 @@ func (s *Scraper) Exec(block int64) (*types.RawData, error) {
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
+	recordDuration("receipts", start)
 
 	log.Debug("done scraping block")
 
 	return b, nil
+}
+
+func recordDuration(task string, start time.Time) {
+	d := float64(time.Since(start) / time.Millisecond)
+	metricsTaskDuration.WithLabelValues(task).Observe(d)
 }
