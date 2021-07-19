@@ -86,19 +86,19 @@ func (g *GovStorable) getAPDescriptionsFromChain(ctx context.Context,aps []ethty
 		if err != nil {
 			return errors.Wrap(err, "could not get token info")
 		}
-		g.Processed.abrProposalsDescription[ap.ProposalId.String()] = description
+		g.Processed.abrogationProposalsDescription[ap.ProposalId.String()] = description
 	}
 	return nil
 }
 
 func (g *GovStorable) storeAbrogrationProposals(ctx context.Context,tx pgx.Tx) error {
 	var rows [][]interface{}
-	for _,ap := range g.Processed.abrProposals {
+	for _,ap := range g.Processed.abrogationProposals {
 		rows = append(rows, []interface{}{
 			ap.ProposalId.Int64(),
 			ap.Caller.String(),
 			g.block.BlockCreationTime,
-			g.Processed.abrProposalsDescription[ap.ProposalId.String()],
+			g.Processed.abrogationProposalsDescription[ap.ProposalId.String()],
 			ap.Raw.TxHash.String(),
 			ap.Raw.TxIndex,
 			ap.Raw.Index,
@@ -109,7 +109,7 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context,tx pgx.Tx) e
 		ctx,
 		pgx.Identifier{"abrogation_proposals"},
 		[]string{"proposal_id", "creator","create_time","description","tx_hash","tx_index","log_index","included_in_block"},
-		pgx.CopyFromSlice(len(g.Processed.abrProposals), func(i int) ([]interface{}, error) {
+		pgx.CopyFromSlice(len(g.Processed.abrogationProposals), func(i int) ([]interface{}, error) {
 			return []interface{}{rows}, nil
 		}),
 	)

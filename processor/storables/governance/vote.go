@@ -13,12 +13,17 @@ import (
 func (g *GovStorable) handleVotes(logs []gethtypes.Log) error {
 	for _, log := range logs {
 		if ethtypes.Governance.IsGovernanceVoteEvent(&log) {
-			var vote ethtypes.GovernanceVoteEvent
-
+			vote,err := ethtypes.Governance.GovernanceVoteEvent(log)
+			if err != nil {
+				return errors.Wrap(err,"could not decode proposal vote event")
+			}
 			g.Processed.votes = append(g.Processed.votes, vote)
 		}
 		if ethtypes.Governance.IsGovernanceVoteCanceledEvent(&log){
-			var vote ethtypes.GovernanceVoteCanceledEvent
+			vote,err := ethtypes.Governance.GovernanceVoteCanceledEvent(log)
+			if err != nil {
+				return errors.Wrap(err,"could not decode proposal vote canceled event")
+			}
 			g.Processed.canceledVotes = append(g.Processed.canceledVotes, vote)
 		}
 
@@ -52,7 +57,7 @@ func (g *GovStorable) storeProposalVotes(ctx context.Context,tx pgx.Tx) error {
 		ctx,
 		pgx.Identifier{"votes"},
 		[]string{"proposal_id", "user_id","support","power","block_timestamp","included_in_block","tx_hash","tx_index","log_index"},
-		pgx.CopyFromSlice(len(g.Processed.abrProposals), func(i int) ([]interface{}, error) {
+		pgx.CopyFromSlice(len(g.Processed.votes), func(i int) ([]interface{}, error) {
 			return []interface{}{rows}, nil
 		}),
 	)
@@ -84,7 +89,7 @@ func (g *GovStorable) storeProposalCanceledVotes(ctx context.Context,tx pgx.Tx) 
 		ctx,
 		pgx.Identifier{"votes_canceled"},
 		[]string{"proposal_id", "user_id","block_timestamp","included_in_block","tx_hash","tx_index","log_index"},
-		pgx.CopyFromSlice(len(g.Processed.abrProposals), func(i int) ([]interface{}, error) {
+		pgx.CopyFromSlice(len(g.Processed.canceledVotes), func(i int) ([]interface{}, error) {
 			return []interface{}{rows}, nil
 		}),
 	)

@@ -56,4 +56,5 @@ func init() {
 	addETHFlags(generateConfigCmd)
 	addGenerateETHTypesFlags(generateConfigCmd)
 	addStorableAccountERC20TransfersFlags(generateConfigCmd)
+	addStorableGovernanceFlags(generateConfigCmd)
 }

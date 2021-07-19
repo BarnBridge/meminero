@@ -45,3 +45,8 @@ func addGenerateETHTypesFlags(cmd *cobra.Command) {
 func addStorableAccountERC20TransfersFlags(cmd *cobra.Command) {
 	cmd.Flags().Bool("storable.accountERC20Transfers.enabled", true, "Enable/disable erc20 transfers scraping")
 }
+
+func addStorableGovernanceFlags(cmd *cobra.Command) {
+	cmd.Flags().Bool("storable.governance.enabled", true, "Enable/disable governance scraping")
+	cmd.Flags().String("storable.governance.address","","Address of governance contract")
+}
