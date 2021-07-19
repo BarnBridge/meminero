@@ -19,6 +19,14 @@ import (
 )
 
 var (
+	metricsBlocksProcessed = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "scraper_processed_blocks",
+		Help: "Number of blocks scraped",
+	})
+	metricsBlocksErrored = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "scraper_errored_blocks",
+		Help: "Number of blocks errored and re-queued",
+	})
 	metricsScrapingDuration = promauto.NewHistogram(prometheus.HistogramOpts{
 		Name:    "scraper_scrape_duration_ms",
 		Help:    "How long did it take to scrape the data from the node",
@@ -113,6 +121,9 @@ func (g *Glue) Run(ctx context.Context) {
 		if err != nil {
 			g.logger.Error(err)
 			g.mustRequeueTask(b)
+			metricsBlocksErrored.Inc()
+		} else {
+			metricsBlocksProcessed.Inc()
 		}
 
 		g.stopMu.Unlock()
