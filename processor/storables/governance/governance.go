@@ -26,6 +26,8 @@ type GovStorable struct {
 		abrProposals []ethtypes.GovernanceAbrogationProposalStartedEvent
 		abrProposalsDescription map[string]string
 		proposalEvents []ProposalEvent
+		votes []ethtypes.GovernanceVoteEvent
+		canceledVotes []ethtypes.GovernanceVoteCanceledEvent
 	}
 }
 
