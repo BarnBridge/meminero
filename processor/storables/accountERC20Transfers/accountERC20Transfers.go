@@ -20,7 +20,6 @@ var (
 		Name: "scraper_erc20_transfers_total",
 		Help: "Number of ERC20 transfers detected",
 	})
-
 )
 
 type Storable struct {
