@@ -8,4 +8,3 @@ const (
 	EXECUTED ActionType = "EXECUTED"
 	CANCELED ActionType = "CANCELED"
 )
-
