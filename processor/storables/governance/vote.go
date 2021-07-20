@@ -69,6 +69,7 @@ func (g *GovStorable) storeProposalVotes(ctx context.Context, tx pgx.Tx) error {
 
 func (g *GovStorable) storeProposalCanceledVotes(ctx context.Context, tx pgx.Tx) error {
 	if len(g.Processed.canceledVotes) == 0 {
+		g.logger.WithField("handler", "canceled votes").Debug("no events found")
 		return nil
 	}
 
