@@ -2,10 +2,10 @@ package notifications
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
-	"github.com/barnbridge/barnbridge-backend/utils"
+	"github.com/barnbridge/smartbackend/utils"
+	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 )
@@ -26,7 +26,7 @@ func NewDelegateStartJob(data *DelegateJobData) (*Job, error) {
 	return NewJob(DelegateStart, 0, data.IncludedInBlockNumber, data)
 }
 
-func (jd *DelegateJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *DelegateJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing delegate start form %s to %s", jd.From, jd.To)
 
 	err := saveNotification(

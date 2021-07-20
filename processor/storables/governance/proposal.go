@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/hex"
 	"sync"
-	"time"
 
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/eth"
@@ -14,7 +13,6 @@ import (
 	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
-	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 )
@@ -87,6 +85,7 @@ func (g *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
 	}
 
 	var rows [][]interface{}
+	var jobs []*notifications.Job
 	for i, p := range g.Processed.proposals {
 
 		var targets, values, signatures, calldatas types.JSONStringArray
@@ -116,52 +115,17 @@ func (g *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
 			g.block.BlockCreationTime,
 			g.block.Number,
 		})
-	}
-
-	_, err := tx.CopyFrom(
-		ctx,
-		pgx.Identifier{"governance", "proposals"},
-		[]string{"proposal_id", "proposer", "description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"},
-		pgx.CopyFromRows(rows),
-	)
-
-	return err
-}
-
-func (g *GovStorable) storeNotifications() error {
-	var jobs []*notifications.Job
-
-	stmt, err := tx.Prepare(pq.CopyIn("governance_proposals", "proposal_id", "proposer", "description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"))
-	if err != nil {
-		return errors.Wrap(err, "could not prepare statement")
-	}
-
-	for i, p := range proposals {
-		a := actions[i]
-		var targets, values, signatures, calldatas types.JSONStringArray
-
-		for i := 0; i < len(a.Targets); i++ {
-			targets = append(targets, a.Targets[i].String())
-			values = append(values, a.Values[i].String())
-			signatures = append(signatures, a.Signatures[i])
-			calldatas = append(calldatas, hex.EncodeToString(a.Calldatas[i]))
-		}
-
-		_, err = stmt.Exec(p.Id.Int64(), p.Proposer.String(), p.Description, p.Title, p.CreateTime.Int64(), targets, values, signatures, calldatas, p.WarmUpDuration.Int64(), p.ActiveDuration.Int64(), p.QueueDuration.Int64(), p.GracePeriodDuration.Int64(), p.AcceptanceThreshold.Int64(), p.MinQuorum.Int64(), g.Preprocessed.BlockNumber, g.Preprocessed.BlockTimestamp)
-		if err != nil {
-			return errors.Wrap(err, "could not execute statement")
-		}
 
 		jd := notifications.ProposalCreatedJobData{
 			Id:                    p.Id.Int64(),
 			Proposer:              p.Proposer.String(),
 			Title:                 p.Title,
 			CreateTime:            p.CreateTime.Int64(),
-			WarmUpDuration:        p.WarmUpDuration.Int64(),
-			ActiveDuration:        p.ActiveDuration.Int64(),
-			QueueDuration:         p.QueueDuration.Int64(),
-			GraceDuration:         p.GracePeriodDuration.Int64(),
-			IncludedInBlockNumber: g.Preprocessed.BlockNumber,
+			WarmUpDuration:        p.Parameters.WarmUpDuration.Int64(),
+			ActiveDuration:        p.Parameters.ActiveDuration.Int64(),
+			QueueDuration:         p.Parameters.QueueDuration.Int64(),
+			GraceDuration:         p.Parameters.GracePeriodDuration.Int64(),
+			IncludedInBlockNumber: g.block.Number,
 		}
 		j, err := notifications.NewProposalCreatedJob(&jd)
 		if err != nil {
@@ -171,21 +135,19 @@ func (g *GovStorable) storeNotifications() error {
 		jobs = append(jobs, j)
 	}
 
-	_, err = stmt.Exec()
-	if err != nil {
-		return err
-	}
+	_, err := tx.CopyFrom(
+		ctx,
+		pgx.Identifier{"governance", "proposals"},
+		[]string{"proposal_id", "proposer", "description", "title", "create_time", "targets", "values", "signatures", "calldatas", "warm_up_duration", "active_duration", "queue_duration", "grace_period_duration", "acceptance_threshold", "min_quorum", "included_in_block", "block_timestamp"},
+		pgx.CopyFromRows(rows),
+	)
 
-	err = stmt.Close()
-	if err != nil {
-		return errors.Wrap(err, "could not close statement")
-	}
-
-	if g.config.Notifications {
-		ctx, _ := context.WithTimeout(context.Background(), time.Second*2)
-		err = notifications.ExecuteJobsWithTx(ctx, tx, jobs...)
+	if config.Store.Storable.Governance.Notifications {
+		err := notifications.ExecuteJobsWithTx(ctx, tx, jobs...)
 		if err != nil && err != context.DeadlineExceeded {
 			return errors.Wrap(err, "could not execute notification jobs")
 		}
 	}
+
+	return err
 }

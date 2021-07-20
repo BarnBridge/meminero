@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/barnbridge/barnbridge-backend/utils"
+	"github.com/barnbridge/smartbackend/utils"
+	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 )
@@ -92,7 +93,7 @@ func NewProposalCreatedJob(data *ProposalCreatedJobData) (*Job, error) {
 	return NewJob(ProposalCreated, 0, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalCreatedJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalCreatedJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal created job for PID-%d", jd.Id)
 
 	// send created notification
@@ -128,7 +129,7 @@ func NewProposalActivatingJob(data *ProposalActivatingJobData) (*Job, error) {
 	return NewJob(ProposalActivating, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalActivatingJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalActivatingJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal activated job for PID-%d", jd.Id)
 
 	// check if proposal is still in warm up phase
@@ -174,7 +175,7 @@ func NewProposalVotingOpenJob(data *ProposalVotingOpenJobData) (*Job, error) {
 	return NewJob(ProposalVotingOpen, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalVotingOpenJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalVotingOpenJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal voting open job for PID-%d", jd.Id)
 
 	// check if proposal in active phase
@@ -220,7 +221,7 @@ func NewProposalVotingEndingJob(data *ProposalVotingEndingJobData) (*Job, error)
 	return NewJob(ProposalVotingEnding, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalVotingEndingJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalVotingEndingJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal voting ending job for PID-%d", jd.Id)
 
 	// check if proposal in active phase
@@ -266,7 +267,7 @@ func NewProposalOutcomeJob(data *ProposalOutcomeJobData) (*Job, error) {
 	return NewJob(ProposalOutcome, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalOutcomeJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalOutcomeJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal voting outcome job for PID-%d", jd.Id)
 
 	// check if proposal in active phase
@@ -368,7 +369,7 @@ func NewProposalGracePeriodJob(data *ProposalGracePeriodJobData) (*Job, error) {
 	return NewJob(ProposalGracePeriod, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalGracePeriodJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalGracePeriodJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal entering grace period job for PID-%d", jd.Id)
 
 	// check if proposal in grace period
@@ -414,7 +415,7 @@ func NewProposalExpiresJob(data *ProposalExpiresJobData) (*Job, error) {
 	return NewJob(ProposalExpires, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalExpiresJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalExpiresJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal expires soon job for PID-%d", jd.Id)
 
 	ps, err := proposalState(ctx, tx, jd.Id)
@@ -457,7 +458,7 @@ func NewProposalExpiredJob(data *ProposalExpiredJobData) (*Job, error) {
 	return NewJob(ProposalExpired, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalExpiredJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalExpiredJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal expired job for PID-%d", jd.Id)
 
 	ps, err := proposalState(ctx, tx, jd.Id)
@@ -493,7 +494,7 @@ func NewAbrogationProposalCreatedJob(data *AbrogationProposalCreatedJobData) (*J
 	return NewJob(AbrogationProposalCreated, 0, data.IncludedInBlockNumber, data)
 }
 
-func (jd *AbrogationProposalCreatedJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *AbrogationProposalCreatedJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing abrogation proposal created job for PID-%d", jd.Id)
 
 	// get the original proposal
@@ -549,7 +550,7 @@ func NewProposalAbrogatedJob(data *ProposalAbrogatedJobData) (*Job, error) {
 	return NewJob(ProposalAbrogated, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalAbrogatedJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalAbrogatedJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing abrogated proposal job for PID-%d", jd.Id)
 
 	ps, err := proposalState(ctx, tx, jd.Id)
@@ -587,7 +588,7 @@ func NewProposalCanceledJob(data *ProposalCanceledJobData) (*Job, error) {
 	return NewJob(ProposalCanceled, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalCanceledJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalCanceledJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal canceled for PID-%d", jd.Id)
 
 	ps, err := proposalState(ctx, tx, jd.Id)
@@ -623,7 +624,7 @@ func NewProposalQueuedJob(data *ProposalQueuedJobData) (*Job, error) {
 	return NewJob(ProposalQueued, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalQueuedJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalQueuedJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal queued for PID-%d", jd.Id)
 
 	ps, err := proposalState(ctx, tx, jd.Id)
@@ -684,7 +685,7 @@ func NewProposalQueueEndingJob(data *ProposalQueueEndingJobData) (*Job, error) {
 	return NewJob(ProposalQueueEnding, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalQueueEndingJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalQueueEndingJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal queue ending soon job for PID-%d", jd.Id)
 
 	// check if proposal in queued period
@@ -721,7 +722,7 @@ func NewProposalExecutedJob(data *ProposalExecutedJobData) (*Job, error) {
 	return NewJob(ProposalExecuted, x, data.IncludedInBlockNumber, data)
 }
 
-func (jd *ProposalExecutedJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *ProposalExecutedJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing proposal executed for PID-%d", jd.Id)
 
 	ps, err := proposalState(ctx, tx, jd.Id)
@@ -751,10 +752,10 @@ func (jd *ProposalExecutedJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx
 	return nil, nil
 }
 
-func proposalState(ctx context.Context, tx *sql.Tx, id int64) (string, error) {
+func proposalState(ctx context.Context, tx pgx.Tx, id int64) (string, error) {
 	var ps string
 	sel := `SELECT * FROM proposal_state($1);`
-	err := tx.QueryRowContext(ctx, sel, id).Scan(&ps)
+	err := tx.QueryRow(ctx, sel, id).Scan(&ps)
 	if err != nil && err != sql.ErrNoRows {
 		return ps, errors.Wrap(err, "get proposal state")
 	}
@@ -762,7 +763,7 @@ func proposalState(ctx context.Context, tx *sql.Tx, id int64) (string, error) {
 	return ps, nil
 }
 
-func proposalAsJobData(ctx context.Context, tx *sql.Tx, id int64) (*ProposalJobData, error) {
+func proposalAsJobData(ctx context.Context, tx pgx.Tx, id int64) (*ProposalJobData, error) {
 	var pjd ProposalJobData
 
 	query := `
@@ -775,11 +776,11 @@ func proposalAsJobData(ctx context.Context, tx *sql.Tx, id int64) (*ProposalJobD
 			   "queue_duration",
 			   "grace_period_duration",
 			   "included_in_block"
-		from "governance_proposals"
+		from governance.proposals
 		where "proposal_id" = $1;
 	`
 
-	err := tx.QueryRowContext(ctx, query, id).Scan(
+	err := tx.QueryRow(ctx, query, id).Scan(
 		&pjd.Id, &pjd.Proposer, &pjd.Title,
 		&pjd.CreateTime, &pjd.WarmUpDuration, &pjd.ActiveDuration, &pjd.QueueDuration, &pjd.GraceDuration,
 		&pjd.IncludedInBlockNumber,
@@ -796,26 +797,26 @@ func proposalAsJobData(ctx context.Context, tx *sql.Tx, id int64) (*ProposalJobD
 	return &pjd, nil
 }
 
-func votingStatus(ctx context.Context, tx *sql.Tx, id int64) (*votes, error) {
+func votingStatus(ctx context.Context, tx pgx.Tx, id int64) (*votes, error) {
 	var v votes
 	sel := `
 		select 
 			   ( select gp.min_quorum::numeric(78) / 100 * bond_staked_at_ts(to_timestamp(gp.create_time + gp.warm_up_duration))
-				 from governance_proposals as "gp"
+				 from governance.proposals as "gp"
 				 where gp.proposal_id = $1 )                            as "quorum_to_meet",
 			   coalesce(sum(case when "support" = true then "power" else 0 end), 0)  as "for_votes",
 			   coalesce(sum(case when "support" = false then "power" else 0 end), 0) as "against_votes"
-		from ( select "support", "power" from "proposal_votes"($1) ) 	as "pv";
+		from ( select "support", "power" from governance.proposal_votes($1) ) 	as "pv";
 	`
 
-	err := tx.QueryRowContext(ctx, sel, id).Scan(&v.QuorumToMeet, &v.For, &v.Against)
+	err := tx.QueryRow(ctx, sel, id).Scan(&v.QuorumToMeet, &v.For, &v.Against)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, errors.Wrap(err, "get voting power")
 	}
 	return &v, nil
 }
 
-func saveNotification(ctx context.Context, tx *sql.Tx, target string, typ string, starts int64, expires int64, msg string, metadata map[string]interface{}, block int64) error {
+func saveNotification(ctx context.Context, tx pgx.Tx, target string, typ string, starts int64, expires int64, msg string, metadata map[string]interface{}, block int64) error {
 	notif := NewNotification(
 		target,
 		typ,

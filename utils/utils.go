@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"math/big"
 	"strings"
+	"time"
+
+	"github.com/hako/durafmt"
+	"github.com/shopspring/decimal"
 )
 
 func CleanUpHex(s string) string {
@@ -59,4 +63,22 @@ func Trim0x(str string) string {
 func Topic2Address(topic string) string {
 	topic = Trim0x(topic)
 	return "0x" + strings.ToLower(topic[24:])
+}
+
+func HumanDuration(seconds int64) string {
+	return durafmt.Parse(time.Duration(seconds) * time.Second).String()
+}
+
+func PrettyPercent(d decimal.Decimal) string {
+	return d.Mul(decimal.NewFromInt(100)).StringFixed(2)
+}
+
+func PrettyBond(d decimal.Decimal) string {
+	tenPow18 := decimal.NewFromInt(10).Pow(decimal.NewFromInt(18))
+	return d.DivRound(tenPow18, 18).StringFixed(2)
+}
+
+func PrettyToken(d decimal.Decimal, precision int64) string {
+	tenPowPrecision := decimal.NewFromInt(10).Pow(decimal.NewFromInt(precision))
+	return d.DivRound(tenPowPrecision, int32(precision)).StringFixed(2)
 }

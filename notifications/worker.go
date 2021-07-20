@@ -5,6 +5,9 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/barnbridge/smartbackend/db"
+	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
@@ -12,7 +15,7 @@ import (
 var log = logrus.WithField("module", "notifs")
 
 type Worker struct {
-	db *sql.DB
+	db *pgxpool.Pool
 }
 
 func (w *Worker) Run(ctx context.Context) {
@@ -21,7 +24,7 @@ func (w *Worker) Run(ctx context.Context) {
 		for {
 			select {
 			case <-time.After(time.Second):
-				tx, err := w.db.BeginTx(ctx, nil)
+				tx, err := w.db.BeginTx(ctx, pgx.TxOptions{})
 				if err != nil {
 					log.Fatalf("start worker tx: %s", err)
 				}
@@ -41,7 +44,7 @@ func (w *Worker) Run(ctx context.Context) {
 					log.Fatalf("failed to cleanup jobs: %s", err)
 				}
 
-				err = tx.Commit()
+				err = tx.Commit(ctx)
 				if err != nil {
 					log.Fatalf("failed to commit jobs: %s", err)
 				}
@@ -54,7 +57,7 @@ func (w *Worker) Run(ctx context.Context) {
 	}()
 }
 
-func (w *Worker) jobs(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (w *Worker) jobs(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	var jobs []*Job
 	sel := `
 		SELECT
@@ -71,7 +74,7 @@ func (w *Worker) jobs(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
 		LIMIT 1000
 		;
 	`
-	rows, err := tx.QueryContext(ctx, sel)
+	rows, err := tx.Query(ctx, sel)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, errors.Wrap(err, "get jobs")
 	}
@@ -90,17 +93,13 @@ func (w *Worker) jobs(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
 
 func NewWorker(config Config) (*Worker, error) {
 	log.Info("connecting to postgres")
-	db, err := sql.Open("postgres", config.PostgresConnectionString)
-	if err != nil {
-		return nil, errors.Wrap(err, "open postgres connection")
-	}
 
-	err = db.Ping()
+	pool, err := db.New()
 	if err != nil {
 		return nil, errors.Wrap(err, "ping postgres connection")
 	}
 
 	return &Worker{
-		db: db,
+		db: pool.Connection(),
 	}, nil
 }

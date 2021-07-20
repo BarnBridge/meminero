@@ -2,6 +2,7 @@ package governance
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/barnbridge/smartbackend/config"
@@ -90,16 +91,20 @@ func (g *GovStorable) Execute(ctx context.Context) error {
 }
 
 func (g *GovStorable) Rollback(ctx context.Context, tx pgx.Tx) error {
-	_, err := tx.Exec(ctx, `
-		delete from governance.proposals where included_in_block = $1;
-		delete from governance.abrogation_proposals where included_in_block = $1;
-		delete from governance.proposal_events where included_in_block = $1;
-		delete from governance.votes where included_in_block = $1
-		delete from governance.votes_canceled where included_in_block = $1
-		delete from governance.abrogation_votes where included_in_block = $1
-		delete from governance.abrogation_votes_canceled where included_in_block = $1
-	`, g.block.Number)
+	b := &pgx.Batch{}
+	tables := [7]string{"proposals", "abrogation_proposals", "proposal_events", "votes", "votes_canceled", "abrogation_votes", "abrogation_votes_canceled"}
+	for _, t := range tables {
+		s := fmt.Sprintf(`delete from governance.%s where included_in_block = $1`, t)
+		b.Queue(s, g.block.Number)
+	}
 
+	br := tx.SendBatch(ctx, b)
+	_, err := br.Exec()
+	if err != nil {
+		return err
+	}
+
+	err = br.Close()
 	return err
 }
 

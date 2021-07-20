@@ -10,6 +10,7 @@ require (
 	github.com/go-playground/validator/v10 v10.5.0 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/google/uuid v1.2.0 // indirect
+	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jackc/pgproto3/v2 v2.1.0 // indirect
 	github.com/jackc/pgtype v1.7.0 // indirect

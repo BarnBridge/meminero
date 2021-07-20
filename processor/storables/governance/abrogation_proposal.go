@@ -3,10 +3,12 @@ package governance
 import (
 	"context"
 	"sync"
+	"time"
 
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/notifications"
 	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
@@ -35,36 +37,6 @@ func (g *GovStorable) handleAbrogationProposal(ctx context.Context, logs []getht
 	if err != nil {
 		return err
 	}
-
-	//var jobs []*notifications.Job
-	/*	for _, cp := range aps {
-			_, err = stmt.Exec(cp.ProposalID.Int64(), cp.Caller.String(), cp.CreateTime, cp.Description, cp.TransactionHash, cp.TransactionIndex, cp.LogIndex, cp.LoggedBy, g.Preprocessed.BlockNumber)
-			if err != nil {
-				return errors.Wrap(err, "could not execute statement")
-			}
-
-			jd := notifications.AbrogationProposalCreatedJobData{
-				Id:                    cp.ProposalID.Int64(),
-				Proposer:              cp.Caller.String(),
-				CreateTime:            cp.CreateTime,
-				IncludedInBlockNumber: g.Preprocessed.BlockNumber,
-			}
-			j, err := notifications.NewAbrogationProposalCreatedJob(&jd)
-			if err != nil {
-				return errors.Wrap(err, "could not create notification job")
-			}
-
-			jobs = append(jobs, j)
-		}
-
-
-		if g.config.Notifications {
-			ctx, _ := context.WithTimeout(context.Background(), time.Second*2)
-			err = notifications.ExecuteJobsWithTx(ctx, tx, jobs...)
-			if err != nil && err != context.DeadlineExceeded {
-				return errors.Wrap(err, "could not execute notification jobs")
-			}
-		}*/
 
 	return nil
 }
@@ -101,6 +73,7 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) 
 	}
 
 	var rows [][]interface{}
+	var jobs []*notifications.Job
 	for _, ap := range g.Processed.abrogationProposals {
 		rows = append(rows, []interface{}{
 			ap.ProposalId.Int64(),
@@ -112,6 +85,19 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) 
 			ap.Raw.Index,
 			ap.Raw.BlockNumber,
 		})
+
+		jd := notifications.AbrogationProposalCreatedJobData{
+			Id:                    ap.ProposalId.Int64(),
+			Proposer:              ap.Caller.String(),
+			CreateTime:            g.block.BlockCreationTime,
+			IncludedInBlockNumber: g.block.Number,
+		}
+		j, err := notifications.NewAbrogationProposalCreatedJob(&jd)
+		if err != nil {
+			return errors.Wrap(err, "could not create notification job")
+		}
+
+		jobs = append(jobs, j)
 	}
 
 	_, err := tx.CopyFrom(
@@ -122,6 +108,14 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) 
 	)
 	if err != nil {
 		return errors.Wrap(err, "could not store abrogration_proposals")
+	}
+
+	if config.Store.Storable.Governance.Notifications {
+		ctx, _ := context.WithTimeout(context.Background(), time.Second*2)
+		err = notifications.ExecuteJobsWithTx(ctx, tx, jobs...)
+		if err != nil && err != context.DeadlineExceeded {
+			return errors.Wrap(err, "could not execute notification jobs")
+		}
 	}
 
 	return nil

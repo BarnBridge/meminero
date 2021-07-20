@@ -1,13 +1,12 @@
 package notifications
 
+/*
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
-	"github.com/barnbridge/barnbridge-backend/state"
-	"github.com/barnbridge/barnbridge-backend/types"
-	"github.com/barnbridge/barnbridge-backend/utils"
+	"github.com/barnbridge/smartbackend/utils"
+	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 )
@@ -28,7 +27,7 @@ func NewSmartYieldTokenBoughtJob(data *SmartYieldJobData) (*Job, error) {
 	return NewJob(SmartYieldTokenBought, 0, data.IncludedInBlockNumber, data)
 }
 
-func (jd *SmartYieldJobData) ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error) {
+func (jd *SmartYieldJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	log.Tracef("executing token bought from pool %s by %s", jd.PoolAddress, jd.Buyer)
 
 	syPool := state.PoolBySmartYieldAddress(jd.PoolAddress)
@@ -62,3 +61,4 @@ func smartYieldMetadata(jd *SmartYieldJobData, pool *types.SYPool) map[string]in
 	m["syPoolAddress"] = jd.PoolAddress
 	return m
 }
+*/

@@ -2,15 +2,15 @@ package notifications
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 )
 
 type JobExecuter interface {
-	ExecuteWithTx(ctx context.Context, tx *sql.Tx) ([]*Job, error)
+	ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error)
 }
 
 type Job struct {
@@ -35,7 +35,7 @@ func NewJob(typ string, executeOn int64, block int64, data interface{}) (*Job, e
 	}, nil
 }
 
-func ExecuteJobsWithTx(ctx context.Context, tx *sql.Tx, jobs ...*Job) error {
+func ExecuteJobsWithTx(ctx context.Context, tx pgx.Tx, jobs ...*Job) error {
 	var nextJobs []*Job
 	for _, j := range jobs {
 		var je JobExecuter
@@ -75,10 +75,10 @@ func ExecuteJobsWithTx(ctx context.Context, tx *sql.Tx, jobs ...*Job) error {
 		case DelegateStart:
 			je = &DelegateJobData{}
 
-		// smart yield
+		/*// smart yield
 		case SmartYieldTokenBought:
 			je = &SmartYieldJobData{}
-
+		*/
 		default:
 			return errors.Errorf("unknown job type %s", j.JobType)
 		}
@@ -106,27 +106,29 @@ func ExecuteJobsWithTx(ctx context.Context, tx *sql.Tx, jobs ...*Job) error {
 	return nil
 }
 
-func ScheduleJobsWithTx(ctx context.Context, tx *sql.Tx, jobs ...*Job) error {
-	stmt, err := tx.PrepareContext(ctx, pq.CopyIn("notification_jobs", "type", "execute_on", "metadata", "included_in_block"))
-	if err != nil {
-		return errors.Wrap(err, "prepare notification job statement")
-	}
+func ScheduleJobsWithTx(ctx context.Context, tx pgx.Tx, jobs ...*Job) error {
+	var rows [][]interface{}
+
 	for _, j := range jobs {
-		_, err := stmt.ExecContext(ctx, j.JobType, j.ExecuteOn, j.JobData, j.IncludedInBlock)
-		if err != nil {
-			return errors.Wrap(err, "could not exec statement")
-		}
+		rows = append(rows, []interface{}{
+			j.JobType,
+			j.ExecuteOn,
+			j.JobData,
+			j.IncludedInBlock,
+		})
 	}
 
-	err = stmt.Close()
-	if err != nil {
-		return errors.Wrap(err, "could not close exec statement")
-	}
+	_, err := tx.CopyFrom(
+		ctx,
+		pgx.Identifier{"public", "notification_jobs"},
+		[]string{"type", "execute_on", "metadata", "included_in_block"},
+		pgx.CopyFromRows(rows),
+	)
 
-	return nil
+	return err
 }
 
-func DeleteJobsWithTx(ctx context.Context, tx *sql.Tx, jobs ...*Job) error {
+func DeleteJobsWithTx(ctx context.Context, tx pgx.Tx, jobs ...*Job) error {
 	var ids []int64
 	for _, j := range jobs {
 		ids = append(ids, j.Id)
@@ -134,19 +136,19 @@ func DeleteJobsWithTx(ctx context.Context, tx *sql.Tx, jobs ...*Job) error {
 
 	del := `
 		DELETE FROM
-			"notification_jobs"
+			public.notification_jobs
 		WHERE
 			id = ANY($1)
 		;
 	`
-	_, err := tx.ExecContext(ctx, del, pq.Array(ids))
+	_, err := tx.Exec(ctx, del, pq.Array(ids))
 	if err != nil {
 		return errors.Wrap(err, "delete notification jobs")
 	}
 	return nil
 }
 
-func SoftDeleteJobsWithTx(ctx context.Context, tx *sql.Tx, jobs ...*Job) error {
+func SoftDeleteJobsWithTx(ctx context.Context, tx pgx.Tx, jobs ...*Job) error {
 	var ids []int64
 	for _, j := range jobs {
 		ids = append(ids, j.Id)
@@ -161,7 +163,7 @@ func SoftDeleteJobsWithTx(ctx context.Context, tx *sql.Tx, jobs ...*Job) error {
 			id = ANY($1)
 		;
 	`
-	_, err := tx.ExecContext(ctx, del, pq.Array(ids))
+	_, err := tx.Exec(ctx, del, pq.Array(ids))
 	if err != nil {
 		return errors.Wrap(err, "delete notification jobs")
 	}

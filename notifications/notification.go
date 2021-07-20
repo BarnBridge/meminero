@@ -2,9 +2,9 @@ package notifications
 
 import (
 	"context"
-	"database/sql"
 
-	"github.com/barnbridge/barnbridge-backend/types"
+	"github.com/barnbridge/smartbackend/types"
+	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 )
 
@@ -18,15 +18,15 @@ type Notification struct {
 	IncludedInBlock  int64
 }
 
-func (n *Notification) ToDBWithTx(ctx context.Context, tx *sql.Tx) error {
+func (n *Notification) ToDBWithTx(ctx context.Context, tx pgx.Tx) error {
 	ins := `
 		INSERT INTO
-			"notifications" ("target", "type", "starts_on", "expires_on", "message", "metadata", "included_in_block")
+			public.notifications ("target", "type", "starts_on", "expires_on", "message", "metadata", "included_in_block")
 		VALUES
 			($1, $2, $3, $4, $5, $6, $7)
 		;
 	`
-	_, err := tx.ExecContext(ctx, ins, n.Target, n.NotificationType, n.StartsOn, n.ExpiresOn, n.Message, n.Metadata, n.IncludedInBlock)
+	_, err := tx.Exec(ctx, ins, n.Target, n.NotificationType, n.StartsOn, n.ExpiresOn, n.Message, n.Metadata, n.IncludedInBlock)
 	if err != nil {
 		return errors.Wrap(err, "could not exec statement")
 	}
