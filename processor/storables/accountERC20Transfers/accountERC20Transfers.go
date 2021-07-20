@@ -47,7 +47,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 			if ethtypes.ERC20.IsERC20TransferEvent(&log) {
 				erc20Transfer, err := ethtypes.ERC20.ERC20TransferEvent(log)
 				if err != nil {
-					return errors.Wrap(err, "could not decode erc20 transfer")
+					return errors.Wrapf(err, "could not decode erc20 transfer in tx %s", log.TxHash.String())
 				}
 
 				if !s.state.IsMonitoredAccount(erc20Transfer.From.String()) &&
