@@ -5,7 +5,6 @@ import (
 
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
-
 )
 
 // checkBlockExists verifies if the current block matches any other block in the database by hash

@@ -9,8 +9,6 @@ create table governance.abrogation_proposals
     tx_hash           text    not null,
     tx_index          integer not null,
     log_index         integer not null,
-
-
     created_at        timestamp default now()
 );
 

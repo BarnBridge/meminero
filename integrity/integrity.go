@@ -98,7 +98,7 @@ func (c *Checker) lifecycle(ctx context.Context) error {
 
 	all := append(missing, broken...)
 	if len(all) == 0 {
-		_, err = c.db.Exec(ctx, "insert into integrity_checkpoints (number) values($1)", highestBlock)
+		_, err = c.db.Exec(ctx, "insert into public.integrity_checkpoints (number) values($1)", highestBlock)
 		if err != nil {
 			return errors.Wrap(err, "could not store new integrity checkpoint")
 		}
@@ -129,7 +129,7 @@ func (c *Checker) lifecycle(ctx context.Context) error {
 		}
 	}
 
-	_, err = c.db.Exec(ctx, "insert into integrity_checkpoints (number) values($1)", blocks[0]-1)
+	_, err = c.db.Exec(ctx, "insert into public.integrity_checkpoints (number) values($1)", blocks[0]-1)
 	if err != nil {
 		return errors.Wrap(err, "could not store new integrity checkpoint")
 	}
@@ -141,7 +141,7 @@ func (c *Checker) lifecycle(ctx context.Context) error {
 
 func (c *Checker) getLastCheckpoint(ctx context.Context) (int64, error) {
 	var b int64
-	err := c.db.QueryRow(ctx, `select number from integrity_checkpoints order by created_at desc limit 1`).Scan(&b)
+	err := c.db.QueryRow(ctx, `select number from public.integrity_checkpoints order by created_at desc limit 1`).Scan(&b)
 	if err == sql.ErrNoRows {
 		err1 := c.db.QueryRow(ctx, `select min(number) from blocks`).Scan(&b)
 		if err1 == sql.ErrNoRows {

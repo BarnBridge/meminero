@@ -52,5 +52,6 @@ func addStorableAccountERC20TransfersFlags(cmd *cobra.Command) {
 
 func addStorableGovernanceFlags(cmd *cobra.Command) {
 	cmd.Flags().Bool("storable.governance.enabled", true, "Enable/disable governance scraping")
-	cmd.Flags().String("storable.governance.address","","Address of governance contract")
+	cmd.Flags().Bool("storable.governance.notifications", true, "Enable/disable governance notifications")
+	cmd.Flags().String("storable.governance.address", "0x4cAE362D7F227e3d306f70ce4878E245563F3069", "Address of governance contract")
 }
