@@ -130,9 +130,17 @@ func (g *Glue) Run(ctx context.Context) {
 		err = g.ScrapeSingleBlock(ctx, b)
 		if err != nil {
 			g.logger.Error(err)
+			err = g.state.UnlockBlock(b)
+			if err != nil {
+				g.logger.Fatal(err)
+			}
 			g.mustRequeueTask(b)
 			metricsBlocksErrored.Inc()
 		} else {
+			err = g.state.UnlockBlock(b)
+			if err != nil {
+				g.logger.Fatal(err)
+			}
 			metricsBlocksProcessed.Inc()
 		}
 
