@@ -8,11 +8,28 @@ import (
 
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/sirupsen/logrus"
 
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/state"
 	"github.com/lacasian/ethwheels/bestblock"
+)
+
+var (
+	metricsHighestDBBlock = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "scraper_highest_db_block",
+		Help: "Highest block number saved in the db",
+	})
+	metricsHighestChainBlock = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "scraper_highest_chain_block",
+		Help: "Head of chain block number",
+	})
+	metricsCheckpointBlock = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "scraper_integrity_checkpoint_block",
+		Help: "Block up to which integrity of chain is confirmed",
+	})
 )
 
 type Checker struct {
@@ -80,6 +97,10 @@ func (c *Checker) lifecycle(ctx context.Context) error {
 			"diff":          best - highestBlock,
 		}).Error("pipeline is falling behind")
 	}
+
+	metricsCheckpointBlock.Set(float64(checkpoint))
+	metricsHighestChainBlock.Set(float64(best))
+	metricsHighestDBBlock.Set(float64(highestBlock))
 
 	if checkpoint >= highestBlock {
 		c.logger.Warn("checkpoint is higher than highest block; there's nothing to check")
