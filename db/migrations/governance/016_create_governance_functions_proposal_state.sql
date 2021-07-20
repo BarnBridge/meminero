@@ -38,7 +38,7 @@ begin
         return 'ACTIVE';
     end if;
 
-    select into bondStaked governance.bond_staked_at_ts(to_timestamp(createTime + warmUpDuration));
+    select into bondStaked governance.bond_staked_at_ts(createTime + warmUpDuration);
 
     with total_votes as ( select support, sum(power) as power from governance.proposal_votes(id) group by support )
     select into forVotes, againstVotes coalesce(( select coalesce(power, 0) from total_votes where support = true ), 0),
