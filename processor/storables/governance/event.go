@@ -122,9 +122,7 @@ func (g *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
 		ctx,
 		pgx.Identifier{"governance", "proposal_events"},
 		[]string{"proposal_id", "caller", "event_type", "event_data", "block_timestamp", "included_in_block", "tx_hash", "tx_index", "log_index"},
-		pgx.CopyFromSlice(len(g.Processed.proposalEvents), func(i int) ([]interface{}, error) {
-			return rows[i], nil
-		}),
+		pgx.CopyFromRows(rows),
 	)
 
 	if err != nil {

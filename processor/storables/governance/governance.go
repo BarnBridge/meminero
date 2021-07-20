@@ -90,38 +90,16 @@ func (g *GovStorable) Execute(ctx context.Context) error {
 }
 
 func (g *GovStorable) Rollback(ctx context.Context, tx pgx.Tx) error {
-	_, err := tx.Exec(ctx, `delete from governance.proposals where included_in_block = $1`, g.block.Number)
-	if err != nil {
-		return err
-	}
-	_, err = tx.Exec(ctx, `delete from governance.abrogation_proposals where included_in_block = $1`, g.block.Number)
-	if err != nil {
-		return err
-	}
-	_, err = tx.Exec(ctx, `delete from governance.proposal_events where included_in_block = $1`, g.block.Number)
-	if err != nil {
-		return err
-	}
+	_, err := tx.Exec(ctx, `
+		delete from governance.proposals where included_in_block = $1;
+		delete from governance.abrogation_proposals where included_in_block = $1;
+		delete from governance.proposal_events where included_in_block = $1;
+		delete from governance.votes where included_in_block = $1
+		delete from governance.votes_canceled where included_in_block = $1
+		delete from governance.abrogation_votes where included_in_block = $1
+		delete from governance.abrogation_votes_canceled where included_in_block = $1
+	`, g.block.Number)
 
-	_, err = tx.Exec(ctx, `delete from governance.votes where included_in_block = $1`, g.block.Number)
-	if err != nil {
-		return err
-	}
-
-	_, err = tx.Exec(ctx, `delete from governance.votes_canceled where included_in_block = $1`, g.block.Number)
-	if err != nil {
-		return err
-	}
-
-	_, err = tx.Exec(ctx, `delete from governance.abrogation_votes where included_in_block = $1`, g.block.Number)
-	if err != nil {
-		return err
-	}
-
-	_, err = tx.Exec(ctx, `delete from governance.abrogation_votes_canceled where included_in_block = $1`, g.block.Number)
-	if err != nil {
-		return err
-	}
 	return err
 }
 

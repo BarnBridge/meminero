@@ -88,9 +88,7 @@ func (g *GovStorable) storeProposalCanceledVotes(ctx context.Context, tx pgx.Tx)
 		ctx,
 		pgx.Identifier{"governance", "votes_canceled"},
 		[]string{"proposal_id", "user_id", "block_timestamp", "included_in_block", "tx_hash", "tx_index", "log_index"},
-		pgx.CopyFromSlice(len(g.Processed.canceledVotes), func(i int) ([]interface{}, error) {
-			return rows[i], nil
-		}),
+		pgx.CopyFromRows(rows),
 	)
 	if err != nil {
 		return errors.Wrap(err, "could not store proposal canceled votes")

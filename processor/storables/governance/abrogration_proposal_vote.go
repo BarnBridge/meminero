@@ -57,9 +57,7 @@ func (g *GovStorable) storeProposalAbrogationVotes(ctx context.Context, tx pgx.T
 		ctx,
 		pgx.Identifier{"governance", "abrogation_votes"},
 		[]string{"proposal_id", "user_id", "support", "power", "block_timestamp", "included_in_block", "tx_hash", "tx_index", "log_index"},
-		pgx.CopyFromSlice(len(g.Processed.abrogationVotes), func(i int) ([]interface{}, error) {
-			return []interface{}{rows}, nil
-		}),
+		pgx.CopyFromRows(rows),
 	)
 	if err != nil {
 		return errors.Wrap(err, "could not store abrogation proposal  votes")
@@ -89,9 +87,8 @@ func (g *GovStorable) storeAbrogationProposalCanceledVotes(ctx context.Context, 
 		ctx,
 		pgx.Identifier{"governance", "abrogation_votes_canceled"},
 		[]string{"proposal_id", "user_id", "block_timestamp", "included_in_block", "tx_hash", "tx_index", "log_index"},
-		pgx.CopyFromSlice(len(g.Processed.abrogationCanceledVotes), func(i int) ([]interface{}, error) {
-			return []interface{}{rows}, nil
-		}))
+		pgx.CopyFromRows(rows),
+	)
 	if err != nil {
 		return errors.Wrap(err, "could not store abrogation proposal canceled votes")
 	}

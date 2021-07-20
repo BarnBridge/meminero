@@ -118,9 +118,7 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) 
 		ctx,
 		pgx.Identifier{"governance", "abrogation_proposals"},
 		[]string{"proposal_id", "creator", "create_time", "description", "tx_hash", "tx_index", "log_index", "included_in_block"},
-		pgx.CopyFromSlice(len(g.Processed.abrogationProposals), func(i int) ([]interface{}, error) {
-			return rows[i], nil
-		}),
+		pgx.CopyFromRows(rows),
 	)
 	if err != nil {
 		return errors.Wrap(err, "could not store abrogration_proposals")
