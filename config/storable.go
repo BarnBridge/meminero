@@ -2,7 +2,7 @@ package config
 
 type storable struct {
 	AccountERC20Transfers accountERC20Transfers `mapstructure:"accountERC20Transfers"`
-	Governance            governance            `mapstructure:"governance""`
+	Governance            governance            `mapstructure:"governance"`
 }
 
 type accountERC20Transfers struct {
@@ -10,7 +10,7 @@ type accountERC20Transfers struct {
 }
 
 type governance struct {
-	Enabled           bool
-	GovernanceAddress string
-	Notifications     bool
+	Enabled       bool
+	Address       string
+	Notifications bool
 }

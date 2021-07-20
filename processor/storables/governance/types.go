@@ -17,7 +17,7 @@ type Proposal struct {
 	AgainstVotes *big.Int
 	Canceled     bool
 	Executed     bool
-	ProposalParameters
+	Parameters   ProposalParameters
 }
 type ProposalParameters struct {
 	WarmUpDuration      *big.Int
@@ -40,7 +40,7 @@ type ProposalEvent struct {
 	ProposalID *big.Int
 	Caller     common.Address
 	Eta        *big.Int
-	EventType ActionType
+	EventType  ActionType
 }
 
 type BaseLog struct {

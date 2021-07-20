@@ -17,7 +17,7 @@ import (
 
 type GovStorable struct {
 	block  *types.Block
-	logger              *logrus.Entry
+	logger *logrus.Entry
 
 	Processed struct {
 		proposals                      []Proposal
@@ -34,12 +34,12 @@ type GovStorable struct {
 
 func New(block *types.Block) *GovStorable {
 	return &GovStorable{
-		block:   block,
-		logger:  logrus.WithField("module", "storable(governance)"),
+		block:  block,
+		logger: logrus.WithField("module", "storable(governance)"),
 	}
 }
 
-func (g GovStorable) Execute(ctx context.Context) error {
+func (g *GovStorable) Execute(ctx context.Context) error {
 	g.logger.Trace("executing")
 	start := time.Now()
 	defer func() {
@@ -50,7 +50,7 @@ func (g GovStorable) Execute(ctx context.Context) error {
 	var govLogs []gethtypes.Log
 	for _, data := range g.block.Txs {
 		for _, log := range data.LogEntries {
-			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.Governance.GovernanceAddress) {
+			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.Governance.Address) {
 				govLogs = append(govLogs, log)
 			}
 		}
@@ -61,13 +61,12 @@ func (g GovStorable) Execute(ctx context.Context) error {
 		return nil
 	}
 
-	err := g.handleProposals(ctx,govLogs)
+	err := g.handleProposals(ctx, govLogs)
 	if err != nil {
 		return err
 	}
 
-
-	err = g.handleAbrogationProposal(ctx,govLogs)
+	err = g.handleAbrogationProposal(ctx, govLogs)
 	if err != nil {
 		return err
 	}
@@ -90,78 +89,77 @@ func (g GovStorable) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (g *GovStorable) Rollback(ctx context.Context,tx pgx.Tx) error {
-	_, err := tx.Exec(ctx, `delete from proposals where included_in_block = $1`, g.block.Number)
+func (g *GovStorable) Rollback(ctx context.Context, tx pgx.Tx) error {
+	_, err := tx.Exec(ctx, `delete from governance.proposals where included_in_block = $1`, g.block.Number)
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(ctx, `delete from abrogation_proposals where included_in_block = $1`, g.block.Number)
+	_, err = tx.Exec(ctx, `delete from governance.abrogation_proposals where included_in_block = $1`, g.block.Number)
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(ctx, `delete from proposal_events where included_in_block = $1`, g.block.Number)
-	if err != nil {
-		return err
-	}
-
-	_, err = tx.Exec(ctx, `delete from votes where included_in_block = $1`, g.block.Number)
+	_, err = tx.Exec(ctx, `delete from governance.proposal_events where included_in_block = $1`, g.block.Number)
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(ctx, `delete from votes_canceled where included_in_block = $1`, g.block.Number)
+	_, err = tx.Exec(ctx, `delete from governance.votes where included_in_block = $1`, g.block.Number)
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(ctx, `delete from abrogation_votes where included_in_block = $1`, g.block.Number)
+	_, err = tx.Exec(ctx, `delete from governance.votes_canceled where included_in_block = $1`, g.block.Number)
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(ctx, `delete from abrogation_votes_canceled where included_in_block = $1`, g.block.Number)
+	_, err = tx.Exec(ctx, `delete from governance.abrogation_votes where included_in_block = $1`, g.block.Number)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(ctx, `delete from governance.abrogation_votes_canceled where included_in_block = $1`, g.block.Number)
 	if err != nil {
 		return err
 	}
 	return err
 }
 
-func (g *GovStorable) SaveToDatabase(ctx context.Context,tx pgx.Tx) error {
-	err := g.storeProposals(ctx,tx)
+func (g *GovStorable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
+	err := g.storeProposals(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store proposals")
 	}
 
-	err = g.storeAbrogrationProposals(ctx,tx)
+	err = g.storeAbrogrationProposals(ctx, tx)
 	if err != nil {
-		return errors.Wrap(err,"could not store abrogration proposals")
+		return errors.Wrap(err, "could not store abrogration proposals")
 	}
 
-	err = g.storeEvents(ctx,tx)
+	err = g.storeEvents(ctx, tx)
 	if err != nil {
-		return errors.Wrap(err,"could not store proposals events")
+		return errors.Wrap(err, "could not store proposals events")
 	}
 
-	err = g.storeProposalVotes(ctx,tx)
+	err = g.storeProposalVotes(ctx, tx)
 	if err != nil {
-		return errors.Wrap(err,"could not store proposal's votes")
+		return errors.Wrap(err, "could not store proposal's votes")
 	}
 
-	err = g.storeProposalCanceledVotes(ctx,tx)
+	err = g.storeProposalCanceledVotes(ctx, tx)
 	if err != nil {
-		return errors.Wrap(err,"could not store proposal's  canceled votes")
+		return errors.Wrap(err, "could not store proposal's  canceled votes")
 	}
 
-	err = g.storeProposalAbrogationVotes(ctx,tx)
+	err = g.storeProposalAbrogationVotes(ctx, tx)
 	if err != nil {
-		return errors.Wrap(err,"could not store abrogation proposal's votes")
+		return errors.Wrap(err, "could not store abrogation proposal's votes")
 	}
 
-	err = g.storeAbrogationProposalCanceledVotes(ctx,tx)
+	err = g.storeAbrogationProposalCanceledVotes(ctx, tx)
 	if err != nil {
-		return errors.Wrap(err,"could not store abrogation proposal's  canceled votes")
+		return errors.Wrap(err, "could not store abrogation proposal's  canceled votes")
 	}
-
 
 	return nil
 }

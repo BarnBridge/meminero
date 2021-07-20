@@ -9,14 +9,20 @@ import (
 	"github.com/pkg/errors"
 )
 
-func CallContractFunction(a abi.ABI, addr string, methodName string, methodArgs []interface{}, result interface{}) func() error {
+func CallContractFunction(a abi.ABI, addr string, methodName string, methodArgs []interface{}, result interface{}, opts ...interface{}) func() error {
 	return func() error {
 		input, err := ABIGenerateInput(a, methodName, methodArgs...)
 		if err != nil {
 			return errors.Wrap(err, "could not generate input for contract call")
 		}
+		var data string
 
-		data, err := CallRaw(addr, input)
+		if len(opts) > 0 {
+			data, err = CallRawAtBlock(addr, input, opts[0].(int64))
+		} else {
+			data, err = CallRaw(addr, input)
+		}
+
 		if err != nil {
 			return errors.Wrap(err, "could not execute contract call")
 		}
@@ -58,7 +64,7 @@ func CallRaw(address string, fnc string) (string, error) {
 	obj["data"] = fnc
 	obj["gas"] = ethrpc.DefaultCallGas
 
-	err := instance.ethrpc.MakeRequest(&result, ethrpc.ETHCall, obj)
+	err := instance.ethrpc.MakeRequest(&result, ethrpc.ETHCall, obj, "latest")
 	if err != nil {
 		return "", errors.Wrapf(err, "could not make rpc request (%s.%s)", address, fnc)
 	}
