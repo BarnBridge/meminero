@@ -38,6 +38,7 @@ var (
 		Buckets: []float64{1, 10, 50, 100, 500, 1000, 2000, 4000},
 	})
 )
+
 type Glue struct {
 	state   *state.Manager
 	scraper *scraper.Scraper
@@ -95,7 +96,7 @@ func (g *Glue) ScrapeSingleBlock(ctx context.Context, b int64) error {
 		return errors.Wrap(err, "could not init processor")
 	}
 
-	err = p.Store(ctx,g.db)
+	err = p.Store(ctx, g.db)
 	if err != nil {
 		return errors.Wrap(err, "could not store block")
 	}
@@ -113,6 +114,15 @@ func (g *Glue) Run(ctx context.Context) {
 			g.logger.Fatal(err)
 		} else if err == context.Canceled {
 			return
+		}
+
+		acquired, err := g.state.LockBlock(b)
+		if err != nil {
+			g.logger.Fatal(err)
+		}
+		if !acquired {
+			// could not get lock, already being worked on, skip
+			continue
 		}
 
 		g.stopMu.Lock()
