@@ -15,12 +15,9 @@ create table governance.barn_staking_actions
 );
 
 create index user_balance_idx on governance.barn_staking_actions (user_address asc, included_in_block desc, log_index desc);
-
-create index barn_staking_actions_included_in_block_idx on governance.barn_staking_actions (included_in_block desc);
+create index barn_staking_actions_block_timestamp_idx on governance.barn_staking_actions (block_timestamp desc);
 
 ---- create above / drop below ----
 
 drop table if exists governance.barn_staking_actions;
-drop index if exists governance.user_balance_idx;
-drop index if exists governance.barn_staking_actions_included_in_block_idx;
 drop type if exists governance.action_type;
