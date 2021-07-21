@@ -227,6 +227,7 @@ begin
                                                                from smart_exposure.tranche_state s
                                                                where s.etoken_address = a.etoken_address
                                                                  and s.block_timestamp <= to_timestamp(ts)
+                                                               order by s.block_timestamp desc
                                                                limit 1 ), 0))
     from smart_exposure.active_position_at_ts(addr, ts) a;
 
@@ -244,6 +245,7 @@ begin
                                                                from smart_exposure.tranche_state s
                                                                where s.etoken_address = a.etoken_address
                                                                  and s.block_timestamp <= to_timestamp(ts)
+                                                               order by s.block_timestamp desc
                                                                limit 1 ), 0))
     from smart_exposure.active_position_at_ts(addr, ts) a
     where a.etoken_address in ( select etoken_address from smart_exposure.tranches where pool_address = _pool_address );
