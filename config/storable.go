@@ -17,6 +17,7 @@ type governance struct {
 }
 
 type barn struct {
-	Enabled bool
-	Address string
+	Enabled       bool
+	Address       string
+	Notifications bool
 }

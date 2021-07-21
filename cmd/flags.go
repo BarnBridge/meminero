@@ -58,6 +58,7 @@ func addStorableGovernanceFlags(cmd *cobra.Command) {
 
 func addStorableBarnFlags(cmd *cobra.Command) {
 	cmd.Flags().Bool("storable.barn.enabled", true, "Enable/disable barn scraping")
+	cmd.Flags().Bool("storable.barn.notifications", true, "Enable/disable barn notifications")
 	cmd.Flags().String("storable.barn.address", "0x10e138877df69Ca44Fdc68655f86c88CDe142D7F", "Address of barn staking contract")
 
 }
