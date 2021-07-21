@@ -39,12 +39,12 @@ func (s *Storable) handleDelegateEvents(logs []gethtypes.Log, ctx context.Contex
 			}
 
 			s.processed.delegateChanges = append(s.processed.delegateChanges, DelegateChange{
-				Sender:              increase.From.String(),
-				Receiver:            increase.To.String(),
+				Sender:              utils.NormalizeAddress(increase.From.String()),
+				Receiver:            utils.NormalizeAddress(increase.To.String()),
 				Amount:              increase.Amount,
 				ToNewDelegatedPower: increase.ToNewDelegatedPower,
 				ActionType:          DELEGATE_INCREASE,
-				TransactionHash:     increase.Raw.TxHash.String(),
+				TransactionHash:     utils.NormalizeAddress(increase.Raw.TxHash.String()),
 				TransactionIndex:    int64(increase.Raw.TxIndex),
 				LogIndex:            int64(increase.Raw.Index),
 			})
@@ -56,12 +56,12 @@ func (s *Storable) handleDelegateEvents(logs []gethtypes.Log, ctx context.Contex
 				return errors.Wrap(err, "could not decode delegate power increased event")
 			}
 			s.processed.delegateChanges = append(s.processed.delegateChanges, DelegateChange{
-				Sender:              decrease.From.String(),
-				Receiver:            decrease.To.String(),
+				Sender:              utils.NormalizeAddress(decrease.From.String()),
+				Receiver:            utils.NormalizeAddress(decrease.To.String()),
 				Amount:              decrease.Amount,
 				ToNewDelegatedPower: decrease.ToNewDelegatedPower,
 				ActionType:          DELEGATE_DECREASE,
-				TransactionHash:     decrease.Raw.TxHash.String(),
+				TransactionHash:     utils.NormalizeAddress(decrease.Raw.TxHash.String()),
 				TransactionIndex:    int64(decrease.Raw.TxIndex),
 				LogIndex:            int64(decrease.Raw.Index),
 			})

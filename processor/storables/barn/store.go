@@ -5,6 +5,7 @@ import (
 
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/notifications"
+	"github.com/barnbridge/smartbackend/utils"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
@@ -20,12 +21,12 @@ func (s *Storable) storeDelegateActions(ctx context.Context, tx pgx.Tx) error {
 
 	for _, d := range s.processed.delegateActions {
 		rows = append(rows, []interface{}{
-			d.From.String(),
-			d.To.String(),
+			utils.NormalizeAddress(d.From.String()),
+			utils.NormalizeAddress(d.To.String()),
 			d.ActionType,
 			s.block.BlockCreationTime,
 			s.block.Number,
-			d.Raw.TxHash.String(),
+			utils.NormalizeAddress(d.Raw.TxHash.String()),
 			d.Raw.TxIndex,
 			d.Raw.Index,
 		})
@@ -97,6 +98,21 @@ func (s *Storable) storeDelegateChanges(ctx context.Context, tx pgx.Tx) error {
 		if err != nil && err != context.DeadlineExceeded {
 			return errors.Wrap(err, "could not execute notification jobs")
 		}
+	}
+
+	return nil
+}
+
+func (s *Storable) storeLockEvents(ctx context.Context, tx pgx.Tx) error {
+	if len(s.processed.locks) == 0 {
+		s.logger.WithField("handler", "locks").Debug("no events found")
+		return nil
+	}
+	var rows [][]interface{}
+	for _, l := range s.processed.locks {
+		rows = append(rows, []interface{}{
+			utils.NormalizeAddress(l.User.String()),
+		})
 	}
 
 	return nil

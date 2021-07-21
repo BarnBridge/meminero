@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/types"
 	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -20,6 +21,7 @@ type Storable struct {
 	processed struct {
 		delegateActions []DelegateAction
 		delegateChanges []DelegateChange
+		locks           []ethtypes.BarnLockEvent
 	}
 }
 
