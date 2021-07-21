@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -43,12 +44,12 @@ func (g *GovStorable) storeProposalAbrogationVotes(ctx context.Context, tx pgx.T
 		power := decimal.NewFromBigInt(v.Power, 0)
 		rows = append(rows, []interface{}{
 			v.ProposalId.Int64(),
-			v.User.String(),
+			utils.NormalizeAddress(v.User.String()),
 			v.Support,
 			power,
 			g.block.BlockCreationTime,
 			v.Raw.BlockNumber,
-			v.Raw.TxHash.String(),
+			utils.NormalizeAddress(v.Raw.TxHash.String()),
 			v.Raw.TxIndex,
 			v.Raw.Index,
 		})
@@ -75,10 +76,10 @@ func (g *GovStorable) storeAbrogationProposalCanceledVotes(ctx context.Context, 
 	for _, v := range g.Processed.abrogationCanceledVotes {
 		rows = append(rows, []interface{}{
 			v.ProposalId.Int64(),
-			v.User.String(),
+			utils.NormalizeAddress(v.User.String()),
 			g.block.BlockCreationTime,
 			v.Raw.BlockNumber,
-			v.Raw.TxHash.String(),
+			utils.NormalizeAddress(v.Raw.TxHash.String()),
 			v.Raw.TxIndex,
 			v.Raw.Index,
 		})

@@ -107,7 +107,7 @@ func (g *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
 
 		rows = append(rows, []interface{}{
 			e.ProposalID.Int64(),
-			e.Caller.String(),
+			utils.NormalizeAddress(e.Caller.String()),
 			e.EventType,
 			eventData,
 			g.block.BlockCreationTime,

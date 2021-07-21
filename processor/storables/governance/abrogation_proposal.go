@@ -77,10 +77,10 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) 
 	for _, ap := range g.Processed.abrogationProposals {
 		rows = append(rows, []interface{}{
 			ap.ProposalId.Int64(),
-			ap.Caller.String(),
+			utils.NormalizeAddress(ap.Caller.String()),
 			g.block.BlockCreationTime,
 			g.Processed.abrogationProposalsDescription[ap.ProposalId.String()],
-			ap.Raw.TxHash.String(),
+			utils.NormalizeAddress(ap.Raw.TxHash.String()),
 			ap.Raw.TxIndex,
 			ap.Raw.Index,
 			ap.Raw.BlockNumber,
@@ -88,7 +88,7 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) 
 
 		jd := notifications.AbrogationProposalCreatedJobData{
 			Id:                    ap.ProposalId.Int64(),
-			Proposer:              ap.Caller.String(),
+			Proposer:              utils.NormalizeAddress(ap.Caller.String()),
 			CreateTime:            g.block.BlockCreationTime,
 			IncludedInBlockNumber: g.block.Number,
 		}

@@ -118,7 +118,7 @@ func (g *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
 
 		jd := notifications.ProposalCreatedJobData{
 			Id:                    p.Id.Int64(),
-			Proposer:              p.Proposer.String(),
+			Proposer:              utils.NormalizeAddress(p.Proposer.String()),
 			Title:                 p.Title,
 			CreateTime:            p.CreateTime.Int64(),
 			WarmUpDuration:        p.Parameters.WarmUpDuration.Int64(),
