@@ -55,3 +55,8 @@ func addStorableGovernanceFlags(cmd *cobra.Command) {
 	cmd.Flags().Bool("storable.governance.notifications", true, "Enable/disable governance notifications")
 	cmd.Flags().String("storable.governance.address", "0x4cAE362D7F227e3d306f70ce4878E245563F3069", "Address of governance contract")
 }
+
+func addStorableYieldFarmingFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().Bool("storable.yieldFarming.enabled", true, "Enable/disable yieldFarming scraping")
+	cmd.PersistentFlags().String("storable.yieldFarming.address", "", "Address of governance contract")
+}
