@@ -22,6 +22,7 @@ type Storable struct {
 		delegateActions []DelegateAction
 		delegateChanges []DelegateChange
 		locks           []ethtypes.BarnLockEvent
+		stakingActions  []StakingAction
 	}
 }
 
@@ -52,6 +53,16 @@ func (s *Storable) Execute(ctx context.Context) error {
 		return err
 	}
 
+	err = s.handleLockEvents(barnLogs)
+	if err != nil {
+		return err
+	}
+
+	err = s.handleStakingActions(barnLogs)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -74,6 +85,25 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 }
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
+	err := s.storeDelegateChanges(ctx, tx)
+	if err != nil {
+		return err
+	}
+
+	err = s.storeDelegateActions(ctx, tx)
+	if err != nil {
+		return err
+	}
+
+	err = s.storeLockEvents(ctx, tx)
+	if err != nil {
+		return err
+	}
+
+	err = s.storeStakingActionsEvents(ctx, tx)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

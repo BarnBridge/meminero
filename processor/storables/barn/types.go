@@ -22,3 +22,14 @@ type DelegateChange struct {
 	TransactionIndex int64
 	LogIndex         int64
 }
+
+type StakingAction struct {
+	UserAddress  string
+	Amount       *big.Int
+	BalanceAfter *big.Int
+	ActionType   ActionType
+
+	TransactionHash  string
+	TransactionIndex int64
+	LogIndex         int64
+}

@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (s *Storable) decodeLockEvents(logs []gethtypes.Log) error {
+func (s *Storable) handleLockEvents(logs []gethtypes.Log) error {
 	for _, log := range logs {
 		if ethtypes.Barn.IsBarnLockEvent(&log) {
 			lock, err := ethtypes.Barn.BarnLockEvent(log)

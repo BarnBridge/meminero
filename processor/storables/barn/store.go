@@ -112,8 +112,53 @@ func (s *Storable) storeLockEvents(ctx context.Context, tx pgx.Tx) error {
 	for _, l := range s.processed.locks {
 		rows = append(rows, []interface{}{
 			utils.NormalizeAddress(l.User.String()),
+			l.Timestamp.Int64(),
+			s.block.BlockCreationTime,
+			s.block.Number,
+			utils.NormalizeAddress(l.Raw.TxHash.String()),
+			int64(l.Raw.TxIndex),
+			int64(l.Raw.Index),
 		})
 	}
 
-	return nil
+	_, err := tx.CopyFrom(
+		ctx,
+		pgx.Identifier{"governance", "barn_locks"},
+		[]string{"user_address", "locked_until", "block_timestamp", "included_in_block", "tx_hash", "tx_index", "log_index"},
+		pgx.CopyFromRows(rows),
+	)
+
+	return err
+}
+
+func (s *Storable) storeStakingActionsEvents(ctx context.Context, tx pgx.Tx) error {
+	if len(s.processed.stakingActions) == 0 {
+		s.logger.WithField("handler", "locks").Debug("no events found")
+		return nil
+	}
+	var rows [][]interface{}
+	for _, a := range s.processed.stakingActions {
+		amount := decimal.NewFromBigInt(a.Amount, 0)
+		balanceAfter := decimal.NewFromBigInt(a.BalanceAfter, 0)
+
+		rows = append(rows, []interface{}{
+			a.UserAddress,
+			a.ActionType,
+			amount,
+			balanceAfter,
+			s.block.BlockCreationTime,
+			s.block.Number,
+			a.TransactionHash,
+			a.TransactionIndex,
+			a.LogIndex,
+		})
+	}
+
+	_, err := tx.CopyFrom(
+		ctx,
+		pgx.Identifier{"governance", "barn_staking_actions"},
+		[]string{"user_address", "action_type", "amount", "balance_after", "block_timestamp", "included_in_block", "tx_hash", "tx_index", "log_index"},
+		pgx.CopyFromRows(rows),
+	)
+	return err
 }
