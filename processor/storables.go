@@ -3,6 +3,7 @@ package processor
 import (
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/processor/storables/accountERC20Transfers"
+	"github.com/barnbridge/smartbackend/processor/storables/erc20Transfers"
 	"github.com/barnbridge/smartbackend/processor/storables/governance"
 )
 
@@ -15,5 +16,9 @@ func (p *Processor) registerStorables() {
 
 	if config.Store.Storable.Governance.Enabled {
 		p.storables = append(p.storables, governance.New(p.Block))
+	}
+
+	if config.Store.Storable.Erc20Transfers.Enabled {
+		p.storables = append(p.storables, erc20Transfers.New(p.Block, p.state))
 	}
 }

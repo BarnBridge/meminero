@@ -100,4 +100,5 @@ func init() {
 
 	addStorableAccountERC20TransfersFlags(scrapeQueueCmd)
 	addStorableGovernanceFlags(scrapeQueueCmd)
+	addStorableMonitoredERC20TransfersFlags(scrapeQueueCmd)
 }
