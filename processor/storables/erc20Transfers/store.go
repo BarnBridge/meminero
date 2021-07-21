@@ -10,6 +10,7 @@ import (
 
 func (s *Storable) storeERC20Transfers(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.transfers) == 0 {
+		s.logger.WithField("handler", "erc20Transfers").Debug("no events found")
 		return nil
 	}
 	var rows [][]interface{}
