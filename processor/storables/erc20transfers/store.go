@@ -1,4 +1,4 @@
-package erc20Transfers
+package erc20transfers
 
 import (
 	"context"

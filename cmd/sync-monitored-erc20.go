@@ -62,5 +62,5 @@ func init() {
 
 	addDBFlags(syncERC20)
 
-	syncERC20.Flags().String("erc20file", "./erc20.mainnet.json", "Path to list of monitored erc20 tokens in json format")
+	syncERC20.Flags().String("erc20file", ".", "Path to list of monitored erc20 tokens in json format")
 }

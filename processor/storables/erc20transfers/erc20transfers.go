@@ -1,4 +1,4 @@
-package erc20Transfers
+package erc20transfers
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/state"
 	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -34,7 +33,7 @@ func New(block *types.Block, state *state.Manager) *Storable {
 func (s *Storable) Execute(ctx context.Context) error {
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
-			if s.state.IsMonitoredERC20(utils.NormalizeAddress(log.Address.String())) {
+			if s.state.IsMonitoredERC20(log.Address.String()) {
 				erc20Transfer, err := ethtypes.ERC20.ERC20TransferEvent(log)
 				if err != nil {
 					return errors.Wrapf(err, "could not decode erc20 transfer in tx %s", log.TxHash.String())

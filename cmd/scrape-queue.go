@@ -98,7 +98,4 @@ func init() {
 	addETHFlags(scrapeQueueCmd)
 	addGenerateETHTypesFlags(scrapeQueueCmd)
 
-	addStorableAccountERC20TransfersFlags(scrapeQueueCmd)
-	addStorableGovernanceFlags(scrapeQueueCmd)
-	addStorableMonitoredERC20TransfersFlags(scrapeQueueCmd)
 }

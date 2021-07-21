@@ -61,9 +61,5 @@ func init() {
 	addETHFlags(scrapeSingleCmd)
 	addGenerateETHTypesFlags(scrapeSingleCmd)
 
-	addStorableAccountERC20TransfersFlags(scrapeSingleCmd)
-	addStorableGovernanceFlags(scrapeSingleCmd)
-	addStorableMonitoredERC20TransfersFlags(scrapeSingleCmd)
-
 	scrapeSingleCmd.Flags().Int64("block", -1, "The block to scrape")
 }
