@@ -12,10 +12,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/processor"
-	"github.com/barnbridge/smartbackend/scraper"
-	"github.com/barnbridge/smartbackend/state"
-	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/meminero/processor"
+	"github.com/barnbridge/meminero/scraper"
+	"github.com/barnbridge/meminero/state"
+	"github.com/barnbridge/meminero/types"
 )
 
 var (

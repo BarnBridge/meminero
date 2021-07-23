@@ -3,12 +3,13 @@ package governance
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
+
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (g *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error {
@@ -18,6 +19,7 @@ func (g *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error 
 			if err != nil {
 				return errors.Wrap(err, "could not decode abrogation proposal event")
 			}
+
 			g.Processed.abrogationVotes = append(g.Processed.abrogationVotes, vote)
 		}
 
@@ -54,6 +56,7 @@ func (g *GovStorable) storeProposalAbrogationVotes(ctx context.Context, tx pgx.T
 			v.Raw.Index,
 		})
 	}
+
 	_, err := tx.CopyFrom(
 		ctx,
 		pgx.Identifier{"governance", "abrogation_votes"},
@@ -84,6 +87,7 @@ func (g *GovStorable) storeAbrogationProposalCanceledVotes(ctx context.Context, 
 			v.Raw.Index,
 		})
 	}
+
 	_, err := tx.CopyFrom(
 		ctx,
 		pgx.Identifier{"governance", "abrogation_votes_canceled"},

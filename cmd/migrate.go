@@ -6,7 +6,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/spf13/cobra"
 
-	"github.com/barnbridge/smartbackend/db"
+	"github.com/barnbridge/meminero/db"
 )
 
 var migrateCmd = &cobra.Command{

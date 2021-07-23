@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/meminero/types"
 )
 
 type Manager struct {
@@ -20,6 +20,7 @@ type Manager struct {
 
 	Tokens            map[string]types.Token
 	monitoredAccounts map[string]bool
+	monitoredERC20    map[string]bool
 
 	sePools    map[string]*types.SEPool
 	seTranches map[string]*types.SETranche
@@ -55,6 +56,11 @@ func (m *Manager) RefreshCache(ctx context.Context) error {
 	err = m.loadAllTokens(ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not fetch tokens")
+	}
+
+	err = m.loadAllERC20(ctx)
+	if err != nil {
+		return errors.Wrap(err, "could not fetch monitored erc20")
 	}
 
 	return nil

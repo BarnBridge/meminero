@@ -10,10 +10,10 @@ import (
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/barnbridge/smartbackend/state"
+	"github.com/barnbridge/meminero/state"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/types"
 )
 
 type Processor struct {

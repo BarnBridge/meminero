@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   redis:
-    container_name: smartbackend-redis
+    container_name: meminero-redis
     image: redis:6
     restart: always
     command: ["redis-server", "--appendonly", "yes"]
@@ -10,20 +10,20 @@ services:
     volumes:
       - .volumes/redis:/data
   postgres:
-    container_name: smartbackend-postgres
+    container_name: meminero-postgres
     image: postgres:13
     restart: always
     environment:
-      - POSTGRES_USER=smartbackend
-      - POSTGRES_DB=smartbackend
+      - POSTGRES_USER=meminero
+      - POSTGRES_DB=meminero
       - POSTGRES_PASSWORD=password
     ports:
       - 0.0.0.0:5432:5432
     volumes:
       - .volumes/postgresql:/var/lib/postgresql/data
-  smartbackend:
-    container_name: smartbackend
-    image: barnbridge/smartbackend:latest
+  meminero:
+    container_name: meminero
+    image: barnbridge/meminero:latest
     restart: always
     depends_on:
       - redis
@@ -34,4 +34,4 @@ services:
     environment:
       - PG_PASSWORD=password
     volumes:
-      - .volumes/smartbackend:/config
+      - .volumes/meminero:/config

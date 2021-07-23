@@ -14,7 +14,7 @@ import (
 
 	shopspring "github.com/jackc/pgtype/ext/shopspring-numeric"
 
-	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/meminero/config"
 )
 
 type ErrorLineExtract struct {

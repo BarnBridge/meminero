@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/barnbridge/smartbackend/cmd"
+	"github.com/barnbridge/meminero/cmd"
 )
 
 var (

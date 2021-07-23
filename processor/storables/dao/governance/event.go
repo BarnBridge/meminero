@@ -3,12 +3,13 @@ package governance
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {
@@ -97,6 +98,7 @@ func (g *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
 		g.logger.WithField("handler", "proposal events").Debug("no events found")
 		return nil
 	}
+
 	var rows [][]interface{}
 	for _, e := range g.Processed.proposalEvents {
 		var eventData types.JSONObject

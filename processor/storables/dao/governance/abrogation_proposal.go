@@ -2,18 +2,17 @@ package governance
 
 import (
 	"context"
-	"sync"
 	"time"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/eth"
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/notifications"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
-	"golang.org/x/sync/errgroup"
+
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/eth"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/notifications"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (g *GovStorable) handleAbrogationProposal(ctx context.Context, logs []gethtypes.Log) error {
@@ -42,27 +41,18 @@ func (g *GovStorable) handleAbrogationProposal(ctx context.Context, logs []getht
 }
 
 func (g *GovStorable) getAPDescriptionsFromChain(ctx context.Context, aps []ethtypes.GovernanceAbrogationProposalStartedEvent) error {
-	wg, _ := errgroup.WithContext(ctx)
-	var mu sync.Mutex
+	a := ethtypes.Governance.ABI
+
 	for _, ap := range aps {
-		ap := ap
-		a := ethtypes.Governance.ABI
-		wg.Go(func() error {
-			var description string
-			subwg, _ := errgroup.WithContext(ctx)
-			subwg.Go(eth.CallContractFunction(*a, utils.NormalizeAddress(config.Store.Storable.Governance.Address), "abrogationProposals", []interface{}{ap.ProposalId}, &description))
-			err := wg.Wait()
-			if err != nil {
-				return errors.Wrap(err, "")
-			}
-			mu.Lock()
-			g.Processed.abrogationProposalsDescription[ap.ProposalId.String()] = description
-			mu.Unlock()
+		var description string
+		err := eth.CallContractFunction(*a, utils.NormalizeAddress(config.Store.Storable.Governance.Address), "abrogationProposals", []interface{}{ap.ProposalId}, &description)()
+		if err != nil {
+			return errors.Wrap(err, "could not call governance.abrogationProposals")
+		}
 
-			return nil
-		})
-
+		g.Processed.abrogationProposalsDescription[ap.ProposalId.String()] = description
 	}
+
 	return nil
 }
 

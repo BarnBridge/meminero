@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/barnbridge/smartbackend/db"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/db"
+	"github.com/barnbridge/meminero/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

@@ -7,7 +7,7 @@ import (
 	"github.com/alethio/web3-go/ethrpc/provider/httprpc"
 	"github.com/pkg/errors"
 
-	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/meminero/config"
 )
 
 type conn struct {

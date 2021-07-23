@@ -3,12 +3,12 @@ package eth
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func GetERC20TokenFromChain(addr string) (*types.Token, error) {

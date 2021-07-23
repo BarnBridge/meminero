@@ -9,8 +9,8 @@ import (
 	"github.com/lacasian/ethwheels/ethgen"
 	"github.com/pkg/errors"
 
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (p *Processor) preprocess() error {

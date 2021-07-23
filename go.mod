@@ -1,4 +1,4 @@
-module github.com/barnbridge/smartbackend
+module github.com/barnbridge/meminero
 
 require (
 	github.com/Masterminds/goutils v1.1.1 // indirect

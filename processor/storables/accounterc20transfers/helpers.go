@@ -1,4 +1,4 @@
-package accountERC20Transfers
+package accounterc20transfers
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/shopspring/decimal"
 
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/utils"
 )
 
 const (

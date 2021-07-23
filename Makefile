@@ -4,6 +4,6 @@ build:
 	go build -ldflags "-X main.buildVersion=$(VERSION)"
 
 reset: build
-	./smartbackend reset --force
-	./smartbackend migrate
-	./smartbackend sync-accounts --file ./accounts.kovan.json
+	./meminero reset --force
+	./meminero migrate
+	./meminero sync-accounts --file ./accounts.kovan.json
