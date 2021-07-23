@@ -20,6 +20,9 @@ type Manager struct {
 
 	Tokens            map[string]types.Token
 	monitoredAccounts map[string]bool
+
+	sePools    map[string]*types.SEPool
+	seTranches map[string]*types.SETranche
 }
 
 // NewManager instantiates a new task manager and also takes care of the redis connection management
