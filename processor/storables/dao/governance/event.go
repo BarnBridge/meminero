@@ -3,12 +3,13 @@ package governance
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {

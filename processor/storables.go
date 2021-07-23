@@ -3,7 +3,7 @@ package processor
 import (
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/processor/storables/accountERC20Transfers"
-	"github.com/barnbridge/smartbackend/processor/storables/governance"
+	"github.com/barnbridge/smartbackend/processor/storables/dao/governance"
 )
 
 // registerStorables instantiates all the storables defined via code with the requested raw data

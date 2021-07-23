@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/barnbridge/smartbackend/db"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
@@ -91,15 +90,8 @@ func (w *Worker) jobs(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 	return jobs, nil
 }
 
-func NewWorker(config Config) (*Worker, error) {
-	log.Info("connecting to postgres")
-
-	pool, err := db.New()
-	if err != nil {
-		return nil, errors.Wrap(err, "ping postgres connection")
-	}
-
+func NewWorker(db *pgxpool.Pool) (*Worker, error) {
 	return &Worker{
-		db: pool.Connection(),
+		db: db,
 	}, nil
 }
