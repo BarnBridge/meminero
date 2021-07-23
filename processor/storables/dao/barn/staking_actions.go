@@ -1,10 +1,11 @@
 package barn
 
 import (
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 func (s *Storable) handleStakingActions(logs []gethtypes.Log) error {

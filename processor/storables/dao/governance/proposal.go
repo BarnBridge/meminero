@@ -5,16 +5,17 @@ import (
 	"encoding/hex"
 	"sync"
 
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/notifications"
 	"github.com/barnbridge/smartbackend/types"
 	"github.com/barnbridge/smartbackend/utils"
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
-	"golang.org/x/sync/errgroup"
 )
 
 func (g *GovStorable) handleProposals(ctx context.Context, logs []gethtypes.Log) error {
@@ -118,7 +119,7 @@ func (g *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
 
 		jd := notifications.ProposalCreatedJobData{
 			Id:                    p.Id.Int64(),
-			Proposer:              p.Proposer.String(),
+			Proposer:              utils.NormalizeAddress(p.Proposer.String()),
 			Title:                 p.Title,
 			CreateTime:            p.CreateTime.Int64(),
 			WarmUpDuration:        p.Parameters.WarmUpDuration.Int64(),

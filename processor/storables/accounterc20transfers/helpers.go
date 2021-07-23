@@ -1,4 +1,4 @@
-package accountERC20Transfers
+package accounterc20transfers
 
 import (
 	"context"

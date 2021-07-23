@@ -3,12 +3,13 @@ package governance
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {
@@ -107,7 +108,7 @@ func (g *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
 
 		rows = append(rows, []interface{}{
 			e.ProposalID.Int64(),
-			e.Caller.String(),
+			utils.NormalizeAddress(e.Caller.String()),
 			e.EventType,
 			eventData,
 			g.block.BlockCreationTime,

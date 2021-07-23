@@ -14,4 +14,17 @@ var scrapeCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(scrapeCmd)
+
+	addDBFlags(scrapeCmd)
+	addRedisFlags(scrapeCmd)
+	addMetricsFlags(scrapeCmd)
+	addFeatureFlags(scrapeCmd)
+	addETHFlags(scrapeCmd)
+	addGenerateETHTypesFlags(scrapeCmd)
+
+	addStorableAccountERC20TransfersFlags(scrapeCmd)
+	addStorableGovernanceFlags(scrapeCmd)
+	addStorableMonitoredERC20TransfersFlags(scrapeCmd)
+	addStorableBarnFlags(scrapeCmd)
+	addStorableYieldFarmingFlags(scrapeCmd)
 }

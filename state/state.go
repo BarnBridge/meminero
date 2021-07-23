@@ -20,6 +20,7 @@ type Manager struct {
 
 	Tokens            map[string]types.Token
 	monitoredAccounts map[string]bool
+	monitoredERC20    map[string]bool
 }
 
 // NewManager instantiates a new task manager and also takes care of the redis connection management
@@ -52,6 +53,11 @@ func (m *Manager) RefreshCache(ctx context.Context) error {
 	err = m.loadAllTokens(ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not fetch tokens")
+	}
+
+	err = m.loadAllERC20(ctx)
+	if err != nil {
+		return errors.Wrap(err, "could not fetch monitored erc20")
 	}
 
 	return nil

@@ -5,15 +5,16 @@ import (
 	"sync"
 	"time"
 
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/notifications"
 	"github.com/barnbridge/smartbackend/utils"
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
-	"golang.org/x/sync/errgroup"
 )
 
 func (g *GovStorable) handleAbrogationProposal(ctx context.Context, logs []gethtypes.Log) error {
@@ -77,10 +78,10 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) 
 	for _, ap := range g.Processed.abrogationProposals {
 		rows = append(rows, []interface{}{
 			ap.ProposalId.Int64(),
-			ap.Caller.String(),
+			utils.NormalizeAddress(ap.Caller.String()),
 			g.block.BlockCreationTime,
 			g.Processed.abrogationProposalsDescription[ap.ProposalId.String()],
-			ap.Raw.TxHash.String(),
+			utils.NormalizeAddress(ap.Raw.TxHash.String()),
 			ap.Raw.TxIndex,
 			ap.Raw.Index,
 			ap.Raw.BlockNumber,
@@ -88,7 +89,7 @@ func (g *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) 
 
 		jd := notifications.AbrogationProposalCreatedJobData{
 			Id:                    ap.ProposalId.Int64(),
-			Proposer:              ap.Caller.String(),
+			Proposer:              utils.NormalizeAddress(ap.Caller.String()),
 			CreateTime:            g.block.BlockCreationTime,
 			IncludedInBlockNumber: g.block.Number,
 		}

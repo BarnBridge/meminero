@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"time"
 
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
+
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/types"
 	"github.com/barnbridge/smartbackend/utils"
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 )
 
 type GovStorable struct {
@@ -58,7 +58,7 @@ func (g *GovStorable) Execute(ctx context.Context) error {
 	}
 
 	if len(govLogs) == 0 {
-		log.Debug("no events found")
+		g.logger.WithField("handler", "governance").Debug("no events found")
 		return nil
 	}
 

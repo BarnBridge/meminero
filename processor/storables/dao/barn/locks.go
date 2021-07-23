@@ -1,9 +1,10 @@
 package barn
 
 import (
-	"github.com/barnbridge/smartbackend/ethtypes"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/smartbackend/ethtypes"
 )
 
 func (s *Storable) handleLockEvents(logs []gethtypes.Log) error {

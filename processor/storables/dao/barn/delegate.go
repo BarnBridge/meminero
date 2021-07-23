@@ -3,10 +3,11 @@ package barn
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 func (s *Storable) handleDelegateEvents(logs []gethtypes.Log, ctx context.Context) error {

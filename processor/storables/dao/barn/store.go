@@ -3,12 +3,13 @@ package barn
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/notifications"
-	"github.com/barnbridge/smartbackend/utils"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
+
+	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/smartbackend/notifications"
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 func (s *Storable) storeDelegateActions(ctx context.Context, tx pgx.Tx) error {

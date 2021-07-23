@@ -3,11 +3,13 @@ package governance
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
+
+	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 func (g *GovStorable) handleVotes(logs []gethtypes.Log) error {
@@ -42,12 +44,12 @@ func (g *GovStorable) storeProposalVotes(ctx context.Context, tx pgx.Tx) error {
 		power := decimal.NewFromBigInt(v.Power, 0)
 		rows = append(rows, []interface{}{
 			v.ProposalId.Int64(),
-			v.User.String(),
+			utils.NormalizeAddress(v.User.String()),
 			v.Support,
 			power,
 			g.block.BlockCreationTime,
 			v.Raw.BlockNumber,
-			v.Raw.TxHash.String(),
+			utils.NormalizeAddress(v.Raw.TxHash.String()),
 			v.Raw.TxIndex,
 			v.Raw.Index,
 		})
@@ -69,6 +71,7 @@ func (g *GovStorable) storeProposalVotes(ctx context.Context, tx pgx.Tx) error {
 
 func (g *GovStorable) storeProposalCanceledVotes(ctx context.Context, tx pgx.Tx) error {
 	if len(g.Processed.canceledVotes) == 0 {
+		g.logger.WithField("handler", "canceled votes").Debug("no events found")
 		return nil
 	}
 
@@ -76,10 +79,10 @@ func (g *GovStorable) storeProposalCanceledVotes(ctx context.Context, tx pgx.Tx)
 	for _, v := range g.Processed.canceledVotes {
 		rows = append(rows, []interface{}{
 			v.ProposalId.Int64(),
-			v.User.String(),
+			utils.NormalizeAddress(v.User.String()),
 			g.block.BlockCreationTime,
 			v.Raw.BlockNumber,
-			v.Raw.TxHash.String(),
+			utils.NormalizeAddress(v.Raw.TxHash.String()),
 			v.Raw.TxIndex,
 			v.Raw.Index,
 		})
