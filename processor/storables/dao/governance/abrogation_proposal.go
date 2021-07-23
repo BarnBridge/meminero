@@ -5,15 +5,16 @@ import (
 	"sync"
 	"time"
 
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/eth"
 	"github.com/barnbridge/smartbackend/ethtypes"
 	"github.com/barnbridge/smartbackend/notifications"
 	"github.com/barnbridge/smartbackend/utils"
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
-	"golang.org/x/sync/errgroup"
 )
 
 func (g *GovStorable) handleAbrogationProposal(ctx context.Context, logs []gethtypes.Log) error {

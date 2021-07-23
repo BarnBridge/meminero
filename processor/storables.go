@@ -3,7 +3,7 @@ package processor
 import (
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/processor/storables/accountERC20Transfers"
-	"github.com/barnbridge/smartbackend/processor/storables/governance"
+	"github.com/barnbridge/smartbackend/processor/storables/dao/governance"
 	"github.com/barnbridge/smartbackend/processor/storables/yieldfarming"
 )
 

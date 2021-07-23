@@ -3,13 +3,14 @@ package yieldfarming
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 type Storable struct {
@@ -39,10 +40,12 @@ func (s *Storable) Execute(ctx context.Context) error {
 	if len(logs) == 0 {
 		s.logger.WithField("module", "yield farming").Debug("no events found")
 	}
+
 	err := s.decodeStakingActions(logs)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
