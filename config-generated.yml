@@ -54,3 +54,22 @@ redis:
 storable:
     accounterc20transfers:
         enabled: true
+    barn:
+        # Address of barn staking contract
+        address: ""
+        # Enable/disable barn scraping
+        enabled: true
+        # Enable/disable barn notifications
+        notifications: true
+    erc20transfers:
+        enabled: true
+    governance:
+        # Address of governance contract
+        address: ""
+        # Enable/disable governance scraping
+        enabled: true
+        # Enable/disable governance notifications
+        notifications: true
+    yieldfarming:
+        address: ""
+        enabled: true

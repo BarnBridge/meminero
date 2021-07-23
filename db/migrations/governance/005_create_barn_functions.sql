@@ -104,7 +104,7 @@ begin
 end;
 $$;
 
-create function governance.bond_staked_at_ts(ts timestamp with time zone) returns numeric
+create function governance.bond_staked_at_ts(ts bigint) returns numeric
     language plpgsql as
 $$
 declare
@@ -112,11 +112,7 @@ declare
 begin
     with values as ( select action_type, sum(amount) as amount
                      from governance.barn_staking_actions
-                     where included_in_block < ( select number
-                                                 from blocks
-                                                 where block_creation_time < ts
-                                                 order by block_creation_time desc
-                                                 limit 1 )
+                     where block_timestamp < ts
                      group by action_type )
     select into value coalesce(( select amount from values where action_type = 'DEPOSIT' ), 0) -
                       coalesce(( select amount from values where action_type = 'WITHDRAW' ), 0);
@@ -142,5 +138,5 @@ drop function governance.voting_power(addr text);
 drop function governance.balance_of(addr text);
 drop function governance.user_multiplier(addr text);
 drop function governance.has_active_delegation(addr text);
-drop function governance.bond_staked_at_ts(ts timestamp with time zone);
+drop function governance.bond_staked_at_ts(ts bigint);
 drop function governance.refresh_barn_users();

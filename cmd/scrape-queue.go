@@ -90,13 +90,4 @@ var scrapeQueueCmd = &cobra.Command{
 
 func init() {
 	scrapeCmd.AddCommand(scrapeQueueCmd)
-
-	addDBFlags(scrapeQueueCmd)
-	addRedisFlags(scrapeQueueCmd)
-	addMetricsFlags(scrapeQueueCmd)
-	addFeatureFlags(scrapeQueueCmd)
-	addETHFlags(scrapeQueueCmd)
-	addGenerateETHTypesFlags(scrapeQueueCmd)
-
-	addStorableAccountERC20TransfersFlags(scrapeQueueCmd)
 }

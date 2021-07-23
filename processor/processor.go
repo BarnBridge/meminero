@@ -43,7 +43,7 @@ func New(raw *types.RawData, state *state.Manager) (*Processor, error) {
 	return p, nil
 }
 
-func (p *Processor) rollbackAll(ctx context.Context,db *pgxpool.Pool) error {
+func (p *Processor) rollbackAll(ctx context.Context, db *pgxpool.Pool) error {
 	tx, err := db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
@@ -55,7 +55,7 @@ func (p *Processor) rollbackAll(ctx context.Context,db *pgxpool.Pool) error {
 	}
 
 	for _, s := range p.storables {
-		err = s.Rollback(ctx,tx)
+		err = s.Rollback(ctx, tx)
 		if err != nil {
 			tx.Rollback(context.Background())
 			return err
@@ -74,7 +74,7 @@ func (p *Processor) rollbackAll(ctx context.Context,db *pgxpool.Pool) error {
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
 func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
-	exists, err := p.checkBlockExists(ctx,db)
+	exists, err := p.checkBlockExists(ctx, db)
 	if err != nil {
 		return err
 	}
@@ -87,12 +87,12 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 	if config.Store.Feature.ReplaceBlocks {
 		p.logger.WithField("block", p.Block.Number).Warn("removing any old versions of block from db because feature flag is enabled")
 
-		err = p.rollbackAll(ctx,db)
+		err = p.rollbackAll(ctx, db)
 		if err != nil {
 			return err
 		}
 	} else {
-		reorged, err := p.checkBlockReorged(ctx,db)
+		reorged, err := p.checkBlockReorged(ctx, db)
 		if err != nil {
 			return err
 		}
@@ -100,7 +100,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 		if reorged {
 			p.logger.WithField("block", p.Block.Number).Warn("detected reorged block")
 
-			err = p.rollbackAll(ctx,db)
+			err = p.rollbackAll(ctx, db)
 			if err != nil {
 				return err
 			}
@@ -132,7 +132,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 
 	p.logger.WithField("duration", time.Since(start)).Info("done executing storables")
 
-	err = p.storeAll(ctx,db)
+	err = p.storeAll(ctx, db)
 	if err != nil {
 		return err
 	}
@@ -140,20 +140,20 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 	return nil
 }
 
-func (p *Processor) storeAll(ctx context.Context,db *pgxpool.Pool) error {
+func (p *Processor) storeAll(ctx context.Context, db *pgxpool.Pool) error {
 	tx, err := db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")
 	}
 
-	err = p.storeBlock(ctx,tx)
+	err = p.storeBlock(ctx, tx)
 	if err != nil {
 		tx.Rollback(ctx)
 		return err
 	}
 
 	for _, s := range p.storables {
-		err = s.SaveToDatabase(ctx,tx)
+		err = s.SaveToDatabase(ctx, tx)
 		if err != nil {
 			tx.Rollback(ctx)
 			return err
@@ -168,7 +168,7 @@ func (p *Processor) storeAll(ctx context.Context,db *pgxpool.Pool) error {
 	return nil
 }
 
-func (p *Processor) storeBlock(ctx context.Context,tx pgx.Tx) error {
+func (p *Processor) storeBlock(ctx context.Context, tx pgx.Tx) error {
 	p.logger.Trace("storing block")
 	start := time.Now()
 	defer func() { p.logger.WithField("duration", time.Since(start)).Debug("done storing block") }()

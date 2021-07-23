@@ -1,4 +1,4 @@
-package accountERC20Transfers
+package accounterc20transfers
 
 import (
 	"context"
@@ -44,10 +44,10 @@ func New(block *types.Block, state *state.Manager) *Storable {
 func (s *Storable) Execute(ctx context.Context) error {
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
-			if ethtypes.ERC20.IsERC20TransferEvent(&log) {
+			if len(log.Topics) == 3 && ethtypes.ERC20.IsERC20TransferEvent(&log) {
 				erc20Transfer, err := ethtypes.ERC20.ERC20TransferEvent(log)
 				if err != nil {
-					return errors.Wrap(err, "could not decode erc20 transfer")
+					return errors.Wrapf(err, "could not decode erc20 transfer in tx %s", log.TxHash.String())
 				}
 
 				if !s.state.IsMonitoredAccount(erc20Transfer.From.String()) &&
@@ -76,14 +76,14 @@ func (s *Storable) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (s *Storable) Rollback(ctx context.Context,tx pgx.Tx) error {
+func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 	_, err := tx.Exec(ctx, `delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
 
 	return err
 }
 
-func (s *Storable) SaveToDatabase(ctx context.Context,tx pgx.Tx) error {
-	err := s.storeTransfers(ctx,tx)
+func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
+	err := s.storeTransfers(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store erc20transfers")
 	}
