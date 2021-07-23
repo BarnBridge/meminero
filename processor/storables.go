@@ -4,6 +4,7 @@ import (
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/processor/storables/accountERC20Transfers"
 	"github.com/barnbridge/smartbackend/processor/storables/dao/governance"
+	"github.com/barnbridge/smartbackend/processor/storables/yieldfarming"
 )
 
 // registerStorables instantiates all the storables defined via code with the requested raw data
@@ -15,5 +16,9 @@ func (p *Processor) registerStorables() {
 
 	if config.Store.Storable.Governance.Enabled {
 		p.storables = append(p.storables, governance.New(p.Block))
+	}
+
+	if config.Store.Storable.YieldFarming.Enabled {
+		p.storables = append(p.storables, yieldfarming.New(p.Block))
 	}
 }

@@ -14,4 +14,5 @@ var scrapeCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(scrapeCmd)
+	addStorableYieldFarmingFlags(scrapeCmd)
 }
