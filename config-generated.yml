@@ -56,7 +56,7 @@ storable:
         enabled: true
     barn:
         # Address of barn staking contract
-        address: 0x10e138877df69Ca44Fdc68655f86c88CDe142D7F
+        address: ""
         # Enable/disable barn scraping
         enabled: true
         # Enable/disable barn notifications
@@ -65,7 +65,7 @@ storable:
         enabled: true
     governance:
         # Address of governance contract
-        address: 0x4cAE362D7F227e3d306f70ce4878E245563F3069
+        address: ""
         # Enable/disable governance scraping
         enabled: true
         # Enable/disable governance notifications

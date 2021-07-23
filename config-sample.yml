@@ -1,14 +1,3 @@
-# api-related fields
-api:
-  # The port on which the API will be exposed (default:3001)
-  port: 3001
-
-  # Enable/disable development CORS
-  dev-cors: true
-
-  # Allowed hosts for HTTP API development CORS
-  dev-cors-host: "*"
-
 # database fields
 db:
   # Database host
@@ -30,6 +19,8 @@ db:
 
   automigrate: true
 
+  migrations-path: db/migrations
+
 # ethereum-related fields
 eth:
   client:
@@ -45,14 +36,29 @@ eth:
     # optional, only used if `ws` url is not specified
     poll-interval: "15s"
 
+ethtypes:
+  # Folder containing ABI JSONs
+  abi-folder: ethtypes/_source
+  # Path where to generate packages. Final folder represents package name
+  package-path: ethtypes
+
 # feature flags
 feature:
+  integrity:
+    # Enable/disable the integrity checker
+    enabled: true
   queuekeeper:
     enabled: true
     lag: 10
+  # Enable this if the scraper should replace existing blocks instead of skipping them
+  replace-blocks: false
 
 # Control what to be logged using format "module=level,module=level"; `*` means all other modules
 logging: "*=info"
+
+metrics:
+  # Port on which to serve Prometheus metrics
+  port: 9909
 
 # redis-related fields
 redis:
@@ -62,15 +68,22 @@ redis:
   # The name of the redis list the scraper will use for task management (default: "todo")
   list: "todo"
 
+  password: ""
+
 #storables
 storable:
   accountERC20Transfers:
     enabled: false
+  barn:
+    enabled: true
+    address: "0x10e138877df69Ca44Fdc68655f86c88CDe142D7F"
+    notifications: true
+  erc20transfers:
+    enabled: true
   governance:
     enabled : true
     address : "0x4cAE362D7F227e3d306f70ce4878E245563F3069"
     notifications : false
-  barn:
-    enabled : true
-    address : "0x10e138877df69Ca44Fdc68655f86c88CDe142D7F"
-    notifications : true
+  yieldfarming:
+    address: ""
+    enabled: true
