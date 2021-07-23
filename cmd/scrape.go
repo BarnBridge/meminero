@@ -18,4 +18,5 @@ func init() {
 	addStorableAccountERC20TransfersFlags(scrapeCmd)
 	addStorableGovernanceFlags(scrapeCmd)
 	addStorableMonitoredERC20TransfersFlags(scrapeCmd)
+	addStorableYieldFarmingFlags(scrapeCmd)
 }

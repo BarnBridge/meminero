@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/smartbackend/utils"
 )
 
 type GovStorable struct {

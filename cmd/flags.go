@@ -59,3 +59,8 @@ func addStorableGovernanceFlags(cmd *cobra.Command) {
 func addStorableMonitoredERC20TransfersFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.erc20Transfers.enabled", true, "Enable/disable erc20Transfers scraping")
 }
+
+func addStorableYieldFarmingFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().Bool("storable.yieldFarming.enabled", true, "Enable/disable yieldFarming scraping")
+	cmd.PersistentFlags().String("storable.yieldFarming.address", "", "Address of governance contract")
+}
