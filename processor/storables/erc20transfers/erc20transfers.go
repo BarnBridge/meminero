@@ -2,6 +2,7 @@ package erc20transfers
 
 import (
 	"context"
+	"time"
 
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/state"
@@ -31,6 +32,13 @@ func New(block *types.Block, state *state.Manager) *Storable {
 }
 
 func (s *Storable) Execute(ctx context.Context) error {
+	s.logger.Trace("executing")
+	start := time.Now()
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).
+			Trace("done")
+	}()
+
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
 			if s.state.IsMonitoredERC20(log.Address.String()) {

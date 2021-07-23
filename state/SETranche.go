@@ -4,10 +4,14 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 	"github.com/pkg/errors"
 )
+
+func (m *Manager) SETranches() map[string]*types.SETranche {
+	return m.seTranches
+}
 
 func (m *Manager) SETrancheByETokenAddress(address string) *types.SETranche {
 	return m.seTranches[address]

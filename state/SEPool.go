@@ -3,8 +3,9 @@ package state
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
+
 	"github.com/pkg/errors"
 )
 

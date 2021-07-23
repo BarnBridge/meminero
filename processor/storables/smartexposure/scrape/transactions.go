@@ -1,8 +1,8 @@
-package smartexposure
+package scrape
 
 import (
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
 )

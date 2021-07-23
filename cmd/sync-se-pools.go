@@ -6,9 +6,9 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/barnbridge/smartbackend/db"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/db"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -75,5 +75,5 @@ func init() {
 
 	addDBFlags(syncSEPoolsCmd)
 
-	syncSEPoolsCmd.Flags().String("sePoolsFile", "./pools.kovan.json", "Path to list of pools in json format")
+	syncSEPoolsCmd.Flags().String("sePoolsFile", "./pools.mainnet.json", "Path to list of pools in json format")
 }

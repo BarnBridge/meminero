@@ -2,17 +2,14 @@ package smartexposure
 
 import (
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/common"
 )
 
-type SETransaction struct {
-	ETokenAddress   string
-	UserAddress     string
-	Amount          *big.Int
-	AmountA         *big.Int
-	AmountB         *big.Int
-	TransactionType string
-
-	TxHash   string
-	TxIndex  int64
-	LogIndex int64
+type TrancheFromChain struct {
+	Etoken      common.Address `json:"eToken"`
+	SFactorE    *big.Int       `json:"sFactorE"`
+	ReserveA    *big.Int       `json:"reserveA"`
+	ReserveB    *big.Int       `json:"reserveB"`
+	TargetRatio *big.Int       `json:"targetRatio"`
 }

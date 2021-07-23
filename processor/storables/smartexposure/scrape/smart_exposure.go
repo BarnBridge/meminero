@@ -1,13 +1,14 @@
-package smartexposure
+package scrape
 
 import (
 	"context"
+	"time"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/state"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/state"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -26,7 +27,7 @@ type Storable struct {
 	}
 }
 
-func (s *Storable) New(block *types.Block, state *state.Manager) *Storable {
+func New(block *types.Block, state *state.Manager) *Storable {
 	return &Storable{
 		block:  block,
 		state:  state,
@@ -35,6 +36,13 @@ func (s *Storable) New(block *types.Block, state *state.Manager) *Storable {
 }
 
 func (s *Storable) Execute(ctx context.Context) error {
+	s.logger.Trace("executing")
+	start := time.Now()
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).
+			Trace("done")
+	}()
+
 	var epoolTxs []gethtypes.Log
 	var newETokens []ethtypes.EtokenfactoryCreatedETokenEvent
 	for _, tx := range s.block.Txs {
@@ -44,23 +52,38 @@ func (s *Storable) Execute(ctx context.Context) error {
 				epoolTxs = append(epoolTxs, log)
 			}
 
-			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.ETokenFactoryAddress) {
-				if ethtypes.Etokenfactory.IsEtokenfactoryCreatedETokenEvent(&log) {
-					eToken, err := ethtypes.Etokenfactory.EtokenfactoryCreatedETokenEvent(log)
-					if err != nil {
-						return errors.Wrap(err, "could not decode Created EToken event")
-					}
-					newETokens = append(newETokens, eToken)
+			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.ETokenFactoryAddress) &&
+				ethtypes.Etokenfactory.IsEtokenfactoryCreatedETokenEvent(&log) {
+				eToken, err := ethtypes.Etokenfactory.EtokenfactoryCreatedETokenEvent(log)
+				if err != nil {
+					return errors.Wrap(err, "could not decode Created EToken event")
 				}
+				newETokens = append(newETokens, eToken)
 			}
-
 		}
+
+	}
+
+	err := s.decodePoolTransactions(epoolTxs)
+	if err != nil {
+		return err
+	}
+
+	err = s.getTranchesDetailsFromChain(ctx, newETokens)
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
-	return nil
+	_, err := tx.Exec(ctx, `delete from smart_exposure.transaction_history where included_in_block = $1`, s.block.Number)
+	if err != nil {
+		return err
+	}
+	_, err = tx.Exec(ctx, `delete from smart_exposure.tranches where start_at_block = $1`, s.block.Number)
+	return err
+
 }
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {

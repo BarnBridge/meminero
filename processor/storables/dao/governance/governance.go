@@ -94,7 +94,7 @@ func (g *GovStorable) Rollback(ctx context.Context, tx pgx.Tx) error {
 	b := &pgx.Batch{}
 	tables := [7]string{"proposals", "abrogation_proposals", "proposal_events", "votes", "votes_canceled", "abrogation_votes", "abrogation_votes_canceled"}
 	for _, t := range tables {
-		s := fmt.Sprintf(`delete from governance.%s where included_in_block = $1`, t)
+		s := fmt.Sprintf(`delete from governance.%s where included_in_block = $1;`, t)
 		b.Queue(s, g.block.Number)
 	}
 

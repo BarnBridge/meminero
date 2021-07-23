@@ -2,6 +2,7 @@ package accounterc20transfers
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -42,6 +43,13 @@ func New(block *types.Block, state *state.Manager) *Storable {
 }
 
 func (s *Storable) Execute(ctx context.Context) error {
+	s.logger.Trace("executing")
+	start := time.Now()
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).
+			Trace("done")
+	}()
+
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
 			if len(log.Topics) == 3 && ethtypes.ERC20.IsERC20TransferEvent(&log) {

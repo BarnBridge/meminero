@@ -63,6 +63,16 @@ func (m *Manager) RefreshCache(ctx context.Context) error {
 		return errors.Wrap(err, "could not fetch monitored erc20")
 	}
 
+	err = m.loadAllSEPools(ctx)
+	if err != nil {
+		return errors.Wrap(err, "could not fetch smart exposure pools")
+	}
+
+	err = m.loadAllSETranches(ctx)
+	if err != nil {
+		return errors.Wrap(err, "could not fetch smart exposure tranches")
+	}
+
 	return nil
 }
 
