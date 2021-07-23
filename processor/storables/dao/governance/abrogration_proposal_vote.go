@@ -19,6 +19,7 @@ func (g *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error 
 			if err != nil {
 				return errors.Wrap(err, "could not decode abrogation proposal event")
 			}
+
 			g.Processed.abrogationVotes = append(g.Processed.abrogationVotes, vote)
 		}
 
@@ -55,6 +56,7 @@ func (g *GovStorable) storeProposalAbrogationVotes(ctx context.Context, tx pgx.T
 			v.Raw.Index,
 		})
 	}
+
 	_, err := tx.CopyFrom(
 		ctx,
 		pgx.Identifier{"governance", "abrogation_votes"},
@@ -85,6 +87,7 @@ func (g *GovStorable) storeAbrogationProposalCanceledVotes(ctx context.Context, 
 			v.Raw.Index,
 		})
 	}
+
 	_, err := tx.CopyFrom(
 		ctx,
 		pgx.Identifier{"governance", "abrogation_votes_canceled"},

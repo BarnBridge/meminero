@@ -98,6 +98,7 @@ func (g *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
 		g.logger.WithField("handler", "proposal events").Debug("no events found")
 		return nil
 	}
+
 	var rows [][]interface{}
 	for _, e := range g.Processed.proposalEvents {
 		var eventData types.JSONObject

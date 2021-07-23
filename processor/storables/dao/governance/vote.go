@@ -19,16 +19,18 @@ func (g *GovStorable) handleVotes(logs []gethtypes.Log) error {
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal vote event")
 			}
+
 			g.Processed.votes = append(g.Processed.votes, vote)
 		}
+
 		if ethtypes.Governance.IsGovernanceVoteCanceledEvent(&log) {
 			vote, err := ethtypes.Governance.GovernanceVoteCanceledEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal vote canceled event")
 			}
+
 			g.Processed.canceledVotes = append(g.Processed.canceledVotes, vote)
 		}
-
 	}
 
 	return nil
@@ -36,6 +38,8 @@ func (g *GovStorable) handleVotes(logs []gethtypes.Log) error {
 
 func (g *GovStorable) storeProposalVotes(ctx context.Context, tx pgx.Tx) error {
 	if len(g.Processed.votes) == 0 {
+		g.logger.WithField("handler", "votes").Debug("no events found")
+
 		return nil
 	}
 
@@ -54,6 +58,7 @@ func (g *GovStorable) storeProposalVotes(ctx context.Context, tx pgx.Tx) error {
 			v.Raw.Index,
 		})
 	}
+
 	_, err := tx.CopyFrom(
 		ctx,
 		pgx.Identifier{"governance", "votes"},
