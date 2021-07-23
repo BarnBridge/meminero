@@ -53,7 +53,7 @@ func addStorableAccountERC20TransfersFlags(cmd *cobra.Command) {
 func addStorableGovernanceFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.governance.enabled", true, "Enable/disable governance scraping")
 	cmd.PersistentFlags().Bool("storable.governance.notifications", true, "Enable/disable governance notifications")
-	cmd.PersistentFlags().String("storable.governance.address", "0x4cAE362D7F227e3d306f70ce4878E245563F3069", "Address of governance contract")
+	cmd.PersistentFlags().String("storable.governance.address", "", "Address of governance contract")
 }
 
 func addStorableMonitoredERC20TransfersFlags(cmd *cobra.Command) {
@@ -68,5 +68,5 @@ func addStorableYieldFarmingFlags(cmd *cobra.Command) {
 func addStorableBarnFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.barn.enabled", true, "Enable/disable barn scraping")
 	cmd.PersistentFlags().Bool("storable.barn.notifications", true, "Enable/disable barn notifications")
-	cmd.PersistentFlags().String("storable.barn.address", "0x10e138877df69Ca44Fdc68655f86c88CDe142D7F", "Address of barn staking contract")
+	cmd.PersistentFlags().String("storable.barn.address", "", "Address of barn staking contract")
 }
