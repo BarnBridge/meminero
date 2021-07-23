@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/meminero/types"
 )
 
 type Manager struct {

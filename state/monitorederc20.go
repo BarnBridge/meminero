@@ -3,7 +3,7 @@ package state
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/utils"
 	"github.com/pkg/errors"
 )
 

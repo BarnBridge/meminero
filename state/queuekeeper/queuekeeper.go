@@ -5,8 +5,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/state"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/state"
 	"github.com/lacasian/ethwheels/bestblock"
 )
 

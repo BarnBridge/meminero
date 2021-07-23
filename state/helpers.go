@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/meminero/config"
 )
 
 func NewRedis() (*redis.Client, error) {

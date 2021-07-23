@@ -9,12 +9,12 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/eth"
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/notifications"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/eth"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/notifications"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (g *GovStorable) handleProposals(ctx context.Context, logs []gethtypes.Log) error {

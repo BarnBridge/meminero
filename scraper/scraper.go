@@ -11,8 +11,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/types"
 
 	"github.com/alethio/web3-go/ethrpc"
 	"github.com/sirupsen/logrus"

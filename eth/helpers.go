@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/pkg/errors"
 
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func DecodeString(output string) ([]byte, error) {

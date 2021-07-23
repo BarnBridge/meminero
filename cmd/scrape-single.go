@@ -6,11 +6,11 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/barnbridge/smartbackend/db"
-	"github.com/barnbridge/smartbackend/eth"
+	"github.com/barnbridge/meminero/db"
+	"github.com/barnbridge/meminero/eth"
 
-	"github.com/barnbridge/smartbackend/glue"
-	"github.com/barnbridge/smartbackend/state"
+	"github.com/barnbridge/meminero/glue"
+	"github.com/barnbridge/meminero/state"
 )
 
 var scrapeSingleCmd = &cobra.Command{

@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/barnbridge/smartbackend/db"
-	"github.com/barnbridge/smartbackend/state"
+	"github.com/barnbridge/meminero/db"
+	"github.com/barnbridge/meminero/state"
 )
 
 var resetCmd = &cobra.Command{

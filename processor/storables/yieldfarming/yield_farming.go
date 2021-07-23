@@ -8,9 +8,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 type Storable struct {

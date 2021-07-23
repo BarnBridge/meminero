@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/utils"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"

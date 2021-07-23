@@ -8,10 +8,10 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 type Storable struct {

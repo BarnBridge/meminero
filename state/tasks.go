@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
 
-	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/meminero/config"
 )
 
 func (m *Manager) NextTask(ctx context.Context) (int64, error) {

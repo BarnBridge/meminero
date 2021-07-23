@@ -4,7 +4,7 @@ import (
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/meminero/ethtypes"
 )
 
 func (s *Storable) handleLockEvents(logs []gethtypes.Log) error {

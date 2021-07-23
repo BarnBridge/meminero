@@ -10,13 +10,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/spf13/cobra"
 
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/db"
-	"github.com/barnbridge/smartbackend/eth"
-	"github.com/barnbridge/smartbackend/glue"
-	"github.com/barnbridge/smartbackend/integrity"
-	"github.com/barnbridge/smartbackend/state"
-	"github.com/barnbridge/smartbackend/state/queuekeeper"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/db"
+	"github.com/barnbridge/meminero/eth"
+	"github.com/barnbridge/meminero/glue"
+	"github.com/barnbridge/meminero/integrity"
+	"github.com/barnbridge/meminero/state"
+	"github.com/barnbridge/meminero/state/queuekeeper"
 )
 
 var scrapeQueueCmd = &cobra.Command{

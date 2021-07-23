@@ -1,7 +1,7 @@
 package state
 
 import (
-	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/meminero/config"
 )
 
 func (m *Manager) Reset() error {

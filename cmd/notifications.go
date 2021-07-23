@@ -7,8 +7,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/barnbridge/smartbackend/db"
-	"github.com/barnbridge/smartbackend/notifications"
+	"github.com/barnbridge/meminero/db"
+	"github.com/barnbridge/meminero/notifications"
 )
 
 var notificationsCmd = &cobra.Command{

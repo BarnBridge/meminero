@@ -1,7 +1,7 @@
 # database fields
 db:
   # Database host
-  host: "smartbackend-postgres"
+  host: "meminero-postgres"
 
   # Database port
   port: 5432
@@ -63,7 +63,7 @@ metrics:
 # redis-related fields
 redis:
   # URL of redis server (default:"localhost:6379")
-  server: "smartbackend-redis:6379"
+  server: "meminero-redis:6379"
 
   # The name of the redis list the scraper will use for task management (default: "todo")
   list: "todo"

@@ -3,7 +3,7 @@ package erc20transfers
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/utils"
 	"github.com/jackc/pgx/v4"
 	"github.com/shopspring/decimal"
 )

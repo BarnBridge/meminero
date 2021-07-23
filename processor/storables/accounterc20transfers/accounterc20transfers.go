@@ -9,10 +9,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/smartbackend/eth"
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/state"
-	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/meminero/eth"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/state"
+	"github.com/barnbridge/meminero/types"
 )
 
 var (

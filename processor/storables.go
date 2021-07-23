@@ -1,12 +1,12 @@
 package processor
 
 import (
-	"github.com/barnbridge/smartbackend/config"
-	"github.com/barnbridge/smartbackend/processor/storables/accounterc20transfers"
-	"github.com/barnbridge/smartbackend/processor/storables/dao/barn"
-	"github.com/barnbridge/smartbackend/processor/storables/dao/governance"
-	"github.com/barnbridge/smartbackend/processor/storables/erc20transfers"
-	"github.com/barnbridge/smartbackend/processor/storables/yieldfarming"
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/processor/storables/accounterc20transfers"
+	"github.com/barnbridge/meminero/processor/storables/dao/barn"
+	"github.com/barnbridge/meminero/processor/storables/dao/governance"
+	"github.com/barnbridge/meminero/processor/storables/erc20transfers"
+	"github.com/barnbridge/meminero/processor/storables/yieldfarming"
 )
 
 // registerStorables instantiates all the storables defined via code with the requested raw data

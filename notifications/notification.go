@@ -3,7 +3,7 @@ package notifications
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/meminero/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 )

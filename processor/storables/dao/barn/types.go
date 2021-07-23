@@ -3,7 +3,7 @@ package barn
 import (
 	"math/big"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
+	"github.com/barnbridge/meminero/ethtypes"
 )
 
 type DelegateAction struct {

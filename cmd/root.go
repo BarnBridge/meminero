@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/barnbridge/smartbackend/config"
+	"github.com/barnbridge/meminero/config"
 )
 
 var log = logrus.WithField("module", "main")
@@ -19,7 +19,7 @@ var (
 	version    bool
 
 	RootCmd = &cobra.Command{
-		Use:   "smartbackend",
+		Use:   "meminero",
 		Short: "Ethereum data and indexer",
 		Long:  "Scrape ethereum data from any web3-compatible node and index it into a postgres database",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
@@ -70,7 +70,7 @@ func init() {
 	cobra.OnInitialize(func() {
 		viper.Set("version", RootCmd.Version)
 	})
-	viper.SetEnvPrefix("smartbackend")
+	viper.SetEnvPrefix("meminero")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 	viper.AutomaticEnv()
 

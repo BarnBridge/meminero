@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (g *GovStorable) handleVotes(logs []gethtypes.Log) error {

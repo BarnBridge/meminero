@@ -3,9 +3,9 @@ package erc20transfers
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/state"
-	"github.com/barnbridge/smartbackend/types"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/state"
+	"github.com/barnbridge/meminero/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"

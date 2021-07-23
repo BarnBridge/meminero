@@ -7,9 +7,9 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/types"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {

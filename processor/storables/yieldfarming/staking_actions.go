@@ -3,8 +3,8 @@ package yieldfarming
 import (
 	"context"
 
-	"github.com/barnbridge/smartbackend/ethtypes"
-	"github.com/barnbridge/smartbackend/utils"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
