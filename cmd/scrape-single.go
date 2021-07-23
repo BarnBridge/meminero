@@ -55,11 +55,5 @@ var scrapeSingleCmd = &cobra.Command{
 func init() {
 	scrapeCmd.AddCommand(scrapeSingleCmd)
 
-	addDBFlags(scrapeSingleCmd)
-	addRedisFlags(scrapeSingleCmd)
-	addFeatureFlags(scrapeSingleCmd)
-	addETHFlags(scrapeSingleCmd)
-	addGenerateETHTypesFlags(scrapeSingleCmd)
-
 	scrapeSingleCmd.Flags().Int64("block", -1, "The block to scrape")
 }

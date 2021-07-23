@@ -3,6 +3,7 @@ package processor
 import (
 	"github.com/barnbridge/smartbackend/config"
 	"github.com/barnbridge/smartbackend/processor/storables/accounterc20transfers"
+	"github.com/barnbridge/smartbackend/processor/storables/dao/barn"
 	"github.com/barnbridge/smartbackend/processor/storables/dao/governance"
 	"github.com/barnbridge/smartbackend/processor/storables/erc20transfers"
 	"github.com/barnbridge/smartbackend/processor/storables/yieldfarming"
@@ -17,6 +18,10 @@ func (p *Processor) registerStorables() {
 
 	if config.Store.Storable.Governance.Enabled {
 		p.storables = append(p.storables, governance.New(p.Block))
+	}
+
+	if config.Store.Storable.Barn.Enabled {
+		p.storables = append(p.storables, barn.New(p.Block))
 	}
 
 	if config.Store.Storable.Erc20Transfers.Enabled {
