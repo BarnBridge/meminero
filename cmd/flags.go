@@ -47,13 +47,17 @@ func addGenerateETHTypesFlags(cmd *cobra.Command) {
 }
 
 func addStorableAccountERC20TransfersFlags(cmd *cobra.Command) {
-	cmd.Flags().Bool("storable.accountERC20Transfers.enabled", true, "Enable/disable erc20 transfers scraping")
+	cmd.PersistentFlags().Bool("storable.accountERC20Transfers.enabled", true, "Enable/disable erc20 transfers scraping")
 }
 
 func addStorableGovernanceFlags(cmd *cobra.Command) {
-	cmd.Flags().Bool("storable.governance.enabled", true, "Enable/disable governance scraping")
-	cmd.Flags().Bool("storable.governance.notifications", true, "Enable/disable governance notifications")
-	cmd.Flags().String("storable.governance.address", "0x4cAE362D7F227e3d306f70ce4878E245563F3069", "Address of governance contract")
+	cmd.PersistentFlags().Bool("storable.governance.enabled", true, "Enable/disable governance scraping")
+	cmd.PersistentFlags().Bool("storable.governance.notifications", true, "Enable/disable governance notifications")
+	cmd.PersistentFlags().String("storable.governance.address", "0x4cAE362D7F227e3d306f70ce4878E245563F3069", "Address of governance contract")
+}
+
+func addStorableMonitoredERC20TransfersFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().Bool("storable.erc20Transfers.enabled", true, "Enable/disable erc20Transfers scraping")
 }
 
 func addStorableYieldFarmingFlags(cmd *cobra.Command) {
