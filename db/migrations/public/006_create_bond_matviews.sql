@@ -1,4 +1,4 @@
-create or replace function public.erc20_user_with_balance(_address text)
+create or replace function public.erc20_users_with_balance(_address text)
     returns table
             (
                 address text,
@@ -25,12 +25,8 @@ begin
 end
 $$;
 
-create or replace function public.erc20_users_with_balance_excluded_transfers(_address text, excluded_addresses text[])
-    returns table
-            (
-                address text,
-                balance numeric(78)
-            )
+create or replace function erc20_users_with_balance_excluded_transfers(_address text, excluded_addresses text[])
+    returns TABLE(address text, balance numeric)
     language plpgsql
 as
 $$
@@ -38,15 +34,15 @@ begin
     return query with transfers as ( select public.erc20_transfers.sender  as address,
                                             - public.erc20_transfers.value as amount
                                      from public.erc20_transfers
-                                     where (public.erc20_transfers.sender not in (excluded_addresses))
-                                       and (public.erc20_transfers.receiver not in (excluded_addresses))
+                                     where not (public.erc20_transfers.sender = ANY(excluded_addresses))
+                                       and not (public.erc20_transfers.receiver = ANY(excluded_addresses))
                                        and token_address = _address
                                      union all
                                      select public.erc20_transfers.receiver as addrress,
                                             public.erc20_transfers.value    as amount
                                      from public.erc20_transfers
-                                     where (public.erc20_transfers.sender not in (excluded_addresses))
-                                       and (public.erc20_transfers.receiver not in (excluded_addresses))
+                                     where not (public.erc20_transfers.sender = ANY(excluded_addresses))
+                                       and not (public.erc20_transfers.receiver = ANY(excluded_addresses))
                                        and token_address = _address )
                  select transfers.address, sum(transfers.amount) as balance
                  from transfers

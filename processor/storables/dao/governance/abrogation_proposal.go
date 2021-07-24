@@ -2,8 +2,10 @@ package governance
 
 import (
 	"context"
+	"math/big"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -43,14 +45,27 @@ func (g *GovStorable) handleAbrogationProposal(ctx context.Context, logs []getht
 func (g *GovStorable) getAPDescriptionsFromChain(ctx context.Context, aps []ethtypes.GovernanceAbrogationProposalStartedEvent) error {
 	a := ethtypes.Governance.ABI
 
+	type Response struct {
+		Creator      common.Address
+		CreateTime   *big.Int
+		Description  string
+		ForVotes     *big.Int
+		AgainstVotes *big.Int
+	}
+
 	for _, ap := range aps {
-		var description string
-		err := eth.CallContractFunction(*a, utils.NormalizeAddress(config.Store.Storable.Governance.Address), "abrogationProposals", []interface{}{ap.ProposalId}, &description)()
+		var resp Response
+
+		err := eth.CallContractFunction(*a, config.Store.Storable.Governance.Address, "abrogationProposals", []interface{}{ap.ProposalId}, &resp)()
 		if err != nil {
 			return errors.Wrap(err, "could not call governance.abrogationProposals")
 		}
 
-		g.Processed.abrogationProposalsDescription[ap.ProposalId.String()] = description
+		if g.Processed.abrogationProposalsDescription == nil {
+			g.Processed.abrogationProposalsDescription = make(map[string]string)
+		}
+
+		g.Processed.abrogationProposalsDescription[ap.ProposalId.String()] = resp.Description
 	}
 
 	return nil
