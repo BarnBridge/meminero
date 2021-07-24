@@ -30,6 +30,14 @@ func NormalizeAddress(addr string) string {
 	return "0x" + CleanUpHex(addr)
 }
 
+func NormalizeAddresses(addrs []string) []string {
+	for k, v := range addrs {
+		addrs[k] = NormalizeAddress(v)
+	}
+
+	return addrs
+}
+
 func AppendNotEmpty(slice []string, str string) []string {
 	if str != "" {
 		return append(slice, str)

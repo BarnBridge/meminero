@@ -6,4 +6,3 @@ build:
 reset: build
 	./meminero reset --force
 	./meminero migrate
-	./meminero sync-accounts --file ./accounts.kovan.json

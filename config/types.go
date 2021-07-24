@@ -52,3 +52,9 @@ type ethtypes struct {
 	AbiFolder   string `mapstructure:"abi-folder"`
 	PackagePath string `mapstructure:"package-path"`
 }
+
+type syncer struct {
+	Path     string
+	Network  string
+	Datasets []string
+}

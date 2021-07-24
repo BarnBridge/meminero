@@ -27,5 +27,5 @@ var genETHDecoders = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(genETHDecoders)
 
-	AddGenerateETHTypesFlags(genETHDecoders)
+	addGenerateETHTypesFlags(genETHDecoders)
 }

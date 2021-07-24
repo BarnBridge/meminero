@@ -11,3 +11,5 @@ create table smart_yield.reward_pools
 
     created_at             timestamp        default now()
 );
+
+create unique index reward_pools_pool_address_idx on smart_yield.reward_pools (pool_address);

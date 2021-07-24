@@ -37,5 +37,5 @@ var notificationsCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(notificationsCmd)
 
-	AddDBFlags(notificationsCmd)
+	addDBFlags(notificationsCmd)
 }
