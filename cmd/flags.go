@@ -73,6 +73,7 @@ func addStorableBarnFlags(cmd *cobra.Command) {
 
 func addStorableSmartExposureFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.smart-exposure.enabled", true, "Enable/disable Smart Exposure scraping")
-	cmd.PersistentFlags().String("storable.smart-exposure.ePoolPeripheryAddress", "", "EPoolPeriphery address")
-	cmd.PersistentFlags().String("storable.smart-exposure.ETokenFactoryAddress", "", "ETokenFactory address")
+	cmd.PersistentFlags().String("storable.smart-exposure.ePoolPeripheryAddress", "", "Address of epool periphery contract")
+	cmd.PersistentFlags().String("storable.smart-exposure.ETokenFactoryAddress", "", "Address of etoken factory contract")
+	cmd.PersistentFlags().String("storable.smart-exposure.EPoolHelperAddress", "", "Address of EPool helper contract")
 }

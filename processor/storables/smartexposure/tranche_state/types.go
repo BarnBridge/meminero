@@ -2,22 +2,16 @@ package tranche_state
 
 import (
 	"math/big"
-
-	"github.com/shopspring/decimal"
 )
 
 type TrancheState struct {
 	EPoolAddress string
 	CurrentRatio *big.Int
 
-	TokenALiquidity decimal.Decimal
-	TokenBLiquidity decimal.Decimal
+	TokenALiquidity *big.Int
+	TokenBLiquidity *big.Int
 
-	ConversionRate     ConversionRate
-	TokenACurrentRatio decimal.Decimal
-	TokenBCurrentRatio decimal.Decimal
-
-	ETokenPrice decimal.Decimal
+	ConversionRate ConversionRate
 }
 
 type ConversionRate struct {

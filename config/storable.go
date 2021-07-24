@@ -38,4 +38,5 @@ type smartExposure struct {
 	Enabled               bool
 	EPoolPeripheryAddress string
 	ETokenFactoryAddress  string
+	EPoolHelperAddress    string
 }

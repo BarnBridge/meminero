@@ -2,16 +2,20 @@ package tranche_state
 
 import (
 	"context"
+	"math/big"
 	"sync"
 	"time"
 
+	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
 	"github.com/barnbridge/meminero/state"
+	"github.com/barnbridge/meminero/types"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 )
@@ -42,22 +46,37 @@ func (s *Storable) Execute(ctx context.Context) error {
 		s.logger.WithField("duration", time.Since(start)).
 			Trace("done")
 	}()
-
+	spew.Dump(config.Store.Storable.SmartExposure)
 	s.processed.trancheState = make(map[string]*TrancheState)
-	var wg = &errgroup.Group{}
+	wg, _ := errgroup.WithContext(ctx)
 	var mu = &sync.Mutex{}
-	tranches := make(map[string]smartexposure.TrancheFromChain)
 	for trancheAddress, tranche := range s.state.SETranches() {
+
 		var t smartexposure.TrancheFromChain
 		a := ethtypes.Epool.ABI
-
+		var currentRatio, amountAConversion, amountBConversion *big.Int
 		wg.Go(eth.CallContractFunction(*a, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t))
+		wg.Go(eth.CallContractFunction(*a, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio))
+		wg.Go(eth.CallContractFunction(*a, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &amountAConversion, &amountBConversion))
 
 		mu.Lock()
-		tranches[t.Etoken.String()] = t
+		s.processed.trancheState[trancheAddress] = &TrancheState{
+			EPoolAddress:    tranche.EPoolAddress,
+			CurrentRatio:    currentRatio,
+			TokenALiquidity: t.ReserveA,
+			TokenBLiquidity: t.ReserveB,
+			ConversionRate: ConversionRate{
+				AmountAConversion: amountAConversion,
+				AmountBConversion: amountBConversion,
+			},
+		}
 		mu.Unlock()
 	}
 
+	err := wg.Wait()
+	if err != nil {
+		return errors.Wrap(err, "could not get data from chain")
+	}
 	return nil
 
 }
@@ -67,7 +86,8 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 }
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
-	return nil
+	err := s.storeTranchesState(ctx, tx)
+	return err
 }
 
 func (s *Storable) Result() interface{} {

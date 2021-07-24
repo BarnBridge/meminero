@@ -7,6 +7,7 @@ import (
 	"github.com/barnbridge/meminero/processor/storables/dao/governance"
 	"github.com/barnbridge/meminero/processor/storables/erc20transfers"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure/scrape"
+	"github.com/barnbridge/meminero/processor/storables/smartexposure/tranche_state"
 	"github.com/barnbridge/meminero/processor/storables/yieldfarming"
 )
 
@@ -35,5 +36,7 @@ func (p *Processor) registerStorables() {
 
 	if config.Store.Storable.SmartExposure.Enabled {
 		p.storables = append(p.storables, scrape.New(p.Block, p.state))
+		p.storables = append(p.storables, tranche_state.New(p.Block, p.state))
 	}
+
 }
