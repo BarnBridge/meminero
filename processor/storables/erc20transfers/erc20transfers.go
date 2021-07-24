@@ -2,13 +2,15 @@ package erc20transfers
 
 import (
 	"context"
+	"time"
+
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
-	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 )
 
 type Storable struct {
@@ -48,6 +50,12 @@ func (s *Storable) Execute(ctx context.Context) error {
 }
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
+	start := time.Now()
+	s.logger.WithField("block", s.block.Number).Debug("rolling back block")
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).Debug("done rolling back block")
+	}()
+
 	_, err := tx.Exec(ctx, `delete from public.erc20_transfers where included_in_block = $1`, s.block.Number)
 	return err
 }

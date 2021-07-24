@@ -40,16 +40,16 @@ func New(block *types.Block) *GovStorable {
 	}
 }
 
-func (g *GovStorable) Execute(ctx context.Context) error {
-	g.logger.Trace("executing")
+func (s *GovStorable) Execute(ctx context.Context) error {
+	s.logger.Trace("executing")
 	start := time.Now()
 	defer func() {
-		g.logger.WithField("duration", time.Since(start)).
+		s.logger.WithField("duration", time.Since(start)).
 			Trace("done")
 	}()
 
 	var govLogs []gethtypes.Log
-	for _, data := range g.block.Txs {
+	for _, data := range s.block.Txs {
 		for _, log := range data.LogEntries {
 			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.Governance.Address) {
 				govLogs = append(govLogs, log)
@@ -58,31 +58,31 @@ func (g *GovStorable) Execute(ctx context.Context) error {
 	}
 
 	if len(govLogs) == 0 {
-		g.logger.WithField("handler", "governance").Debug("no events found")
+		s.logger.WithField("handler", "governance").Debug("no events found")
 		return nil
 	}
 
-	err := g.handleProposals(ctx, govLogs)
+	err := s.handleProposals(ctx, govLogs)
 	if err != nil {
 		return err
 	}
 
-	err = g.handleAbrogationProposal(ctx, govLogs)
+	err = s.handleAbrogationProposal(ctx, govLogs)
 	if err != nil {
 		return err
 	}
 
-	err = g.handleEvents(govLogs)
+	err = s.handleEvents(govLogs)
 	if err != nil {
 		return err
 	}
 
-	err = g.handleVotes(govLogs)
+	err = s.handleVotes(govLogs)
 	if err != nil {
 		return err
 	}
 
-	err = g.handleAbrogationProposalVotes(govLogs)
+	err = s.handleAbrogationProposalVotes(govLogs)
 	if err != nil {
 		return err
 	}
@@ -90,12 +90,18 @@ func (g *GovStorable) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (g *GovStorable) Rollback(ctx context.Context, tx pgx.Tx) error {
+func (s *GovStorable) Rollback(ctx context.Context, tx pgx.Tx) error {
+	start := time.Now()
+	s.logger.WithField("block", s.block.Number).Debug("rolling back block")
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).Debug("done rolling back block")
+	}()
+
 	b := &pgx.Batch{}
-	tables := [7]string{"proposals", "abrogation_proposals", "proposal_events", "votes", "votes_canceled", "abrogation_votes", "abrogation_votes_canceled"}
+	tables := []string{"proposals", "abrogation_proposals", "proposal_events", "votes", "votes_canceled", "abrogation_votes", "abrogation_votes_canceled"}
 	for _, t := range tables {
-		s := fmt.Sprintf(`delete from governance.%s where included_in_block = $1`, t)
-		b.Queue(s, g.block.Number)
+		query := fmt.Sprintf(`delete from governance.%s where included_in_block = $1`, t)
+		b.Queue(query, s.block.Number)
 	}
 
 	br := tx.SendBatch(ctx, b)
@@ -108,38 +114,38 @@ func (g *GovStorable) Rollback(ctx context.Context, tx pgx.Tx) error {
 	return err
 }
 
-func (g *GovStorable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
-	err := g.storeProposals(ctx, tx)
+func (s *GovStorable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
+	err := s.storeProposals(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store proposals")
 	}
 
-	err = g.storeAbrogrationProposals(ctx, tx)
+	err = s.storeAbrogrationProposals(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store abrogration proposals")
 	}
 
-	err = g.storeEvents(ctx, tx)
+	err = s.storeEvents(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store proposals events")
 	}
 
-	err = g.storeProposalVotes(ctx, tx)
+	err = s.storeProposalVotes(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store proposal's votes")
 	}
 
-	err = g.storeProposalCanceledVotes(ctx, tx)
+	err = s.storeProposalCanceledVotes(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store proposal's  canceled votes")
 	}
 
-	err = g.storeProposalAbrogationVotes(ctx, tx)
+	err = s.storeProposalAbrogationVotes(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store abrogation proposal's votes")
 	}
 
-	err = g.storeAbrogationProposalCanceledVotes(ctx, tx)
+	err = s.storeAbrogationProposalCanceledVotes(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store abrogation proposal's  canceled votes")
 	}
@@ -147,6 +153,6 @@ func (g *GovStorable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
 	return nil
 }
 
-func (g *GovStorable) Result() interface{} {
-	return g.Processed
+func (s *GovStorable) Result() interface{} {
+	return s.Processed
 }

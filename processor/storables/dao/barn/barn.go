@@ -3,6 +3,7 @@ package barn
 import (
 	"context"
 	"fmt"
+	"time"
 
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
@@ -68,8 +69,14 @@ func (s *Storable) Execute(ctx context.Context) error {
 }
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
+	start := time.Now()
+	s.logger.WithField("block", s.block.Number).Debug("rolling back block")
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).Debug("done rolling back block")
+	}()
+
 	b := &pgx.Batch{}
-	tables := [7]string{"barn_delegate_actions", "barn_delegate_changes", "barn_locks", "barn_staking_actions"}
+	tables := []string{"barn_delegate_actions", "barn_delegate_changes", "barn_locks", "barn_staking_actions"}
 	for _, t := range tables {
 		query := fmt.Sprintf(`delete from governance.%s where included_in_block = $1`, t)
 		b.Queue(query, s.block.Number)

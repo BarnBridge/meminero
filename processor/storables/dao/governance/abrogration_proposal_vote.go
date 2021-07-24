@@ -12,7 +12,7 @@ import (
 	"github.com/barnbridge/meminero/utils"
 )
 
-func (g *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error {
+func (s *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error {
 	for _, log := range logs {
 		if ethtypes.Governance.IsGovernanceAbrogationProposalVoteEvent(&log) {
 			vote, err := ethtypes.Governance.GovernanceAbrogationProposalVoteEvent(log)
@@ -20,7 +20,7 @@ func (g *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error 
 				return errors.Wrap(err, "could not decode abrogation proposal event")
 			}
 
-			g.Processed.abrogationVotes = append(g.Processed.abrogationVotes, vote)
+			s.Processed.abrogationVotes = append(s.Processed.abrogationVotes, vote)
 		}
 
 		if ethtypes.Governance.IsGovernanceAbrogationProposalVoteEvent(&log) {
@@ -29,27 +29,27 @@ func (g *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error 
 				return errors.Wrap(err, "could not decode abrogation proposal event")
 			}
 
-			g.Processed.abrogationCanceledVotes = append(g.Processed.abrogationCanceledVotes, vote)
+			s.Processed.abrogationCanceledVotes = append(s.Processed.abrogationCanceledVotes, vote)
 		}
 	}
 
 	return nil
 }
 
-func (g *GovStorable) storeProposalAbrogationVotes(ctx context.Context, tx pgx.Tx) error {
-	if len(g.Processed.abrogationVotes) == 0 {
+func (s *GovStorable) storeProposalAbrogationVotes(ctx context.Context, tx pgx.Tx) error {
+	if len(s.Processed.abrogationVotes) == 0 {
 		return nil
 	}
 
 	var rows [][]interface{}
-	for _, v := range g.Processed.abrogationVotes {
+	for _, v := range s.Processed.abrogationVotes {
 		power := decimal.NewFromBigInt(v.Power, 0)
 		rows = append(rows, []interface{}{
 			v.ProposalId.Int64(),
 			utils.NormalizeAddress(v.User.String()),
 			v.Support,
 			power,
-			g.block.BlockCreationTime,
+			s.block.BlockCreationTime,
 			v.Raw.BlockNumber,
 			utils.NormalizeAddress(v.Raw.TxHash.String()),
 			v.Raw.TxIndex,
@@ -70,17 +70,17 @@ func (g *GovStorable) storeProposalAbrogationVotes(ctx context.Context, tx pgx.T
 	return nil
 }
 
-func (g *GovStorable) storeAbrogationProposalCanceledVotes(ctx context.Context, tx pgx.Tx) error {
-	if len(g.Processed.abrogationCanceledVotes) == 0 {
+func (s *GovStorable) storeAbrogationProposalCanceledVotes(ctx context.Context, tx pgx.Tx) error {
+	if len(s.Processed.abrogationCanceledVotes) == 0 {
 		return nil
 	}
 
 	var rows [][]interface{}
-	for _, v := range g.Processed.abrogationCanceledVotes {
+	for _, v := range s.Processed.abrogationCanceledVotes {
 		rows = append(rows, []interface{}{
 			v.ProposalId.Int64(),
 			utils.NormalizeAddress(v.User.String()),
-			g.block.BlockCreationTime,
+			s.block.BlockCreationTime,
 			v.Raw.BlockNumber,
 			utils.NormalizeAddress(v.Raw.TxHash.String()),
 			v.Raw.TxIndex,

@@ -17,7 +17,7 @@ import (
 	"github.com/barnbridge/meminero/utils"
 )
 
-func (g *GovStorable) handleProposals(ctx context.Context, logs []gethtypes.Log) error {
+func (s *GovStorable) handleProposals(ctx context.Context, logs []gethtypes.Log) error {
 	var createdProposals []ethtypes.GovernanceProposalCreatedEvent
 	for _, log := range logs {
 		if ethtypes.Governance.IsGovernanceProposalCreatedEvent(&log) {
@@ -31,11 +31,11 @@ func (g *GovStorable) handleProposals(ctx context.Context, logs []gethtypes.Log)
 	}
 
 	if len(createdProposals) == 0 {
-		g.logger.WithField("handler", "proposals").Debug("no events found")
+		s.logger.WithField("handler", "proposals").Debug("no events found")
 		return nil
 	}
 
-	err := g.getProposalsDetailsFromChain(ctx, createdProposals)
+	err := s.getProposalsDetailsFromChain(ctx, createdProposals)
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func (g *GovStorable) handleProposals(ctx context.Context, logs []gethtypes.Log)
 	return nil
 }
 
-func (g *GovStorable) getProposalsDetailsFromChain(ctx context.Context, createdEvents []ethtypes.GovernanceProposalCreatedEvent) error {
+func (s *GovStorable) getProposalsDetailsFromChain(ctx context.Context, createdEvents []ethtypes.GovernanceProposalCreatedEvent) error {
 	a := ethtypes.Governance.ABI
 
 	wg, _ := errgroup.WithContext(ctx)
@@ -61,25 +61,25 @@ func (g *GovStorable) getProposalsDetailsFromChain(ctx context.Context, createdE
 			return err
 		}
 
-		g.Processed.proposals = append(g.Processed.proposals, proposal)
-		g.Processed.proposalsActions = append(g.Processed.proposalsActions, proposalAction)
+		s.Processed.proposals = append(s.Processed.proposals, proposal)
+		s.Processed.proposalsActions = append(s.Processed.proposalsActions, proposalAction)
 	}
 
 	return nil
 }
 
-func (g *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
-	if len(g.Processed.proposals) == 0 {
-		g.logger.WithField("handler", "proposals").Debug("no events found")
+func (s *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
+	if len(s.Processed.proposals) == 0 {
+		s.logger.WithField("handler", "proposals").Debug("no events found")
 		return nil
 	}
 
 	var rows [][]interface{}
 	var jobs []*notifications.Job
-	for i, p := range g.Processed.proposals {
+	for i, p := range s.Processed.proposals {
 		var targets, values, signatures, calldatas types.JSONStringArray
 
-		a := g.Processed.proposalsActions[i]
+		a := s.Processed.proposalsActions[i]
 		for i := 0; i < len(a.Targets); i++ {
 			targets = append(targets, a.Targets[i].String())
 			values = append(values, a.Values[i].String())
@@ -103,8 +103,8 @@ func (g *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
 			p.Parameters.GracePeriodDuration.Int64(),
 			p.Parameters.AcceptanceThreshold.Int64(),
 			p.Parameters.MinQuorum.Int64(),
-			g.block.Number,
-			g.block.BlockCreationTime,
+			s.block.Number,
+			s.block.BlockCreationTime,
 		})
 
 		jd := notifications.ProposalCreatedJobData{
@@ -116,7 +116,7 @@ func (g *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
 			ActiveDuration:        p.Parameters.ActiveDuration.Int64(),
 			QueueDuration:         p.Parameters.QueueDuration.Int64(),
 			GraceDuration:         p.Parameters.GracePeriodDuration.Int64(),
-			IncludedInBlockNumber: g.block.Number,
+			IncludedInBlockNumber: s.block.Number,
 		}
 
 		j, err := notifications.NewProposalCreatedJob(&jd)
