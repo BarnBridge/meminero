@@ -1,0 +1,52 @@
+{
+  "labels": [
+    {
+      "address": "0x4cAE362D7F227e3d306f70ce4878E245563F3069",
+      "label": "BarnBridge DAO & Treasury"
+    },
+    {
+      "address": "0x5040a19E59FEcC9Bdf62CEa2F71a4604408C67BF",
+      "label": "BarnBridge LaunchDAO"
+    },
+    {
+      "address": "0xA3C299eEE1998F45c20010276684921EBE6423D9",
+      "label": "BarnBridge Community Vault"
+    },
+    {
+      "address": "0xDAA037F99d168b552c0c61B7Fb64cF7819D78310",
+      "label": "SmartYield cUSDC provider"
+    },
+    {
+      "address": "0xe6c1A8E7a879d7feBB8144276a62f9a6b381bd37",
+      "label": "SmartYield cDAI provider"
+    },
+    {
+      "address": "0xA4f8310CD972b1fc3CA9F130b235A91bc882baDb",
+      "label": "SmartYield crUSDC provider"
+    },
+    {
+      "address": "0x37923EB0F4a9097B2774eAB9D928AFaD6196cf76",
+      "label": "SmartYield crDAI provider"
+    },
+    {
+      "address": "0x7B1E1A841afE589F1b5337a2Eec41A18a58475Be",
+      "label": "SmartYield crUSDT provider"
+    },
+    {
+      "address": "0x99230f93135f3650ab5706b7B6D4B30b4EE961C9",
+      "label": "SmartYield aUSDC provider"
+    },
+    {
+      "address": "0x372d02e58a8Fcf42114232F614D57f31401d4C7D",
+      "label": "SmartYield aDAI provider"
+    },
+    {
+      "address": "0xbF5649526aa1DC1dAA82ED29dDc65149278CA5d8",
+      "label": "SmartYield aUSDT provider"
+    },
+    {
+      "address": "0x5cFcFb6171db72a26b84bc50EdD2d80b0F3fc094",
+      "label": "SmartYield aGUSD provider"
+    }
+  ]
+}
