@@ -6,6 +6,8 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/meminero/utils"
 )
 
 type Label struct {
@@ -29,7 +31,7 @@ func (l Labels) Sync(tx pgx.Tx) error {
 	for _, a := range l {
 		_, err := tx.Exec(context.Background(), `
 			insert into labels (address, label) values ($1, $2) on conflict (address) do update set label = $2 
-		`, a.Address, a.Label)
+		`, utils.NormalizeAddress(a.Address), a.Label)
 		if err != nil {
 			return errors.Wrap(err, "could not insert label")
 		}

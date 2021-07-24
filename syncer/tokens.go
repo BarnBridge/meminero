@@ -6,6 +6,8 @@ import (
 
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/meminero/utils"
 )
 
 type Token struct {
@@ -35,7 +37,13 @@ func (t Tokens) Sync(tx pgx.Tx) error {
 			values ($1, $2, $3, $4, $5) 
 			on conflict (address) 
 			do update set symbol = $2, decimals = $3, aggregator_address = $4, price_provider_type = $5
-		`, token.Address, token.Symbol, token.Decimals, token.AggregatorAddress, token.PriceProviderType)
+		`,
+			utils.NormalizeAddress(token.Address),
+			token.Symbol,
+			token.Decimals,
+			utils.NormalizeAddress(token.AggregatorAddress),
+			token.PriceProviderType,
+		)
 		if err != nil {
 			return errors.Wrap(err, "could not insert token")
 		}
