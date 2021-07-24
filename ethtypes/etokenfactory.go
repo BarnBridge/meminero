@@ -4,10 +4,20 @@
 package ethtypes
 
 import (
+	"math/big"
+
 	web3types "github.com/alethio/web3-go/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/lacasian/ethwheels/ethgen"
+)
+
+// Reference imports to suppress errors
+var (
+	_ = big.NewInt
+	_ = common.Big1
+	_ = types.BloomLookup
+	_ = web3types.Log{}
 )
 
 const EtokenfactoryABI = "[{\"inputs\":[{\"internalType\":\"contractIController\",\"name\":\"_controller\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"ePool\",\"type\":\"address\"}],\"name\":\"CreatedEToken\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"controller\",\"outputs\":[{\"internalType\":\"contractIController\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"}],\"name\":\"createEToken\",\"outputs\":[{\"internalType\":\"contractIEToken\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
@@ -40,6 +50,13 @@ func (d *EtokenfactoryDecoder) IsEtokenfactoryCreatedETokenEvent(log *types.Log)
 		return false
 	}
 	return log.Topics[0] == d.EtokenfactoryCreatedETokenEventID()
+}
+
+func (d *EtokenfactoryDecoder) IsEtokenfactoryCreatedETokenEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EtokenfactoryCreatedETokenEventID().String()
 }
 
 func (d *EtokenfactoryDecoder) EtokenfactoryCreatedETokenEventW3(w3l web3types.Log) (EtokenfactoryCreatedETokenEvent, error) {

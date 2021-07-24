@@ -12,6 +12,14 @@ import (
 	"github.com/lacasian/ethwheels/ethgen"
 )
 
+// Reference imports to suppress errors
+var (
+	_ = big.NewInt
+	_ = common.Big1
+	_ = types.BloomLookup
+	_ = web3types.Log{}
+)
+
 const EpoolABI = "[{\"inputs\":[{\"internalType\":\"contractIController\",\"name\":\"_controller\",\"type\":\"address\"},{\"internalType\":\"contractIETokenFactory\",\"name\":\"_eTokenFactory\",\"type\":\"address\"},{\"internalType\":\"contractIERC20\",\"name\":\"_tokenA\",\"type\":\"address\"},{\"internalType\":\"contractIERC20\",\"name\":\"_tokenB\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_aggregator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"inverseRate\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"}],\"name\":\"AddedTranche\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cumulativeFeeA\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cumulativeFeeB\",\"type\":\"uint256\"}],\"name\":\"CollectedFees\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountA\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountB\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"IssuedEToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"deltaA\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"deltaB\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rChange\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rDiv\",\"type\":\"uint256\"}],\"name\":\"RebalancedTranches\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"RecoveredToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountA\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountB\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"RedeemedEToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"aggregator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"inverseRate\",\"type\":\"bool\"}],\"name\":\"SetAggregator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"controller\",\"type\":\"address\"}],\"name\":\"SetController\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeRate\",\"type\":\"uint256\"}],\"name\":\"SetFeeRate\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minRDiv\",\"type\":\"uint256\"}],\"name\":\"SetMinRDiv\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"interval\",\"type\":\"uint256\"}],\"name\":\"SetRebalanceInterval\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"FEE_RATE_LIMIT\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANCHE_LIMIT\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"targetRatio\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"eTokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"eTokenSymbol\",\"type\":\"string\"}],\"name\":\"addTranche\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"collectFees\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cumulativeFeeA\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cumulativeFeeB\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"eTokenFactory\",\"outputs\":[{\"internalType\":\"contractIETokenFactory\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAggregator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getController\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"}],\"name\":\"getTranche\",\"outputs\":[{\"components\":[{\"internalType\":\"contractIEToken\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sFactorE\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveB\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"targetRatio\",\"type\":\"uint256\"}],\"internalType\":\"structIEPool.Tranche\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTranches\",\"outputs\":[{\"components\":[{\"internalType\":\"contractIEToken\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sFactorE\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveB\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"targetRatio\",\"type\":\"uint256\"}],\"internalType\":\"structIEPool.Tranche[]\",\"name\":\"_tranches\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"issueExact\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amountA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountB\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastRebalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"fracDelta\",\"type\":\"uint256\"}],\"name\":\"rebalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"deltaA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deltaB\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rChange\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rDiv\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rebalanceInterval\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rebalanceMinRDiv\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"recover\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"redeemExact\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amountA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountB\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sFactorA\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sFactorB\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_aggregator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"inverseRate\",\"type\":\"bool\"}],\"name\":\"setAggregator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_controller\",\"type\":\"address\"}],\"name\":\"setController\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feeRate\",\"type\":\"uint256\"}],\"name\":\"setFeeRate\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"minRDiv\",\"type\":\"uint256\"}],\"name\":\"setMinRDiv\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"interval\",\"type\":\"uint256\"}],\"name\":\"setRebalanceInterval\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenA\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenB\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"tranches\",\"outputs\":[{\"internalType\":\"contractIEToken\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sFactorE\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveB\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"targetRatio\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tranchesByIndex\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 var Epool = NewEpoolDecoder()
@@ -41,6 +49,13 @@ func (d *EpoolDecoder) IsEpoolSetMinRDivEvent(log *types.Log) bool {
 		return false
 	}
 	return log.Topics[0] == d.EpoolSetMinRDivEventID()
+}
+
+func (d *EpoolDecoder) IsEpoolSetMinRDivEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolSetMinRDivEventID().String()
 }
 
 func (d *EpoolDecoder) EpoolSetMinRDivEventW3(w3l web3types.Log) (EpoolSetMinRDivEvent, error) {
@@ -78,6 +93,13 @@ func (d *EpoolDecoder) IsEpoolAddedTrancheEvent(log *types.Log) bool {
 	return log.Topics[0] == d.EpoolAddedTrancheEventID()
 }
 
+func (d *EpoolDecoder) IsEpoolAddedTrancheEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolAddedTrancheEventID().String()
+}
+
 func (d *EpoolDecoder) EpoolAddedTrancheEventW3(w3l web3types.Log) (EpoolAddedTrancheEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
@@ -113,6 +135,13 @@ func (d *EpoolDecoder) IsEpoolSetControllerEvent(log *types.Log) bool {
 	return log.Topics[0] == d.EpoolSetControllerEventID()
 }
 
+func (d *EpoolDecoder) IsEpoolSetControllerEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolSetControllerEventID().String()
+}
+
 func (d *EpoolDecoder) EpoolSetControllerEventW3(w3l web3types.Log) (EpoolSetControllerEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
@@ -146,6 +175,13 @@ func (d *EpoolDecoder) IsEpoolSetFeeRateEvent(log *types.Log) bool {
 		return false
 	}
 	return log.Topics[0] == d.EpoolSetFeeRateEventID()
+}
+
+func (d *EpoolDecoder) IsEpoolSetFeeRateEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolSetFeeRateEventID().String()
 }
 
 func (d *EpoolDecoder) EpoolSetFeeRateEventW3(w3l web3types.Log) (EpoolSetFeeRateEvent, error) {
@@ -187,6 +223,13 @@ func (d *EpoolDecoder) IsEpoolRedeemedETokenEvent(log *types.Log) bool {
 	return log.Topics[0] == d.EpoolRedeemedETokenEventID()
 }
 
+func (d *EpoolDecoder) IsEpoolRedeemedETokenEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolRedeemedETokenEventID().String()
+}
+
 func (d *EpoolDecoder) EpoolRedeemedETokenEventW3(w3l web3types.Log) (EpoolRedeemedETokenEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
@@ -221,6 +264,13 @@ func (d *EpoolDecoder) IsEpoolRecoveredTokenEvent(log *types.Log) bool {
 		return false
 	}
 	return log.Topics[0] == d.EpoolRecoveredTokenEventID()
+}
+
+func (d *EpoolDecoder) IsEpoolRecoveredTokenEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolRecoveredTokenEventID().String()
 }
 
 func (d *EpoolDecoder) EpoolRecoveredTokenEventW3(w3l web3types.Log) (EpoolRecoveredTokenEvent, error) {
@@ -262,6 +312,13 @@ func (d *EpoolDecoder) IsEpoolIssuedETokenEvent(log *types.Log) bool {
 	return log.Topics[0] == d.EpoolIssuedETokenEventID()
 }
 
+func (d *EpoolDecoder) IsEpoolIssuedETokenEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolIssuedETokenEventID().String()
+}
+
 func (d *EpoolDecoder) EpoolIssuedETokenEventW3(w3l web3types.Log) (EpoolIssuedETokenEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
@@ -298,6 +355,13 @@ func (d *EpoolDecoder) IsEpoolSetAggregatorEvent(log *types.Log) bool {
 	return log.Topics[0] == d.EpoolSetAggregatorEventID()
 }
 
+func (d *EpoolDecoder) IsEpoolSetAggregatorEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolSetAggregatorEventID().String()
+}
+
 func (d *EpoolDecoder) EpoolSetAggregatorEventW3(w3l web3types.Log) (EpoolSetAggregatorEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
@@ -332,6 +396,13 @@ func (d *EpoolDecoder) IsEpoolCollectedFeesEvent(log *types.Log) bool {
 		return false
 	}
 	return log.Topics[0] == d.EpoolCollectedFeesEventID()
+}
+
+func (d *EpoolDecoder) IsEpoolCollectedFeesEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolCollectedFeesEventID().String()
 }
 
 func (d *EpoolDecoder) EpoolCollectedFeesEventW3(w3l web3types.Log) (EpoolCollectedFeesEvent, error) {
@@ -372,6 +443,13 @@ func (d *EpoolDecoder) IsEpoolRebalancedTranchesEvent(log *types.Log) bool {
 	return log.Topics[0] == d.EpoolRebalancedTranchesEventID()
 }
 
+func (d *EpoolDecoder) IsEpoolRebalancedTranchesEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolRebalancedTranchesEventID().String()
+}
+
 func (d *EpoolDecoder) EpoolRebalancedTranchesEventW3(w3l web3types.Log) (EpoolRebalancedTranchesEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
@@ -405,6 +483,13 @@ func (d *EpoolDecoder) IsEpoolSetRebalanceIntervalEvent(log *types.Log) bool {
 		return false
 	}
 	return log.Topics[0] == d.EpoolSetRebalanceIntervalEventID()
+}
+
+func (d *EpoolDecoder) IsEpoolSetRebalanceIntervalEventW3(log *web3types.Log) bool {
+	if len(log.Topics) == 0 {
+		return false
+	}
+	return log.Topics[0] == d.EpoolSetRebalanceIntervalEventID().String()
 }
 
 func (d *EpoolDecoder) EpoolSetRebalanceIntervalEventW3(w3l web3types.Log) (EpoolSetRebalanceIntervalEvent, error) {
