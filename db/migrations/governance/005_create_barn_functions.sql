@@ -130,13 +130,3 @@ begin
     return null;
 end
 $$;
-
----- create above / drop below ----
-
-drop function governance.delegated_power(addr text);
-drop function governance.voting_power(addr text);
-drop function governance.balance_of(addr text);
-drop function governance.user_multiplier(addr text);
-drop function governance.has_active_delegation(addr text);
-drop function governance.bond_staked_at_ts(ts bigint);
-drop function governance.refresh_barn_users();

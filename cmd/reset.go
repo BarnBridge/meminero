@@ -73,8 +73,8 @@ var resetCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(resetCmd)
 
-	addDBFlags(resetCmd)
-	addRedisFlags(resetCmd)
+	AddDBFlags(resetCmd)
+	AddRedisFlags(resetCmd)
 
 	resetCmd.Flags().Bool("force", false, "Skip interactive shell")
 }

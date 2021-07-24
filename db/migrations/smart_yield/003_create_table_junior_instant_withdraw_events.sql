@@ -14,7 +14,3 @@ create table smart_yield.junior_instant_withdraw_events
     log_index         integer not null,
     created_at        timestamp default now()
 );
-
----- create above / drop below ----
-
-drop table if exists smart_yield.junior_instant_withdraw_events;

@@ -16,9 +16,3 @@ create table governance.barn_delegate_changes
 );
 
 create index user_delegated_power_idx on governance.barn_delegate_changes (receiver asc, included_in_block desc, log_index desc);
-
-
----- create above / drop below ----
-
-drop table if exists governance.barn_delegate_changes;
-drop index if exists governance.user_delegated_power_idx;

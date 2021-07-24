@@ -28,5 +28,5 @@ var migrateCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(migrateCmd)
 
-	addDBFlags(migrateCmd)
+	AddDBFlags(migrateCmd)
 }

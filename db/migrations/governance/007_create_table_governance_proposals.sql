@@ -24,10 +24,3 @@ create table governance.proposals
 create index proposals_proposal_id_idx on governance.proposals (proposal_id desc);
 
 create index proposals_proposer_idx on governance.proposals (lower(proposer));
-
-
----- create above / drop below ----
-
-drop table if exists governance.proposals;
-drop index if exists governance.proposals_proposal_id_idx;
-drop index if exists governance.proposals_proposer_idx;

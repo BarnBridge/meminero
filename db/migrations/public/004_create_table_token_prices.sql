@@ -8,7 +8,3 @@ create table public.token_prices
     included_in_block bigint           not null,
     created_at        timestamp default now()
 );
-
-
----- create above / drop below ----
-

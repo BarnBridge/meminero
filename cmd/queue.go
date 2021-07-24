@@ -41,7 +41,7 @@ var queueCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(queueCmd)
 
-	addRedisFlags(queueCmd)
+	AddRedisFlags(queueCmd)
 
 	queueCmd.Flags().Int64("block", -1, "Add a single block in the todo queue")
 	queueCmd.Flags().Int64("from", -1, "Add a series of blocks into the todo queue starting from the provided number (only use in combination with --to)")

@@ -20,9 +20,3 @@ create table smart_yield.transaction_history
 );
 
 create index tx_history_user_address_idx on smart_yield.transaction_history (user_address asc, block_timestamp desc, tx_index desc, log_index desc);
-
----- create above / drop below ----
-
-drop table if exists smart_yield.transaction_history;
-drop index if exists smart_yield.tx_history_user_address_idx;
-drop type if exists sy_tx_history_tx_type;

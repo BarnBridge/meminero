@@ -18,11 +18,3 @@ create index abrogation_votes_proposal_id_idx on governance.abrogation_votes (pr
 create index abrogation_votes_proposal_id_composed_idx on governance.abrogation_votes (proposal_id asc, user_id asc, block_timestamp desc);
 
 create index abrogation_votes_user_id_idx on governance.abrogation_votes (lower(user_id));
-
-
----- create above / drop below ----
-
-drop table if exists governance.abrogation_votes;
-drop index if exists governance.abrogation_votes_proposal_id_idx;
-drop index if exists governance.abrogation_votes_proposal_id_composed_idx;
-drop index if exists governance.abrogation_votes_user_id_idx;

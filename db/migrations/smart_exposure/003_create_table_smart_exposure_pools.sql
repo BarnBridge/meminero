@@ -12,7 +12,3 @@ create table smart_exposure.pools
 
     created_at       timestamp default now()
 );
-
----- create above / drop below ----
-
-drop table if exists smart_exposure.pools;

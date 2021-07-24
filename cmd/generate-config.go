@@ -50,16 +50,16 @@ func init() {
 
 	generateConfigCmd.Flags().Bool("with-defaults", true, "Generate the config using the default values. If set to false and a config.yml is loaded, it will take the params from the config")
 
-	addDBFlags(generateConfigCmd)
-	addRedisFlags(generateConfigCmd)
-	addMetricsFlags(generateConfigCmd)
-	addFeatureFlags(generateConfigCmd)
-	addETHFlags(generateConfigCmd)
-	addGenerateETHTypesFlags(generateConfigCmd)
+	AddDBFlags(generateConfigCmd)
+	AddRedisFlags(generateConfigCmd)
+	AddMetricsFlags(generateConfigCmd)
+	AddFeatureFlags(generateConfigCmd)
+	AddETHFlags(generateConfigCmd)
+	AddGenerateETHTypesFlags(generateConfigCmd)
 
-	addStorableAccountERC20TransfersFlags(generateConfigCmd)
-	addStorableGovernanceFlags(generateConfigCmd)
-	addStorableBarnFlags(generateConfigCmd)
-	addStorableYieldFarmingFlags(generateConfigCmd)
-	addStorableMonitoredERC20TransfersFlags(generateConfigCmd)
+	AddStorableAccountERC20TransfersFlags(generateConfigCmd)
+	AddStorableGovernanceFlags(generateConfigCmd)
+	AddStorableBarnFlags(generateConfigCmd)
+	AddStorableYieldFarmingFlags(generateConfigCmd)
+	AddStorableMonitoredERC20TransfersFlags(generateConfigCmd)
 }
