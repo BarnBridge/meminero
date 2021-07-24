@@ -12,14 +12,14 @@ import (
 	"github.com/barnbridge/meminero/utils"
 )
 
-func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {
+func (s *GovStorable) handleEvents(logs []gethtypes.Log) error {
 	for _, log := range logs {
 		if ethtypes.Governance.IsGovernanceProposalCreatedEvent(&log) {
 			e, err := ethtypes.Governance.GovernanceProposalCreatedEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal created event")
 			}
-			g.Processed.proposalEvents = append(g.Processed.proposalEvents, ProposalEvent{
+			s.Processed.proposalEvents = append(s.Processed.proposalEvents, ProposalEvent{
 				ProposalID: e.ProposalId,
 				EventType:  CREATED,
 				BaseLog: BaseLog{
@@ -37,7 +37,7 @@ func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {
 				return errors.Wrap(err, "could not decode proposal queued event")
 			}
 
-			g.Processed.proposalEvents = append(g.Processed.proposalEvents, ProposalEvent{
+			s.Processed.proposalEvents = append(s.Processed.proposalEvents, ProposalEvent{
 				ProposalID: e.ProposalId,
 				Caller:     e.Caller,
 				Eta:        e.Eta,
@@ -57,7 +57,7 @@ func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {
 				return errors.Wrap(err, "could not decode proposal executed event")
 			}
 
-			g.Processed.proposalEvents = append(g.Processed.proposalEvents, ProposalEvent{
+			s.Processed.proposalEvents = append(s.Processed.proposalEvents, ProposalEvent{
 				ProposalID: e.ProposalId,
 				Caller:     e.Caller,
 				EventType:  EXECUTED,
@@ -76,7 +76,7 @@ func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {
 				return errors.Wrap(err, "could not decode proposal canceled event")
 			}
 
-			g.Processed.proposalEvents = append(g.Processed.proposalEvents, ProposalEvent{
+			s.Processed.proposalEvents = append(s.Processed.proposalEvents, ProposalEvent{
 				ProposalID: e.ProposalId,
 				Caller:     e.Caller,
 				EventType:  CANCELED,
@@ -93,14 +93,14 @@ func (g *GovStorable) handleEvents(logs []gethtypes.Log) error {
 	return nil
 }
 
-func (g *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
-	if len(g.Processed.proposalEvents) == 0 {
-		g.logger.WithField("handler", "proposal events").Debug("no events found")
+func (s *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
+	if len(s.Processed.proposalEvents) == 0 {
+		s.logger.WithField("handler", "proposal events").Debug("no events found")
 		return nil
 	}
 
 	var rows [][]interface{}
-	for _, e := range g.Processed.proposalEvents {
+	for _, e := range s.Processed.proposalEvents {
 		var eventData types.JSONObject
 		if e.Eta != nil {
 			eventData = make(types.JSONObject)
@@ -112,8 +112,8 @@ func (g *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
 			utils.NormalizeAddress(e.Caller.String()),
 			e.EventType,
 			eventData,
-			g.block.BlockCreationTime,
-			g.block.Number,
+			s.block.BlockCreationTime,
+			s.block.Number,
 			e.TransactionHash,
 			e.TransactionIndex,
 			e.LogIndex,

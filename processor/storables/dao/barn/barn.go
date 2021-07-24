@@ -69,20 +69,20 @@ func (s *Storable) Execute(ctx context.Context) error {
 }
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
-	s.logger.Trace("executing")
 	start := time.Now()
+	s.logger.WithField("block", s.block.Number).Debug("rolling back block")
 	defer func() {
-		s.logger.WithField("duration", time.Since(start)).
-			Trace("done")
+		s.logger.WithField("duration", time.Since(start)).Debug("done rolling back block")
 	}()
 
-	barnBatch := &pgx.Batch{}
-	tables := [4]string{"barn_delegate_actions", "barn_delegate_changes", "barn_locks", "barn_staking_actions"}
+	b := &pgx.Batch{}
+	tables := []string{"barn_delegate_actions", "barn_delegate_changes", "barn_locks", "barn_staking_actions"}
 	for _, t := range tables {
-		x := fmt.Sprintf(`delete from governance.%s where included_in_block = $1;`, t)
-		barnBatch.Queue(x, s.block.Number)
+		query := fmt.Sprintf(`delete from governance.%s where included_in_block = $1`, t)
+		b.Queue(query, s.block.Number)
 	}
-	br := tx.SendBatch(ctx, barnBatch)
+
+	br := tx.SendBatch(ctx, b)
 	_, err := br.Exec()
 	if err != nil {
 		return err

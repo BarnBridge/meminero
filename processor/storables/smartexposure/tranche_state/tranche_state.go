@@ -6,16 +6,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+	"github.com/shopspring/decimal"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 )
@@ -28,6 +27,7 @@ type Storable struct {
 
 	processed struct {
 		trancheState map[string]*TrancheState
+		tokenPrices  map[string]decimal.Decimal
 	}
 }
 
@@ -46,37 +46,58 @@ func (s *Storable) Execute(ctx context.Context) error {
 		s.logger.WithField("duration", time.Since(start)).
 			Trace("done")
 	}()
-	spew.Dump(config.Store.Storable.SmartExposure)
+
 	s.processed.trancheState = make(map[string]*TrancheState)
+	s.processed.tokenPrices = make(map[string]decimal.Decimal)
+
+	err := s.getTokensPrice(ctx)
+	if err != nil {
+		return err
+	}
 	wg, _ := errgroup.WithContext(ctx)
 	var mu = &sync.Mutex{}
+	a := ethtypes.Epool.ABI
 	for trancheAddress, tranche := range s.state.SETranches() {
+		trancheAddress := trancheAddress
+		tranche := tranche
 
-		var t smartexposure.TrancheFromChain
-		a := ethtypes.Epool.ABI
-		var currentRatio, amountAConversion, amountBConversion *big.Int
-		wg.Go(eth.CallContractFunction(*a, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t))
-		wg.Go(eth.CallContractFunction(*a, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio))
-		wg.Go(eth.CallContractFunction(*a, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &amountAConversion, &amountBConversion))
+		wg.Go(func() error {
+			subwg, _ := errgroup.WithContext(ctx)
+			var t smartexposure.TrancheFromChain
+			var currentRatio, amountAConversion, amountBConversion *big.Int
+			subwg.Go(eth.CallContractFunction(*a, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t, s.block.Number))
 
-		mu.Lock()
-		s.processed.trancheState[trancheAddress] = &TrancheState{
-			EPoolAddress:    tranche.EPoolAddress,
-			CurrentRatio:    currentRatio,
-			TokenALiquidity: t.ReserveA,
-			TokenBLiquidity: t.ReserveB,
-			ConversionRate: ConversionRate{
-				AmountAConversion: amountAConversion,
-				AmountBConversion: amountBConversion,
-			},
-		}
-		mu.Unlock()
+			//wg.Go(eth.CallContractFunction(*a, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio))
+			//wg.Go(eth.CallContractFunction(*a, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &amountAConversion, &amountBConversion))
+			err := subwg.Wait()
+			if err != nil {
+				return err
+			}
+
+			mu.Lock()
+			s.processed.trancheState[trancheAddress] = &TrancheState{
+				EPoolAddress:    tranche.EPoolAddress,
+				CurrentRatio:    currentRatio,
+				TokenALiquidity: t.ReserveA,
+				TokenBLiquidity: t.ReserveB,
+				ConversionRate: ConversionRate{
+					AmountAConversion: amountAConversion,
+					AmountBConversion: amountBConversion,
+				},
+			}
+
+			mu.Unlock()
+
+			return nil
+		})
+
 	}
 
-	err := wg.Wait()
+	err = wg.Wait()
 	if err != nil {
 		return errors.Wrap(err, "could not get data from chain")
 	}
+
 	return nil
 
 }
