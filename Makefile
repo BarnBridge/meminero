@@ -6,3 +6,6 @@ build:
 reset: build
 	./meminero reset --force
 	./meminero migrate
+
+sync-all: build
+	./meminero sync --syncer.datasets labels,tokens,monitored-accounts,monitored-erc20,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools
