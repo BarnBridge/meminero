@@ -4,6 +4,8 @@
 package ethtypes
 
 import (
+	"math/big"
+
 	web3types "github.com/alethio/web3-go/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
