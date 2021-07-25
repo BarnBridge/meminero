@@ -34,7 +34,7 @@ func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []e
 			EPoolAddress:  utils.NormalizeAddress(t.EPool.String()),
 			ETokenAddress: utils.NormalizeAddress(t.EToken.String()),
 			ETokenSymbol:  symbol,
-			SFactorE:      decimal.NewFromBigInt(newTranche.SFactorE, 0),
+			SFactorE:      newTranche.SFactorE,
 			TargetRatio:   decimal.NewFromBigInt(newTranche.TargetRatio, 0),
 			TokenARatio:   ratioA,
 			TokenBRatio:   ratioB,

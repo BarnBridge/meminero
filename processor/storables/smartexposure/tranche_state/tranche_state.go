@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
@@ -57,6 +58,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 	wg, _ := errgroup.WithContext(ctx)
 	var mu = &sync.Mutex{}
 	a := ethtypes.Epool.ABI
+
 	for trancheAddress, tranche := range s.state.SETranches() {
 		trancheAddress := trancheAddress
 		tranche := tranche
@@ -64,11 +66,17 @@ func (s *Storable) Execute(ctx context.Context) error {
 		wg.Go(func() error {
 			subwg, _ := errgroup.WithContext(ctx)
 			var t smartexposure.TrancheFromChain
-			var currentRatio, amountAConversion, amountBConversion *big.Int
+			var currentRatio *big.Int
+
+			var conversionRate struct {
+				AmountA *big.Int `json:"amountA"`
+				AmountB *big.Int `json:"amountB"`
+			}
+
 			subwg.Go(eth.CallContractFunction(*a, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t, s.block.Number))
 
-			//wg.Go(eth.CallContractFunction(*a, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio))
-			//wg.Go(eth.CallContractFunction(*a, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &amountAConversion, &amountBConversion))
+			wg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio, s.block.Number))
+			wg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &conversionRate, s.block.Number))
 			err := subwg.Wait()
 			if err != nil {
 				return err
@@ -81,8 +89,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 				TokenALiquidity: t.ReserveA,
 				TokenBLiquidity: t.ReserveB,
 				ConversionRate: ConversionRate{
-					AmountAConversion: amountAConversion,
-					AmountBConversion: amountBConversion,
+					AmountAConversion: conversionRate.AmountA,
+					AmountBConversion: conversionRate.AmountB,
 				},
 			}
 

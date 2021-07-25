@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Storable) getETokenPrice(pool types.SEPool, state TrancheState, tranche types.SETranche) (decimal.Decimal, decimal.Decimal, decimal.Decimal) {
-	ratioWithDec := decimal.NewFromBigInt(state.CurrentRatio, 0).Div(tranche.SFactorE)
+	ratioWithDec := decimal.NewFromBigInt(state.CurrentRatio, 0).Div(decimal.NewFromBigInt(tranche.SFactorE, 0))
 	tokenBRatio := decimal.NewFromInt(1).Div(ratioWithDec.Add(decimal.NewFromInt(1)))
 	tokenARatio := decimal.NewFromInt(1).Sub(tokenBRatio)
 
