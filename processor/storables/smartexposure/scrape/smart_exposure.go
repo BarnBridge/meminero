@@ -4,15 +4,16 @@ import (
 	"context"
 	"time"
 
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
+
 	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
-	gethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 )
 
 type Storable struct {
@@ -53,8 +54,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 			}
 
 			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.ETokenFactoryAddress) &&
-				ethtypes.Etokenfactory.IsEtokenfactoryCreatedETokenEvent(&log) {
-				eToken, err := ethtypes.Etokenfactory.EtokenfactoryCreatedETokenEvent(log)
+				ethtypes.Etokenfactory.IsCreatedETokenEvent(&log) {
+				eToken, err := ethtypes.Etokenfactory.CreatedETokenEvent(log)
 				if err != nil {
 					return errors.Wrap(err, "could not decode Created EToken event")
 				}

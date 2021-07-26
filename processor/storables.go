@@ -9,6 +9,8 @@ import (
 	"github.com/barnbridge/meminero/processor/storables/smartexposure/pool_state"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure/scrape"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure/tranche_state"
+	syERC721 "github.com/barnbridge/meminero/processor/storables/smartyield/erc721"
+	syEvents "github.com/barnbridge/meminero/processor/storables/smartyield/events"
 	"github.com/barnbridge/meminero/processor/storables/yieldfarming"
 )
 
@@ -41,4 +43,12 @@ func (p *Processor) registerStorables() {
 		p.storables = append(p.storables, pool_state.New(p.Block, p.state))
 	}
 
+	p.registerSmartYield()
+}
+
+func (p *Processor) registerSmartYield() {
+	if config.Store.Storable.SmartYield.Enabled {
+		p.storables = append(p.storables, syEvents.New(p.Block, p.state))
+		p.storables = append(p.storables, syERC721.New(p.Block, p.state))
+	}
 }

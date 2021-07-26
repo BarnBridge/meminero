@@ -40,36 +40,36 @@ type EpoolSetMinRDivEvent struct {
 	Raw     types.Log
 }
 
-func (d *EpoolDecoder) EpoolSetMinRDivEventID() common.Hash {
+func (d *EpoolDecoder) SetMinRDivEventID() common.Hash {
 	return common.HexToHash("0x4a7d6cd4901b6056e935ae8117764092378eea4896b4f247039c613b42c15c05")
 }
 
-func (d *EpoolDecoder) IsEpoolSetMinRDivEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsSetMinRDivEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetMinRDivEventID()
+	return log.Topics[0] == d.SetMinRDivEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolSetMinRDivEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsSetMinRDivEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetMinRDivEventID().String()
+	return log.Topics[0] == d.SetMinRDivEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolSetMinRDivEventW3(w3l web3types.Log) (EpoolSetMinRDivEvent, error) {
+func (d *EpoolDecoder) SetMinRDivEventW3(w3l web3types.Log) (EpoolSetMinRDivEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolSetMinRDivEvent{}, err
 	}
 
-	return d.EpoolSetMinRDivEvent(l)
+	return d.SetMinRDivEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolSetMinRDivEvent(l types.Log) (EpoolSetMinRDivEvent, error) {
+func (d *EpoolDecoder) SetMinRDivEvent(l types.Log) (EpoolSetMinRDivEvent, error) {
 	var out EpoolSetMinRDivEvent
-	if !d.IsEpoolSetMinRDivEvent(&l) {
+	if !d.IsSetMinRDivEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "SetMinRDiv", l)
@@ -82,36 +82,36 @@ type EpoolAddedTrancheEvent struct {
 	Raw    types.Log
 }
 
-func (d *EpoolDecoder) EpoolAddedTrancheEventID() common.Hash {
+func (d *EpoolDecoder) AddedTrancheEventID() common.Hash {
 	return common.HexToHash("0x4f07ccfd1b8dd69c100ce0f0a3f368aa28cadc543706f2fa14f813177703a1a6")
 }
 
-func (d *EpoolDecoder) IsEpoolAddedTrancheEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsAddedTrancheEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolAddedTrancheEventID()
+	return log.Topics[0] == d.AddedTrancheEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolAddedTrancheEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsAddedTrancheEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolAddedTrancheEventID().String()
+	return log.Topics[0] == d.AddedTrancheEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolAddedTrancheEventW3(w3l web3types.Log) (EpoolAddedTrancheEvent, error) {
+func (d *EpoolDecoder) AddedTrancheEventW3(w3l web3types.Log) (EpoolAddedTrancheEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolAddedTrancheEvent{}, err
 	}
 
-	return d.EpoolAddedTrancheEvent(l)
+	return d.AddedTrancheEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolAddedTrancheEvent(l types.Log) (EpoolAddedTrancheEvent, error) {
+func (d *EpoolDecoder) AddedTrancheEvent(l types.Log) (EpoolAddedTrancheEvent, error) {
 	var out EpoolAddedTrancheEvent
-	if !d.IsEpoolAddedTrancheEvent(&l) {
+	if !d.IsAddedTrancheEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "AddedTranche", l)
@@ -124,36 +124,36 @@ type EpoolSetControllerEvent struct {
 	Raw        types.Log
 }
 
-func (d *EpoolDecoder) EpoolSetControllerEventID() common.Hash {
+func (d *EpoolDecoder) SetControllerEventID() common.Hash {
 	return common.HexToHash("0x4ff638452bbf33c012645d18ae6f05515ff5f2d1dfb0cece8cbf018c60903f70")
 }
 
-func (d *EpoolDecoder) IsEpoolSetControllerEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsSetControllerEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetControllerEventID()
+	return log.Topics[0] == d.SetControllerEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolSetControllerEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsSetControllerEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetControllerEventID().String()
+	return log.Topics[0] == d.SetControllerEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolSetControllerEventW3(w3l web3types.Log) (EpoolSetControllerEvent, error) {
+func (d *EpoolDecoder) SetControllerEventW3(w3l web3types.Log) (EpoolSetControllerEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolSetControllerEvent{}, err
 	}
 
-	return d.EpoolSetControllerEvent(l)
+	return d.SetControllerEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolSetControllerEvent(l types.Log) (EpoolSetControllerEvent, error) {
+func (d *EpoolDecoder) SetControllerEvent(l types.Log) (EpoolSetControllerEvent, error) {
 	var out EpoolSetControllerEvent
-	if !d.IsEpoolSetControllerEvent(&l) {
+	if !d.IsSetControllerEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "SetController", l)
@@ -166,36 +166,36 @@ type EpoolSetFeeRateEvent struct {
 	Raw     types.Log
 }
 
-func (d *EpoolDecoder) EpoolSetFeeRateEventID() common.Hash {
+func (d *EpoolDecoder) SetFeeRateEventID() common.Hash {
 	return common.HexToHash("0x6717373928cccf59cc9912055cfa8db86e7085b95c94c15862b121114aa333be")
 }
 
-func (d *EpoolDecoder) IsEpoolSetFeeRateEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsSetFeeRateEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetFeeRateEventID()
+	return log.Topics[0] == d.SetFeeRateEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolSetFeeRateEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsSetFeeRateEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetFeeRateEventID().String()
+	return log.Topics[0] == d.SetFeeRateEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolSetFeeRateEventW3(w3l web3types.Log) (EpoolSetFeeRateEvent, error) {
+func (d *EpoolDecoder) SetFeeRateEventW3(w3l web3types.Log) (EpoolSetFeeRateEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolSetFeeRateEvent{}, err
 	}
 
-	return d.EpoolSetFeeRateEvent(l)
+	return d.SetFeeRateEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolSetFeeRateEvent(l types.Log) (EpoolSetFeeRateEvent, error) {
+func (d *EpoolDecoder) SetFeeRateEvent(l types.Log) (EpoolSetFeeRateEvent, error) {
 	var out EpoolSetFeeRateEvent
-	if !d.IsEpoolSetFeeRateEvent(&l) {
+	if !d.IsSetFeeRateEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "SetFeeRate", l)
@@ -212,36 +212,36 @@ type EpoolRedeemedETokenEvent struct {
 	Raw     types.Log
 }
 
-func (d *EpoolDecoder) EpoolRedeemedETokenEventID() common.Hash {
+func (d *EpoolDecoder) RedeemedETokenEventID() common.Hash {
 	return common.HexToHash("0x6ccf4b3c348e324c7a3cc286369614139a347bbff3f2315520c87ce795c50dde")
 }
 
-func (d *EpoolDecoder) IsEpoolRedeemedETokenEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsRedeemedETokenEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolRedeemedETokenEventID()
+	return log.Topics[0] == d.RedeemedETokenEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolRedeemedETokenEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsRedeemedETokenEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolRedeemedETokenEventID().String()
+	return log.Topics[0] == d.RedeemedETokenEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolRedeemedETokenEventW3(w3l web3types.Log) (EpoolRedeemedETokenEvent, error) {
+func (d *EpoolDecoder) RedeemedETokenEventW3(w3l web3types.Log) (EpoolRedeemedETokenEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolRedeemedETokenEvent{}, err
 	}
 
-	return d.EpoolRedeemedETokenEvent(l)
+	return d.RedeemedETokenEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolRedeemedETokenEvent(l types.Log) (EpoolRedeemedETokenEvent, error) {
+func (d *EpoolDecoder) RedeemedETokenEvent(l types.Log) (EpoolRedeemedETokenEvent, error) {
 	var out EpoolRedeemedETokenEvent
-	if !d.IsEpoolRedeemedETokenEvent(&l) {
+	if !d.IsRedeemedETokenEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "RedeemedEToken", l)
@@ -255,36 +255,36 @@ type EpoolRecoveredTokenEvent struct {
 	Raw    types.Log
 }
 
-func (d *EpoolDecoder) EpoolRecoveredTokenEventID() common.Hash {
+func (d *EpoolDecoder) RecoveredTokenEventID() common.Hash {
 	return common.HexToHash("0x6de8b63479ce07cf2dfc515e20a5c88a3a5bab6cbd76f753388b77e244ca7071")
 }
 
-func (d *EpoolDecoder) IsEpoolRecoveredTokenEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsRecoveredTokenEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolRecoveredTokenEventID()
+	return log.Topics[0] == d.RecoveredTokenEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolRecoveredTokenEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsRecoveredTokenEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolRecoveredTokenEventID().String()
+	return log.Topics[0] == d.RecoveredTokenEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolRecoveredTokenEventW3(w3l web3types.Log) (EpoolRecoveredTokenEvent, error) {
+func (d *EpoolDecoder) RecoveredTokenEventW3(w3l web3types.Log) (EpoolRecoveredTokenEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolRecoveredTokenEvent{}, err
 	}
 
-	return d.EpoolRecoveredTokenEvent(l)
+	return d.RecoveredTokenEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolRecoveredTokenEvent(l types.Log) (EpoolRecoveredTokenEvent, error) {
+func (d *EpoolDecoder) RecoveredTokenEvent(l types.Log) (EpoolRecoveredTokenEvent, error) {
 	var out EpoolRecoveredTokenEvent
-	if !d.IsEpoolRecoveredTokenEvent(&l) {
+	if !d.IsRecoveredTokenEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "RecoveredToken", l)
@@ -301,36 +301,36 @@ type EpoolIssuedETokenEvent struct {
 	Raw     types.Log
 }
 
-func (d *EpoolDecoder) EpoolIssuedETokenEventID() common.Hash {
+func (d *EpoolDecoder) IssuedETokenEventID() common.Hash {
 	return common.HexToHash("0x99b554b7dd396926e9ca4dc2f8349b638f196fb693daf374c850139debc63447")
 }
 
-func (d *EpoolDecoder) IsEpoolIssuedETokenEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsIssuedETokenEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolIssuedETokenEventID()
+	return log.Topics[0] == d.IssuedETokenEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolIssuedETokenEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsIssuedETokenEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolIssuedETokenEventID().String()
+	return log.Topics[0] == d.IssuedETokenEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolIssuedETokenEventW3(w3l web3types.Log) (EpoolIssuedETokenEvent, error) {
+func (d *EpoolDecoder) IssuedETokenEventW3(w3l web3types.Log) (EpoolIssuedETokenEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolIssuedETokenEvent{}, err
 	}
 
-	return d.EpoolIssuedETokenEvent(l)
+	return d.IssuedETokenEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolIssuedETokenEvent(l types.Log) (EpoolIssuedETokenEvent, error) {
+func (d *EpoolDecoder) IssuedETokenEvent(l types.Log) (EpoolIssuedETokenEvent, error) {
 	var out EpoolIssuedETokenEvent
-	if !d.IsEpoolIssuedETokenEvent(&l) {
+	if !d.IsIssuedETokenEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "IssuedEToken", l)
@@ -344,36 +344,36 @@ type EpoolSetAggregatorEvent struct {
 	Raw         types.Log
 }
 
-func (d *EpoolDecoder) EpoolSetAggregatorEventID() common.Hash {
+func (d *EpoolDecoder) SetAggregatorEventID() common.Hash {
 	return common.HexToHash("0x9aaad5d73fc4de1befd3e790b855dfdc6363f068e93abfdf01ad70681d31d0ce")
 }
 
-func (d *EpoolDecoder) IsEpoolSetAggregatorEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsSetAggregatorEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetAggregatorEventID()
+	return log.Topics[0] == d.SetAggregatorEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolSetAggregatorEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsSetAggregatorEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetAggregatorEventID().String()
+	return log.Topics[0] == d.SetAggregatorEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolSetAggregatorEventW3(w3l web3types.Log) (EpoolSetAggregatorEvent, error) {
+func (d *EpoolDecoder) SetAggregatorEventW3(w3l web3types.Log) (EpoolSetAggregatorEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolSetAggregatorEvent{}, err
 	}
 
-	return d.EpoolSetAggregatorEvent(l)
+	return d.SetAggregatorEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolSetAggregatorEvent(l types.Log) (EpoolSetAggregatorEvent, error) {
+func (d *EpoolDecoder) SetAggregatorEvent(l types.Log) (EpoolSetAggregatorEvent, error) {
 	var out EpoolSetAggregatorEvent
-	if !d.IsEpoolSetAggregatorEvent(&l) {
+	if !d.IsSetAggregatorEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "SetAggregator", l)
@@ -387,36 +387,36 @@ type EpoolCollectedFeesEvent struct {
 	Raw            types.Log
 }
 
-func (d *EpoolDecoder) EpoolCollectedFeesEventID() common.Hash {
+func (d *EpoolDecoder) CollectedFeesEventID() common.Hash {
 	return common.HexToHash("0xaeb342f3c261bafef9d4f2cccd5ada643628fa7f7fadb7035ee1e91c2385b873")
 }
 
-func (d *EpoolDecoder) IsEpoolCollectedFeesEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsCollectedFeesEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolCollectedFeesEventID()
+	return log.Topics[0] == d.CollectedFeesEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolCollectedFeesEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsCollectedFeesEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolCollectedFeesEventID().String()
+	return log.Topics[0] == d.CollectedFeesEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolCollectedFeesEventW3(w3l web3types.Log) (EpoolCollectedFeesEvent, error) {
+func (d *EpoolDecoder) CollectedFeesEventW3(w3l web3types.Log) (EpoolCollectedFeesEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolCollectedFeesEvent{}, err
 	}
 
-	return d.EpoolCollectedFeesEvent(l)
+	return d.CollectedFeesEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolCollectedFeesEvent(l types.Log) (EpoolCollectedFeesEvent, error) {
+func (d *EpoolDecoder) CollectedFeesEvent(l types.Log) (EpoolCollectedFeesEvent, error) {
 	var out EpoolCollectedFeesEvent
-	if !d.IsEpoolCollectedFeesEvent(&l) {
+	if !d.IsCollectedFeesEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "CollectedFees", l)
@@ -432,36 +432,36 @@ type EpoolRebalancedTranchesEvent struct {
 	Raw     types.Log
 }
 
-func (d *EpoolDecoder) EpoolRebalancedTranchesEventID() common.Hash {
+func (d *EpoolDecoder) RebalancedTranchesEventID() common.Hash {
 	return common.HexToHash("0xe219e81e936fbe5bc0195b0cc0755ef3e79c6910fc4398345d8b4c6c267fd40f")
 }
 
-func (d *EpoolDecoder) IsEpoolRebalancedTranchesEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsRebalancedTranchesEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolRebalancedTranchesEventID()
+	return log.Topics[0] == d.RebalancedTranchesEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolRebalancedTranchesEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsRebalancedTranchesEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolRebalancedTranchesEventID().String()
+	return log.Topics[0] == d.RebalancedTranchesEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolRebalancedTranchesEventW3(w3l web3types.Log) (EpoolRebalancedTranchesEvent, error) {
+func (d *EpoolDecoder) RebalancedTranchesEventW3(w3l web3types.Log) (EpoolRebalancedTranchesEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolRebalancedTranchesEvent{}, err
 	}
 
-	return d.EpoolRebalancedTranchesEvent(l)
+	return d.RebalancedTranchesEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolRebalancedTranchesEvent(l types.Log) (EpoolRebalancedTranchesEvent, error) {
+func (d *EpoolDecoder) RebalancedTranchesEvent(l types.Log) (EpoolRebalancedTranchesEvent, error) {
 	var out EpoolRebalancedTranchesEvent
-	if !d.IsEpoolRebalancedTranchesEvent(&l) {
+	if !d.IsRebalancedTranchesEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "RebalancedTranches", l)
@@ -474,36 +474,36 @@ type EpoolSetRebalanceIntervalEvent struct {
 	Raw      types.Log
 }
 
-func (d *EpoolDecoder) EpoolSetRebalanceIntervalEventID() common.Hash {
+func (d *EpoolDecoder) SetRebalanceIntervalEventID() common.Hash {
 	return common.HexToHash("0xe92aa3ac048565d1668fe6ffad28e03b8cbeed2210cd1fdef353d88d7f8e694b")
 }
 
-func (d *EpoolDecoder) IsEpoolSetRebalanceIntervalEvent(log *types.Log) bool {
+func (d *EpoolDecoder) IsSetRebalanceIntervalEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetRebalanceIntervalEventID()
+	return log.Topics[0] == d.SetRebalanceIntervalEventID()
 }
 
-func (d *EpoolDecoder) IsEpoolSetRebalanceIntervalEventW3(log *web3types.Log) bool {
+func (d *EpoolDecoder) IsSetRebalanceIntervalEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EpoolSetRebalanceIntervalEventID().String()
+	return log.Topics[0] == d.SetRebalanceIntervalEventID().String()
 }
 
-func (d *EpoolDecoder) EpoolSetRebalanceIntervalEventW3(w3l web3types.Log) (EpoolSetRebalanceIntervalEvent, error) {
+func (d *EpoolDecoder) SetRebalanceIntervalEventW3(w3l web3types.Log) (EpoolSetRebalanceIntervalEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EpoolSetRebalanceIntervalEvent{}, err
 	}
 
-	return d.EpoolSetRebalanceIntervalEvent(l)
+	return d.SetRebalanceIntervalEvent(l)
 }
 
-func (d *EpoolDecoder) EpoolSetRebalanceIntervalEvent(l types.Log) (EpoolSetRebalanceIntervalEvent, error) {
+func (d *EpoolDecoder) SetRebalanceIntervalEvent(l types.Log) (EpoolSetRebalanceIntervalEvent, error) {
 	var out EpoolSetRebalanceIntervalEvent
-	if !d.IsEpoolSetRebalanceIntervalEvent(&l) {
+	if !d.IsSetRebalanceIntervalEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "SetRebalanceInterval", l)

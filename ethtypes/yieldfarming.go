@@ -42,36 +42,36 @@ type YieldFarmingDepositEvent struct {
 	Raw          types.Log
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingDepositEventID() common.Hash {
+func (d *YieldFarmingDecoder) DepositEventID() common.Hash {
 	return common.HexToHash("0x5548c837ab068cf56a2c2479df0882a4922fd203edb7517321831d95078c5f62")
 }
 
-func (d *YieldFarmingDecoder) IsYieldFarmingDepositEvent(log *types.Log) bool {
+func (d *YieldFarmingDecoder) IsDepositEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.YieldFarmingDepositEventID()
+	return log.Topics[0] == d.DepositEventID()
 }
 
-func (d *YieldFarmingDecoder) IsYieldFarmingDepositEventW3(log *web3types.Log) bool {
+func (d *YieldFarmingDecoder) IsDepositEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.YieldFarmingDepositEventID().String()
+	return log.Topics[0] == d.DepositEventID().String()
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingDepositEventW3(w3l web3types.Log) (YieldFarmingDepositEvent, error) {
+func (d *YieldFarmingDecoder) DepositEventW3(w3l web3types.Log) (YieldFarmingDepositEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return YieldFarmingDepositEvent{}, err
 	}
 
-	return d.YieldFarmingDepositEvent(l)
+	return d.DepositEvent(l)
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingDepositEvent(l types.Log) (YieldFarmingDepositEvent, error) {
+func (d *YieldFarmingDecoder) DepositEvent(l types.Log) (YieldFarmingDepositEvent, error) {
 	var out YieldFarmingDepositEvent
-	if !d.IsYieldFarmingDepositEvent(&l) {
+	if !d.IsDepositEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "Deposit", l)
@@ -86,36 +86,36 @@ type YieldFarmingWithdrawEvent struct {
 	Raw          types.Log
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingWithdrawEventID() common.Hash {
+func (d *YieldFarmingDecoder) WithdrawEventID() common.Hash {
 	return common.HexToHash("0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb")
 }
 
-func (d *YieldFarmingDecoder) IsYieldFarmingWithdrawEvent(log *types.Log) bool {
+func (d *YieldFarmingDecoder) IsWithdrawEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.YieldFarmingWithdrawEventID()
+	return log.Topics[0] == d.WithdrawEventID()
 }
 
-func (d *YieldFarmingDecoder) IsYieldFarmingWithdrawEventW3(log *web3types.Log) bool {
+func (d *YieldFarmingDecoder) IsWithdrawEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.YieldFarmingWithdrawEventID().String()
+	return log.Topics[0] == d.WithdrawEventID().String()
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingWithdrawEventW3(w3l web3types.Log) (YieldFarmingWithdrawEvent, error) {
+func (d *YieldFarmingDecoder) WithdrawEventW3(w3l web3types.Log) (YieldFarmingWithdrawEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return YieldFarmingWithdrawEvent{}, err
 	}
 
-	return d.YieldFarmingWithdrawEvent(l)
+	return d.WithdrawEvent(l)
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingWithdrawEvent(l types.Log) (YieldFarmingWithdrawEvent, error) {
+func (d *YieldFarmingDecoder) WithdrawEvent(l types.Log) (YieldFarmingWithdrawEvent, error) {
 	var out YieldFarmingWithdrawEvent
-	if !d.IsYieldFarmingWithdrawEvent(&l) {
+	if !d.IsWithdrawEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "Withdraw", l)
@@ -130,36 +130,36 @@ type YieldFarmingManualEpochInitEvent struct {
 	Raw     types.Log
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingManualEpochInitEventID() common.Hash {
+func (d *YieldFarmingDecoder) ManualEpochInitEventID() common.Hash {
 	return common.HexToHash("0xb85c32b8d9cecc81feba78646289584a693e9a8afea40ab2fd31efae4408429f")
 }
 
-func (d *YieldFarmingDecoder) IsYieldFarmingManualEpochInitEvent(log *types.Log) bool {
+func (d *YieldFarmingDecoder) IsManualEpochInitEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.YieldFarmingManualEpochInitEventID()
+	return log.Topics[0] == d.ManualEpochInitEventID()
 }
 
-func (d *YieldFarmingDecoder) IsYieldFarmingManualEpochInitEventW3(log *web3types.Log) bool {
+func (d *YieldFarmingDecoder) IsManualEpochInitEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.YieldFarmingManualEpochInitEventID().String()
+	return log.Topics[0] == d.ManualEpochInitEventID().String()
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingManualEpochInitEventW3(w3l web3types.Log) (YieldFarmingManualEpochInitEvent, error) {
+func (d *YieldFarmingDecoder) ManualEpochInitEventW3(w3l web3types.Log) (YieldFarmingManualEpochInitEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return YieldFarmingManualEpochInitEvent{}, err
 	}
 
-	return d.YieldFarmingManualEpochInitEvent(l)
+	return d.ManualEpochInitEvent(l)
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingManualEpochInitEvent(l types.Log) (YieldFarmingManualEpochInitEvent, error) {
+func (d *YieldFarmingDecoder) ManualEpochInitEvent(l types.Log) (YieldFarmingManualEpochInitEvent, error) {
 	var out YieldFarmingManualEpochInitEvent
-	if !d.IsYieldFarmingManualEpochInitEvent(&l) {
+	if !d.IsManualEpochInitEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "ManualEpochInit", l)
@@ -174,36 +174,36 @@ type YieldFarmingEmergencyWithdrawEvent struct {
 	Raw          types.Log
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingEmergencyWithdrawEventID() common.Hash {
+func (d *YieldFarmingDecoder) EmergencyWithdrawEventID() common.Hash {
 	return common.HexToHash("0xf24ef89f38eadc1bde50701ad6e4d6d11a2dc24f7cf834a486991f3883328504")
 }
 
-func (d *YieldFarmingDecoder) IsYieldFarmingEmergencyWithdrawEvent(log *types.Log) bool {
+func (d *YieldFarmingDecoder) IsEmergencyWithdrawEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.YieldFarmingEmergencyWithdrawEventID()
+	return log.Topics[0] == d.EmergencyWithdrawEventID()
 }
 
-func (d *YieldFarmingDecoder) IsYieldFarmingEmergencyWithdrawEventW3(log *web3types.Log) bool {
+func (d *YieldFarmingDecoder) IsEmergencyWithdrawEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.YieldFarmingEmergencyWithdrawEventID().String()
+	return log.Topics[0] == d.EmergencyWithdrawEventID().String()
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingEmergencyWithdrawEventW3(w3l web3types.Log) (YieldFarmingEmergencyWithdrawEvent, error) {
+func (d *YieldFarmingDecoder) EmergencyWithdrawEventW3(w3l web3types.Log) (YieldFarmingEmergencyWithdrawEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return YieldFarmingEmergencyWithdrawEvent{}, err
 	}
 
-	return d.YieldFarmingEmergencyWithdrawEvent(l)
+	return d.EmergencyWithdrawEvent(l)
 }
 
-func (d *YieldFarmingDecoder) YieldFarmingEmergencyWithdrawEvent(l types.Log) (YieldFarmingEmergencyWithdrawEvent, error) {
+func (d *YieldFarmingDecoder) EmergencyWithdrawEvent(l types.Log) (YieldFarmingEmergencyWithdrawEvent, error) {
 	var out YieldFarmingEmergencyWithdrawEvent
-	if !d.IsYieldFarmingEmergencyWithdrawEvent(&l) {
+	if !d.IsEmergencyWithdrawEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "EmergencyWithdraw", l)

@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
+	"github.com/barnbridge/meminero/state/smartyield"
 	"github.com/barnbridge/meminero/types"
 )
 
@@ -24,15 +25,18 @@ type Manager struct {
 
 	sePools    map[string]*types.SEPool
 	seTranches map[string]*types.SETranche
+
+	SmartYield *smartyield.SmartYield
 }
 
 // NewManager instantiates a new task manager and also takes care of the redis connection management
 // it subscribes to the best block tracker for new blocks which it'll add to the redis queue automatically
 func NewManager(db *pgxpool.Pool) (*Manager, error) {
 	m := &Manager{
-		db:     db,
-		logger: logrus.WithField("module", "state"),
-		mu:     new(sync.Mutex),
+		db:         db,
+		logger:     logrus.WithField("module", "state"),
+		mu:         new(sync.Mutex),
+		SmartYield: smartyield.New(),
 	}
 
 	var err error
@@ -71,6 +75,11 @@ func (m *Manager) RefreshCache(ctx context.Context) error {
 	err = m.loadAllSETranches(ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not fetch smart exposure tranches")
+	}
+
+	err = m.SmartYield.LoadPools(ctx, m.db)
+	if err != nil {
+		return errors.Wrap(err, "could not fetch smart yield pools")
 	}
 
 	return nil
