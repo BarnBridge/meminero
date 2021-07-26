@@ -14,7 +14,6 @@ import (
 
 func (s *Storable) storeDelegateActions(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.delegateActions) == 0 {
-		s.logger.WithField("handler", "delegateActions").Debug("no events found")
 		return nil
 	}
 
@@ -45,7 +44,6 @@ func (s *Storable) storeDelegateActions(ctx context.Context, tx pgx.Tx) error {
 
 func (s *Storable) storeDelegateChanges(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.delegateChanges) == 0 {
-		s.logger.WithField("handler", "delegateChanges").Debug("no events found")
 		return nil
 	}
 
@@ -106,7 +104,6 @@ func (s *Storable) storeDelegateChanges(ctx context.Context, tx pgx.Tx) error {
 
 func (s *Storable) storeLockEvents(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.locks) == 0 {
-		s.logger.WithField("handler", "locks").Debug("no events found")
 		return nil
 	}
 	var rows [][]interface{}
@@ -134,7 +131,6 @@ func (s *Storable) storeLockEvents(ctx context.Context, tx pgx.Tx) error {
 
 func (s *Storable) storeStakingActionsEvents(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.stakingActions) == 0 {
-		s.logger.WithField("handler", "locks").Debug("no events found")
 		return nil
 	}
 	var rows [][]interface{}

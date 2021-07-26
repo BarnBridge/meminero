@@ -70,7 +70,6 @@ func (s *GovStorable) getProposalsDetailsFromChain(ctx context.Context, createdE
 
 func (s *GovStorable) storeProposals(ctx context.Context, tx pgx.Tx) error {
 	if len(s.Processed.proposals) == 0 {
-		s.logger.WithField("handler", "proposals").Debug("no events found")
 		return nil
 	}
 

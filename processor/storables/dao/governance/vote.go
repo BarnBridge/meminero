@@ -38,8 +38,6 @@ func (s *GovStorable) handleVotes(logs []gethtypes.Log) error {
 
 func (s *GovStorable) storeProposalVotes(ctx context.Context, tx pgx.Tx) error {
 	if len(s.Processed.votes) == 0 {
-		s.logger.WithField("handler", "votes").Debug("no events found")
-
 		return nil
 	}
 
@@ -76,7 +74,6 @@ func (s *GovStorable) storeProposalVotes(ctx context.Context, tx pgx.Tx) error {
 
 func (s *GovStorable) storeProposalCanceledVotes(ctx context.Context, tx pgx.Tx) error {
 	if len(s.Processed.canceledVotes) == 0 {
-		s.logger.WithField("handler", "canceled votes").Debug("no events found")
 		return nil
 	}
 

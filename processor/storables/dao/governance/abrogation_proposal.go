@@ -73,7 +73,6 @@ func (s *GovStorable) getAPDescriptionsFromChain(ctx context.Context, aps []etht
 
 func (s *GovStorable) storeAbrogrationProposals(ctx context.Context, tx pgx.Tx) error {
 	if len(s.Processed.abrogationProposals) == 0 {
-		s.logger.WithField("handler", "abrogation proposal").Debug("no events found")
 		return nil
 	}
 
