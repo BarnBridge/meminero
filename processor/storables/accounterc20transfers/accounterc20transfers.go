@@ -52,8 +52,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
-			if len(log.Topics) == 3 && ethtypes.ERC20.IsERC20TransferEvent(&log) {
-				erc20Transfer, err := ethtypes.ERC20.ERC20TransferEvent(log)
+			if len(log.Topics) == 3 && ethtypes.ERC20.IsTransferEvent(&log) {
+				erc20Transfer, err := ethtypes.ERC20.TransferEvent(log)
 				if err != nil {
 					return errors.Wrapf(err, "could not decode erc20 transfer in tx %s", log.TxHash.String())
 				}

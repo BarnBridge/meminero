@@ -6,6 +6,8 @@ import (
 	"github.com/barnbridge/meminero/processor/storables/dao/barn"
 	"github.com/barnbridge/meminero/processor/storables/dao/governance"
 	"github.com/barnbridge/meminero/processor/storables/erc20transfers"
+	syERC721 "github.com/barnbridge/meminero/processor/storables/smartyield/erc721"
+	syEvents "github.com/barnbridge/meminero/processor/storables/smartyield/events"
 	"github.com/barnbridge/meminero/processor/storables/yieldfarming"
 )
 
@@ -30,5 +32,14 @@ func (p *Processor) registerStorables() {
 
 	if config.Store.Storable.YieldFarming.Enabled {
 		p.storables = append(p.storables, yieldfarming.New(p.Block))
+	}
+
+	p.registerSmartYield()
+}
+
+func (p *Processor) registerSmartYield() {
+	if config.Store.Storable.SmartYield.Enabled {
+		p.storables = append(p.storables, syEvents.New(p.Block, p.state))
+		p.storables = append(p.storables, syERC721.New(p.Block, p.state))
 	}
 }

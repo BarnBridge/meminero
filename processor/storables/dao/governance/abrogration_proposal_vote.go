@@ -14,8 +14,8 @@ import (
 
 func (s *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.Governance.IsGovernanceAbrogationProposalVoteEvent(&log) {
-			vote, err := ethtypes.Governance.GovernanceAbrogationProposalVoteEvent(log)
+		if ethtypes.Governance.IsAbrogationProposalVoteEvent(&log) {
+			vote, err := ethtypes.Governance.AbrogationProposalVoteEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode abrogation proposal event")
 			}
@@ -23,8 +23,8 @@ func (s *GovStorable) handleAbrogationProposalVotes(logs []gethtypes.Log) error 
 			s.Processed.abrogationVotes = append(s.Processed.abrogationVotes, vote)
 		}
 
-		if ethtypes.Governance.IsGovernanceAbrogationProposalVoteEvent(&log) {
-			vote, err := ethtypes.Governance.GovernanceAbrogationProposalVoteCancelledEvent(log)
+		if ethtypes.Governance.IsAbrogationProposalVoteEvent(&log) {
+			vote, err := ethtypes.Governance.AbrogationProposalVoteCancelledEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode abrogation proposal event")
 			}
