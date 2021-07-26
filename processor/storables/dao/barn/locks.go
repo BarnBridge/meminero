@@ -9,8 +9,8 @@ import (
 
 func (s *Storable) handleLockEvents(logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.Barn.IsBarnLockEvent(&log) {
-			lock, err := ethtypes.Barn.BarnLockEvent(log)
+		if ethtypes.Barn.IsLockEvent(&log) {
+			lock, err := ethtypes.Barn.LockEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode lock event")
 			}

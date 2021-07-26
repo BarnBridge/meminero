@@ -1,16 +1,17 @@
 package scrape
 
 import (
-	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.Epool.IsEpoolIssuedETokenEvent(&log) {
-			t, err := ethtypes.Epool.EpoolIssuedETokenEvent(log)
+		if ethtypes.Epool.IsIssuedETokenEvent(&log) {
+			t, err := ethtypes.Epool.IssuedETokenEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode IssuedEtoken event")
 			}
@@ -28,8 +29,8 @@ func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 			})
 		}
 
-		if ethtypes.Epool.IsEpoolRedeemedETokenEvent(&log) {
-			t, err := ethtypes.Epool.EpoolRedeemedETokenEvent(log)
+		if ethtypes.Epool.IsRedeemedETokenEvent(&log) {
+			t, err := ethtypes.Epool.RedeemedETokenEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode RedeemedEToken event")
 			}

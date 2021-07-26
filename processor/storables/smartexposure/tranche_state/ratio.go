@@ -1,7 +1,7 @@
 package tranche_state
 
 import (
-	"github.com/barnbridge/meminero/processor/storables/smartexposure"
+	"github.com/barnbridge/meminero/state/smartexposure"
 	"github.com/shopspring/decimal"
 )
 

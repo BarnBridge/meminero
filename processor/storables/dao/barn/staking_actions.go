@@ -10,8 +10,8 @@ import (
 
 func (s *Storable) handleStakingActions(logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.Barn.IsBarnDepositEvent(&log) {
-			deposit, err := ethtypes.Barn.BarnDepositEvent(log)
+		if ethtypes.Barn.IsDepositEvent(&log) {
+			deposit, err := ethtypes.Barn.DepositEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode deposit event")
 			}
@@ -26,8 +26,8 @@ func (s *Storable) handleStakingActions(logs []gethtypes.Log) error {
 			})
 		}
 
-		if ethtypes.Barn.IsBarnWithdrawEvent(&log) {
-			withdraw, err := ethtypes.Barn.BarnWithdrawEvent(log)
+		if ethtypes.Barn.IsWithdrawEvent(&log) {
+			withdraw, err := ethtypes.Barn.WithdrawEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode withdraw event")
 			}

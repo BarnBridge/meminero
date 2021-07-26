@@ -7,14 +7,6 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-type TrancheFromChain struct {
-	Etoken      common.Address `json:"eToken"`
-	SFactorE    *big.Int       `json:"sFactorE"`
-	ReserveA    *big.Int       `json:"reserveA"`
-	ReserveB    *big.Int       `json:"reserveB"`
-	TargetRatio *big.Int       `json:"targetRatio"`
-}
-
 type SEPool struct {
 	EPoolAddress string
 	ProtocolId   string
@@ -38,4 +30,12 @@ type SETranche struct {
 	TargetRatio   *big.Int
 	TokenARatio   decimal.Decimal
 	TokenBRatio   decimal.Decimal
+}
+
+type TrancheFromChain struct {
+	Etoken      common.Address `json:"eToken"`
+	SFactorE    *big.Int       `json:"sFactorE"`
+	ReserveA    *big.Int       `json:"reserveA"`
+	ReserveB    *big.Int       `json:"reserveB"`
+	TargetRatio *big.Int       `json:"targetRatio"`
 }

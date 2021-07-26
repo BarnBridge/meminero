@@ -42,36 +42,36 @@ type EthaggregatorNewRoundEvent struct {
 	Raw       types.Log
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorNewRoundEventID() common.Hash {
+func (d *EthaggregatorDecoder) NewRoundEventID() common.Hash {
 	return common.HexToHash("0x0109fc6f55cf40689f02fbaad7af7fe7bbac8a3d2186600afc7d3e10cac60271")
 }
 
-func (d *EthaggregatorDecoder) IsEthaggregatorNewRoundEvent(log *types.Log) bool {
+func (d *EthaggregatorDecoder) IsNewRoundEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EthaggregatorNewRoundEventID()
+	return log.Topics[0] == d.NewRoundEventID()
 }
 
-func (d *EthaggregatorDecoder) IsEthaggregatorNewRoundEventW3(log *web3types.Log) bool {
+func (d *EthaggregatorDecoder) IsNewRoundEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EthaggregatorNewRoundEventID().String()
+	return log.Topics[0] == d.NewRoundEventID().String()
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorNewRoundEventW3(w3l web3types.Log) (EthaggregatorNewRoundEvent, error) {
+func (d *EthaggregatorDecoder) NewRoundEventW3(w3l web3types.Log) (EthaggregatorNewRoundEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EthaggregatorNewRoundEvent{}, err
 	}
 
-	return d.EthaggregatorNewRoundEvent(l)
+	return d.NewRoundEvent(l)
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorNewRoundEvent(l types.Log) (EthaggregatorNewRoundEvent, error) {
+func (d *EthaggregatorDecoder) NewRoundEvent(l types.Log) (EthaggregatorNewRoundEvent, error) {
 	var out EthaggregatorNewRoundEvent
-	if !d.IsEthaggregatorNewRoundEvent(&l) {
+	if !d.IsNewRoundEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "NewRound", l)
@@ -86,36 +86,36 @@ type EthaggregatorAnswerUpdatedEvent struct {
 	Raw       types.Log
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorAnswerUpdatedEventID() common.Hash {
+func (d *EthaggregatorDecoder) AnswerUpdatedEventID() common.Hash {
 	return common.HexToHash("0x0559884fd3a460db3073b7fc896cc77986f16e378210ded43186175bf646fc5f")
 }
 
-func (d *EthaggregatorDecoder) IsEthaggregatorAnswerUpdatedEvent(log *types.Log) bool {
+func (d *EthaggregatorDecoder) IsAnswerUpdatedEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EthaggregatorAnswerUpdatedEventID()
+	return log.Topics[0] == d.AnswerUpdatedEventID()
 }
 
-func (d *EthaggregatorDecoder) IsEthaggregatorAnswerUpdatedEventW3(log *web3types.Log) bool {
+func (d *EthaggregatorDecoder) IsAnswerUpdatedEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EthaggregatorAnswerUpdatedEventID().String()
+	return log.Topics[0] == d.AnswerUpdatedEventID().String()
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorAnswerUpdatedEventW3(w3l web3types.Log) (EthaggregatorAnswerUpdatedEvent, error) {
+func (d *EthaggregatorDecoder) AnswerUpdatedEventW3(w3l web3types.Log) (EthaggregatorAnswerUpdatedEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EthaggregatorAnswerUpdatedEvent{}, err
 	}
 
-	return d.EthaggregatorAnswerUpdatedEvent(l)
+	return d.AnswerUpdatedEvent(l)
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorAnswerUpdatedEvent(l types.Log) (EthaggregatorAnswerUpdatedEvent, error) {
+func (d *EthaggregatorDecoder) AnswerUpdatedEvent(l types.Log) (EthaggregatorAnswerUpdatedEvent, error) {
 	var out EthaggregatorAnswerUpdatedEvent
-	if !d.IsEthaggregatorAnswerUpdatedEvent(&l) {
+	if !d.IsAnswerUpdatedEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "AnswerUpdated", l)
@@ -129,36 +129,36 @@ type EthaggregatorOwnershipTransferredEvent struct {
 	Raw  types.Log
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorOwnershipTransferredEventID() common.Hash {
+func (d *EthaggregatorDecoder) OwnershipTransferredEventID() common.Hash {
 	return common.HexToHash("0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0")
 }
 
-func (d *EthaggregatorDecoder) IsEthaggregatorOwnershipTransferredEvent(log *types.Log) bool {
+func (d *EthaggregatorDecoder) IsOwnershipTransferredEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EthaggregatorOwnershipTransferredEventID()
+	return log.Topics[0] == d.OwnershipTransferredEventID()
 }
 
-func (d *EthaggregatorDecoder) IsEthaggregatorOwnershipTransferredEventW3(log *web3types.Log) bool {
+func (d *EthaggregatorDecoder) IsOwnershipTransferredEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EthaggregatorOwnershipTransferredEventID().String()
+	return log.Topics[0] == d.OwnershipTransferredEventID().String()
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorOwnershipTransferredEventW3(w3l web3types.Log) (EthaggregatorOwnershipTransferredEvent, error) {
+func (d *EthaggregatorDecoder) OwnershipTransferredEventW3(w3l web3types.Log) (EthaggregatorOwnershipTransferredEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EthaggregatorOwnershipTransferredEvent{}, err
 	}
 
-	return d.EthaggregatorOwnershipTransferredEvent(l)
+	return d.OwnershipTransferredEvent(l)
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorOwnershipTransferredEvent(l types.Log) (EthaggregatorOwnershipTransferredEvent, error) {
+func (d *EthaggregatorDecoder) OwnershipTransferredEvent(l types.Log) (EthaggregatorOwnershipTransferredEvent, error) {
 	var out EthaggregatorOwnershipTransferredEvent
-	if !d.IsEthaggregatorOwnershipTransferredEvent(&l) {
+	if !d.IsOwnershipTransferredEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "OwnershipTransferred", l)
@@ -172,36 +172,36 @@ type EthaggregatorOwnershipTransferRequestedEvent struct {
 	Raw  types.Log
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorOwnershipTransferRequestedEventID() common.Hash {
+func (d *EthaggregatorDecoder) OwnershipTransferRequestedEventID() common.Hash {
 	return common.HexToHash("0xed8889f560326eb138920d842192f0eb3dd22b4f139c87a2c57538e05bae1278")
 }
 
-func (d *EthaggregatorDecoder) IsEthaggregatorOwnershipTransferRequestedEvent(log *types.Log) bool {
+func (d *EthaggregatorDecoder) IsOwnershipTransferRequestedEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EthaggregatorOwnershipTransferRequestedEventID()
+	return log.Topics[0] == d.OwnershipTransferRequestedEventID()
 }
 
-func (d *EthaggregatorDecoder) IsEthaggregatorOwnershipTransferRequestedEventW3(log *web3types.Log) bool {
+func (d *EthaggregatorDecoder) IsOwnershipTransferRequestedEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EthaggregatorOwnershipTransferRequestedEventID().String()
+	return log.Topics[0] == d.OwnershipTransferRequestedEventID().String()
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorOwnershipTransferRequestedEventW3(w3l web3types.Log) (EthaggregatorOwnershipTransferRequestedEvent, error) {
+func (d *EthaggregatorDecoder) OwnershipTransferRequestedEventW3(w3l web3types.Log) (EthaggregatorOwnershipTransferRequestedEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EthaggregatorOwnershipTransferRequestedEvent{}, err
 	}
 
-	return d.EthaggregatorOwnershipTransferRequestedEvent(l)
+	return d.OwnershipTransferRequestedEvent(l)
 }
 
-func (d *EthaggregatorDecoder) EthaggregatorOwnershipTransferRequestedEvent(l types.Log) (EthaggregatorOwnershipTransferRequestedEvent, error) {
+func (d *EthaggregatorDecoder) OwnershipTransferRequestedEvent(l types.Log) (EthaggregatorOwnershipTransferRequestedEvent, error) {
 	var out EthaggregatorOwnershipTransferRequestedEvent
-	if !d.IsEthaggregatorOwnershipTransferRequestedEvent(&l) {
+	if !d.IsOwnershipTransferRequestedEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "OwnershipTransferRequested", l)

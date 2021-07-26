@@ -18,7 +18,7 @@ func GetTokensPrice(ctx context.Context, state *state.Manager, blockNumber int64
 	var mu = &sync.Mutex{}
 	tokensPrices := make(map[string]decimal.Decimal)
 	tokens := make(map[string]types.Token)
-	for _, pool := range state.SEPools() {
+	for _, pool := range state.SmartExposure.SEPools() {
 		tokens[pool.ATokenAddress] = state.Tokens[pool.ATokenAddress]
 		tokens[pool.BTokenAddress] = state.Tokens[pool.BTokenAddress]
 	}

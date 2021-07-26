@@ -52,6 +52,7 @@ func (s *Storable) storeNewTranches(ctx context.Context, tx pgx.Tx) error {
 	var rows [][]interface{}
 	for _, t := range s.processed.newTranches {
 		factor := decimal.NewFromBigInt(t.SFactorE, 0)
+		targetRatio := decimal.NewFromBigInt(t.TargetRatio, 0)
 		ratioA, _ := t.TokenARatio.Float64()
 		ratioB, _ := t.TokenBRatio.Float64()
 		rows = append(rows, []interface{}{
@@ -59,13 +60,13 @@ func (s *Storable) storeNewTranches(ctx context.Context, tx pgx.Tx) error {
 			t.ETokenAddress,
 			t.ETokenSymbol,
 			factor,
-			t.TargetRatio,
+			targetRatio,
 			ratioA,
 			ratioB,
 			s.block.Number,
 		})
 
-		s.state.AddNewTrancheToState(t)
+		s.state.SmartExposure.AddNewTrancheToState(t)
 	}
 
 	_, err := tx.CopyFrom(

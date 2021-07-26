@@ -47,36 +47,36 @@ type BarnLockEvent struct {
 	Raw       types.Log
 }
 
-func (d *BarnDecoder) BarnLockEventID() common.Hash {
+func (d *BarnDecoder) LockEventID() common.Hash {
 	return common.HexToHash("0x625fed9875dada8643f2418b838ae0bc78d9a148a18eee4ee1979ff0f3f5d427")
 }
 
-func (d *BarnDecoder) IsBarnLockEvent(log *types.Log) bool {
+func (d *BarnDecoder) IsLockEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnLockEventID()
+	return log.Topics[0] == d.LockEventID()
 }
 
-func (d *BarnDecoder) IsBarnLockEventW3(log *web3types.Log) bool {
+func (d *BarnDecoder) IsLockEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnLockEventID().String()
+	return log.Topics[0] == d.LockEventID().String()
 }
 
-func (d *BarnDecoder) BarnLockEventW3(w3l web3types.Log) (BarnLockEvent, error) {
+func (d *BarnDecoder) LockEventW3(w3l web3types.Log) (BarnLockEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return BarnLockEvent{}, err
 	}
 
-	return d.BarnLockEvent(l)
+	return d.LockEvent(l)
 }
 
-func (d *BarnDecoder) BarnLockEvent(l types.Log) (BarnLockEvent, error) {
+func (d *BarnDecoder) LockEvent(l types.Log) (BarnLockEvent, error) {
 	var out BarnLockEvent
-	if !d.IsBarnLockEvent(&l) {
+	if !d.IsLockEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "Lock", l)
@@ -90,36 +90,36 @@ type BarnOwnershipTransferredEvent struct {
 	Raw           types.Log
 }
 
-func (d *BarnDecoder) BarnOwnershipTransferredEventID() common.Hash {
+func (d *BarnDecoder) OwnershipTransferredEventID() common.Hash {
 	return common.HexToHash("0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0")
 }
 
-func (d *BarnDecoder) IsBarnOwnershipTransferredEvent(log *types.Log) bool {
+func (d *BarnDecoder) IsOwnershipTransferredEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnOwnershipTransferredEventID()
+	return log.Topics[0] == d.OwnershipTransferredEventID()
 }
 
-func (d *BarnDecoder) IsBarnOwnershipTransferredEventW3(log *web3types.Log) bool {
+func (d *BarnDecoder) IsOwnershipTransferredEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnOwnershipTransferredEventID().String()
+	return log.Topics[0] == d.OwnershipTransferredEventID().String()
 }
 
-func (d *BarnDecoder) BarnOwnershipTransferredEventW3(w3l web3types.Log) (BarnOwnershipTransferredEvent, error) {
+func (d *BarnDecoder) OwnershipTransferredEventW3(w3l web3types.Log) (BarnOwnershipTransferredEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return BarnOwnershipTransferredEvent{}, err
 	}
 
-	return d.BarnOwnershipTransferredEvent(l)
+	return d.OwnershipTransferredEvent(l)
 }
 
-func (d *BarnDecoder) BarnOwnershipTransferredEvent(l types.Log) (BarnOwnershipTransferredEvent, error) {
+func (d *BarnDecoder) OwnershipTransferredEvent(l types.Log) (BarnOwnershipTransferredEvent, error) {
 	var out BarnOwnershipTransferredEvent
-	if !d.IsBarnOwnershipTransferredEvent(&l) {
+	if !d.IsOwnershipTransferredEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "OwnershipTransferred", l)
@@ -134,36 +134,36 @@ type BarnDiamondCutEvent struct {
 	Raw        types.Log
 }
 
-func (d *BarnDecoder) BarnDiamondCutEventID() common.Hash {
+func (d *BarnDecoder) DiamondCutEventID() common.Hash {
 	return common.HexToHash("0x8faa70878671ccd212d20771b795c50af8fd3ff6cf27f4bde57e5d4de0aeb673")
 }
 
-func (d *BarnDecoder) IsBarnDiamondCutEvent(log *types.Log) bool {
+func (d *BarnDecoder) IsDiamondCutEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDiamondCutEventID()
+	return log.Topics[0] == d.DiamondCutEventID()
 }
 
-func (d *BarnDecoder) IsBarnDiamondCutEventW3(log *web3types.Log) bool {
+func (d *BarnDecoder) IsDiamondCutEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDiamondCutEventID().String()
+	return log.Topics[0] == d.DiamondCutEventID().String()
 }
 
-func (d *BarnDecoder) BarnDiamondCutEventW3(w3l web3types.Log) (BarnDiamondCutEvent, error) {
+func (d *BarnDecoder) DiamondCutEventW3(w3l web3types.Log) (BarnDiamondCutEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return BarnDiamondCutEvent{}, err
 	}
 
-	return d.BarnDiamondCutEvent(l)
+	return d.DiamondCutEvent(l)
 }
 
-func (d *BarnDecoder) BarnDiamondCutEvent(l types.Log) (BarnDiamondCutEvent, error) {
+func (d *BarnDecoder) DiamondCutEvent(l types.Log) (BarnDiamondCutEvent, error) {
 	var out BarnDiamondCutEvent
-	if !d.IsBarnDiamondCutEvent(&l) {
+	if !d.IsDiamondCutEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "DiamondCut", l)
@@ -178,36 +178,36 @@ type BarnDepositEvent struct {
 	Raw        types.Log
 }
 
-func (d *BarnDecoder) BarnDepositEventID() common.Hash {
+func (d *BarnDecoder) DepositEventID() common.Hash {
 	return common.HexToHash("0x90890809c654f11d6e72a28fa60149770a0d11ec6c92319d6ceb2bb0a4ea1a15")
 }
 
-func (d *BarnDecoder) IsBarnDepositEvent(log *types.Log) bool {
+func (d *BarnDecoder) IsDepositEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDepositEventID()
+	return log.Topics[0] == d.DepositEventID()
 }
 
-func (d *BarnDecoder) IsBarnDepositEventW3(log *web3types.Log) bool {
+func (d *BarnDecoder) IsDepositEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDepositEventID().String()
+	return log.Topics[0] == d.DepositEventID().String()
 }
 
-func (d *BarnDecoder) BarnDepositEventW3(w3l web3types.Log) (BarnDepositEvent, error) {
+func (d *BarnDecoder) DepositEventW3(w3l web3types.Log) (BarnDepositEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return BarnDepositEvent{}, err
 	}
 
-	return d.BarnDepositEvent(l)
+	return d.DepositEvent(l)
 }
 
-func (d *BarnDecoder) BarnDepositEvent(l types.Log) (BarnDepositEvent, error) {
+func (d *BarnDecoder) DepositEvent(l types.Log) (BarnDepositEvent, error) {
 	var out BarnDepositEvent
-	if !d.IsBarnDepositEvent(&l) {
+	if !d.IsDepositEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "Deposit", l)
@@ -223,36 +223,36 @@ type BarnDelegatedPowerIncreasedEvent struct {
 	Raw                 types.Log
 }
 
-func (d *BarnDecoder) BarnDelegatedPowerIncreasedEventID() common.Hash {
+func (d *BarnDecoder) DelegatedPowerIncreasedEventID() common.Hash {
 	return common.HexToHash("0x9306546ca617a204223f7da51d942104c887cf8e53f8fd454af55a529aaa689a")
 }
 
-func (d *BarnDecoder) IsBarnDelegatedPowerIncreasedEvent(log *types.Log) bool {
+func (d *BarnDecoder) IsDelegatedPowerIncreasedEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDelegatedPowerIncreasedEventID()
+	return log.Topics[0] == d.DelegatedPowerIncreasedEventID()
 }
 
-func (d *BarnDecoder) IsBarnDelegatedPowerIncreasedEventW3(log *web3types.Log) bool {
+func (d *BarnDecoder) IsDelegatedPowerIncreasedEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDelegatedPowerIncreasedEventID().String()
+	return log.Topics[0] == d.DelegatedPowerIncreasedEventID().String()
 }
 
-func (d *BarnDecoder) BarnDelegatedPowerIncreasedEventW3(w3l web3types.Log) (BarnDelegatedPowerIncreasedEvent, error) {
+func (d *BarnDecoder) DelegatedPowerIncreasedEventW3(w3l web3types.Log) (BarnDelegatedPowerIncreasedEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return BarnDelegatedPowerIncreasedEvent{}, err
 	}
 
-	return d.BarnDelegatedPowerIncreasedEvent(l)
+	return d.DelegatedPowerIncreasedEvent(l)
 }
 
-func (d *BarnDecoder) BarnDelegatedPowerIncreasedEvent(l types.Log) (BarnDelegatedPowerIncreasedEvent, error) {
+func (d *BarnDecoder) DelegatedPowerIncreasedEvent(l types.Log) (BarnDelegatedPowerIncreasedEvent, error) {
 	var out BarnDelegatedPowerIncreasedEvent
-	if !d.IsBarnDelegatedPowerIncreasedEvent(&l) {
+	if !d.IsDelegatedPowerIncreasedEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "DelegatedPowerIncreased", l)
@@ -266,36 +266,36 @@ type BarnDelegateEvent struct {
 	Raw  types.Log
 }
 
-func (d *BarnDecoder) BarnDelegateEventID() common.Hash {
+func (d *BarnDecoder) DelegateEventID() common.Hash {
 	return common.HexToHash("0xab7d75eccd27c9989942a3a6e4137e415df0ad90ec428751b16361f16fe8780f")
 }
 
-func (d *BarnDecoder) IsBarnDelegateEvent(log *types.Log) bool {
+func (d *BarnDecoder) IsDelegateEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDelegateEventID()
+	return log.Topics[0] == d.DelegateEventID()
 }
 
-func (d *BarnDecoder) IsBarnDelegateEventW3(log *web3types.Log) bool {
+func (d *BarnDecoder) IsDelegateEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDelegateEventID().String()
+	return log.Topics[0] == d.DelegateEventID().String()
 }
 
-func (d *BarnDecoder) BarnDelegateEventW3(w3l web3types.Log) (BarnDelegateEvent, error) {
+func (d *BarnDecoder) DelegateEventW3(w3l web3types.Log) (BarnDelegateEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return BarnDelegateEvent{}, err
 	}
 
-	return d.BarnDelegateEvent(l)
+	return d.DelegateEvent(l)
 }
 
-func (d *BarnDecoder) BarnDelegateEvent(l types.Log) (BarnDelegateEvent, error) {
+func (d *BarnDecoder) DelegateEvent(l types.Log) (BarnDelegateEvent, error) {
 	var out BarnDelegateEvent
-	if !d.IsBarnDelegateEvent(&l) {
+	if !d.IsDelegateEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "Delegate", l)
@@ -310,36 +310,36 @@ type BarnWithdrawEvent struct {
 	Raw            types.Log
 }
 
-func (d *BarnDecoder) BarnWithdrawEventID() common.Hash {
+func (d *BarnDecoder) WithdrawEventID() common.Hash {
 	return common.HexToHash("0xf279e6a1f5e320cca91135676d9cb6e44ca8a08c0b88342bcdb1144f6511b568")
 }
 
-func (d *BarnDecoder) IsBarnWithdrawEvent(log *types.Log) bool {
+func (d *BarnDecoder) IsWithdrawEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnWithdrawEventID()
+	return log.Topics[0] == d.WithdrawEventID()
 }
 
-func (d *BarnDecoder) IsBarnWithdrawEventW3(log *web3types.Log) bool {
+func (d *BarnDecoder) IsWithdrawEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnWithdrawEventID().String()
+	return log.Topics[0] == d.WithdrawEventID().String()
 }
 
-func (d *BarnDecoder) BarnWithdrawEventW3(w3l web3types.Log) (BarnWithdrawEvent, error) {
+func (d *BarnDecoder) WithdrawEventW3(w3l web3types.Log) (BarnWithdrawEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return BarnWithdrawEvent{}, err
 	}
 
-	return d.BarnWithdrawEvent(l)
+	return d.WithdrawEvent(l)
 }
 
-func (d *BarnDecoder) BarnWithdrawEvent(l types.Log) (BarnWithdrawEvent, error) {
+func (d *BarnDecoder) WithdrawEvent(l types.Log) (BarnWithdrawEvent, error) {
 	var out BarnWithdrawEvent
-	if !d.IsBarnWithdrawEvent(&l) {
+	if !d.IsWithdrawEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "Withdraw", l)
@@ -355,36 +355,36 @@ type BarnDelegatedPowerDecreasedEvent struct {
 	Raw                 types.Log
 }
 
-func (d *BarnDecoder) BarnDelegatedPowerDecreasedEventID() common.Hash {
+func (d *BarnDecoder) DelegatedPowerDecreasedEventID() common.Hash {
 	return common.HexToHash("0xfb73cd22fb01f433ef312f758a708c1c7d1442ec871b9dd2546b3ec85a8b4e76")
 }
 
-func (d *BarnDecoder) IsBarnDelegatedPowerDecreasedEvent(log *types.Log) bool {
+func (d *BarnDecoder) IsDelegatedPowerDecreasedEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDelegatedPowerDecreasedEventID()
+	return log.Topics[0] == d.DelegatedPowerDecreasedEventID()
 }
 
-func (d *BarnDecoder) IsBarnDelegatedPowerDecreasedEventW3(log *web3types.Log) bool {
+func (d *BarnDecoder) IsDelegatedPowerDecreasedEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.BarnDelegatedPowerDecreasedEventID().String()
+	return log.Topics[0] == d.DelegatedPowerDecreasedEventID().String()
 }
 
-func (d *BarnDecoder) BarnDelegatedPowerDecreasedEventW3(w3l web3types.Log) (BarnDelegatedPowerDecreasedEvent, error) {
+func (d *BarnDecoder) DelegatedPowerDecreasedEventW3(w3l web3types.Log) (BarnDelegatedPowerDecreasedEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return BarnDelegatedPowerDecreasedEvent{}, err
 	}
 
-	return d.BarnDelegatedPowerDecreasedEvent(l)
+	return d.DelegatedPowerDecreasedEvent(l)
 }
 
-func (d *BarnDecoder) BarnDelegatedPowerDecreasedEvent(l types.Log) (BarnDelegatedPowerDecreasedEvent, error) {
+func (d *BarnDecoder) DelegatedPowerDecreasedEvent(l types.Log) (BarnDelegatedPowerDecreasedEvent, error) {
 	var out BarnDelegatedPowerDecreasedEvent
-	if !d.IsBarnDelegatedPowerDecreasedEvent(&l) {
+	if !d.IsDelegatedPowerDecreasedEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "DelegatedPowerDecreased", l)

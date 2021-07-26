@@ -15,8 +15,8 @@ func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 	var rows [][]interface{}
 
 	for trancheAddress, t := range s.processed.trancheState {
-		pool := s.state.SEPoolByAddress(t.EPoolAddress)
-		tranche := s.state.SETrancheByETokenAddress(trancheAddress)
+		pool := s.state.SmartExposure.SEPoolByAddress(t.EPoolAddress)
+		tranche := s.state.SmartExposure.SETrancheByETokenAddress(trancheAddress)
 
 		tokenAPrice := s.processed.tokenPrices[pool.ATokenAddress]
 		tokenBPrice := s.processed.tokenPrices[pool.BTokenAddress]

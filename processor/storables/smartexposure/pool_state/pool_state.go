@@ -9,6 +9,8 @@ import (
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
+	smartexposure2 "github.com/barnbridge/meminero/state/smartexposure"
+
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
 	"github.com/jackc/pgx/v4"
@@ -56,7 +58,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 	var mu = &sync.Mutex{}
 	a := ethtypes.Epool.ABI
 
-	for address, pool := range s.state.SEPools() {
+	for address, pool := range s.state.SmartExposure.SEPools() {
 		if s.block.Number < pool.StartAtBlock {
 			s.logger.WithField("pool", address).Info("skipping pool due to StartAtBlock property")
 			continue
@@ -66,7 +68,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 		pool := pool
 		wg.Go(func() error {
 			subwg, _ := errgroup.WithContext(ctx)
-			var _tranches []smartexposure.TrancheFromChain
+			var _tranches []smartexposure2.TrancheFromChain
 			var lastRebalance, rebalancingInterval, rebalancingCondition *big.Int
 
 			subwg.Go(eth.CallContractFunction(*a, address, "getTranches", []interface{}{}, &_tranches))

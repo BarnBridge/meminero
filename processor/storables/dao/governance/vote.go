@@ -14,8 +14,8 @@ import (
 
 func (s *GovStorable) handleVotes(logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.Governance.IsGovernanceVoteEvent(&log) {
-			vote, err := ethtypes.Governance.GovernanceVoteEvent(log)
+		if ethtypes.Governance.IsVoteEvent(&log) {
+			vote, err := ethtypes.Governance.VoteEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal vote event")
 			}
@@ -23,8 +23,8 @@ func (s *GovStorable) handleVotes(logs []gethtypes.Log) error {
 			s.Processed.votes = append(s.Processed.votes, vote)
 		}
 
-		if ethtypes.Governance.IsGovernanceVoteCanceledEvent(&log) {
-			vote, err := ethtypes.Governance.GovernanceVoteCanceledEvent(log)
+		if ethtypes.Governance.IsVoteCanceledEvent(&log) {
+			vote, err := ethtypes.Governance.VoteCanceledEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal vote canceled event")
 			}

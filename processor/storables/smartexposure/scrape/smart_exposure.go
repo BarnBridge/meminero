@@ -4,16 +4,17 @@ import (
 	"context"
 	"time"
 
-	"github.com/barnbridge/meminero/config"
-	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/processor/storables/smartexposure"
-	"github.com/barnbridge/meminero/state"
-	"github.com/barnbridge/meminero/types"
-	"github.com/barnbridge/meminero/utils"
+	"github.com/barnbridge/meminero/state/smartexposure"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/barnbridge/meminero/config"
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/state"
+	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 type Storable struct {
@@ -48,14 +49,14 @@ func (s *Storable) Execute(ctx context.Context) error {
 	var newETokens []ethtypes.EtokenfactoryCreatedETokenEvent
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
-			if s.state.SEPoolByAddress(log.Address.String()) != nil ||
+			if s.state.SmartExposure.SEPoolByAddress(log.Address.String()) != nil ||
 				utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.EPoolPeripheryAddress) {
 				epoolTxs = append(epoolTxs, log)
 			}
 
 			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.ETokenFactoryAddress) &&
-				ethtypes.Etokenfactory.IsEtokenfactoryCreatedETokenEvent(&log) {
-				eToken, err := ethtypes.Etokenfactory.EtokenfactoryCreatedETokenEvent(log)
+				ethtypes.Etokenfactory.IsCreatedETokenEvent(&log) {
+				eToken, err := ethtypes.Etokenfactory.CreatedETokenEvent(log)
 				if err != nil {
 					return errors.Wrap(err, "could not decode Created EToken event")
 				}

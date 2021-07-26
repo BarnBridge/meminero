@@ -3,18 +3,19 @@ package yieldfarming
 import (
 	"context"
 
-	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
+
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *Storable) decodeStakingActions(logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.YieldFarming.IsYieldFarmingDepositEvent(&log) {
-			d, err := ethtypes.YieldFarming.YieldFarmingDepositEvent(log)
+		if ethtypes.YieldFarming.IsDepositEvent(&log) {
+			d, err := ethtypes.YieldFarming.DepositEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could nod decode deposit event")
 			}
@@ -29,8 +30,8 @@ func (s *Storable) decodeStakingActions(logs []gethtypes.Log) error {
 			})
 		}
 
-		if ethtypes.YieldFarming.IsYieldFarmingWithdrawEvent(&log) {
-			w, err := ethtypes.YieldFarming.YieldFarmingWithdrawEvent(log)
+		if ethtypes.YieldFarming.IsWithdrawEvent(&log) {
+			w, err := ethtypes.YieldFarming.WithdrawEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could nod decode withdraw event")
 			}

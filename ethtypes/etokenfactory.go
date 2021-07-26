@@ -41,36 +41,36 @@ type EtokenfactoryCreatedETokenEvent struct {
 	Raw    types.Log
 }
 
-func (d *EtokenfactoryDecoder) EtokenfactoryCreatedETokenEventID() common.Hash {
+func (d *EtokenfactoryDecoder) CreatedETokenEventID() common.Hash {
 	return common.HexToHash("0x98d5a18d1ecc5924c3270fc708d83f1413759b0f8bd8e9b9353e5434747b271d")
 }
 
-func (d *EtokenfactoryDecoder) IsEtokenfactoryCreatedETokenEvent(log *types.Log) bool {
+func (d *EtokenfactoryDecoder) IsCreatedETokenEvent(log *types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EtokenfactoryCreatedETokenEventID()
+	return log.Topics[0] == d.CreatedETokenEventID()
 }
 
-func (d *EtokenfactoryDecoder) IsEtokenfactoryCreatedETokenEventW3(log *web3types.Log) bool {
+func (d *EtokenfactoryDecoder) IsCreatedETokenEventW3(log *web3types.Log) bool {
 	if len(log.Topics) == 0 {
 		return false
 	}
-	return log.Topics[0] == d.EtokenfactoryCreatedETokenEventID().String()
+	return log.Topics[0] == d.CreatedETokenEventID().String()
 }
 
-func (d *EtokenfactoryDecoder) EtokenfactoryCreatedETokenEventW3(w3l web3types.Log) (EtokenfactoryCreatedETokenEvent, error) {
+func (d *EtokenfactoryDecoder) CreatedETokenEventW3(w3l web3types.Log) (EtokenfactoryCreatedETokenEvent, error) {
 	l, err := ethgen.W3LogToLog(w3l)
 	if err != nil {
 		return EtokenfactoryCreatedETokenEvent{}, err
 	}
 
-	return d.EtokenfactoryCreatedETokenEvent(l)
+	return d.CreatedETokenEvent(l)
 }
 
-func (d *EtokenfactoryDecoder) EtokenfactoryCreatedETokenEvent(l types.Log) (EtokenfactoryCreatedETokenEvent, error) {
+func (d *EtokenfactoryDecoder) CreatedETokenEvent(l types.Log) (EtokenfactoryCreatedETokenEvent, error) {
 	var out EtokenfactoryCreatedETokenEvent
-	if !d.IsEtokenfactoryCreatedETokenEvent(&l) {
+	if !d.IsCreatedETokenEvent(&l) {
 		return out, ethgen.ErrMismatchingEvent
 	}
 	err := d.UnpackLog(&out, "CreatedEToken", l)

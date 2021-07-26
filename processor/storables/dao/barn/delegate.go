@@ -13,9 +13,9 @@ import (
 func (s *Storable) handleDelegateEvents(logs []gethtypes.Log, ctx context.Context) error {
 
 	for _, log := range logs {
-		if ethtypes.Barn.IsBarnDelegateEvent(&log) {
+		if ethtypes.Barn.IsDelegateEvent(&log) {
 			var action DelegateAction
-			a, err := ethtypes.Barn.BarnDelegateEvent(log)
+			a, err := ethtypes.Barn.DelegateEvent(log)
 			if err != nil {
 				return err
 			}
@@ -33,8 +33,8 @@ func (s *Storable) handleDelegateEvents(logs []gethtypes.Log, ctx context.Contex
 			s.processed.delegateActions = append(s.processed.delegateActions, action)
 		}
 
-		if ethtypes.Barn.IsBarnDelegatedPowerIncreasedEvent(&log) {
-			increase, err := ethtypes.Barn.BarnDelegatedPowerIncreasedEvent(log)
+		if ethtypes.Barn.IsDelegatedPowerIncreasedEvent(&log) {
+			increase, err := ethtypes.Barn.DelegatedPowerIncreasedEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode delegate power increased event")
 			}
@@ -51,8 +51,8 @@ func (s *Storable) handleDelegateEvents(logs []gethtypes.Log, ctx context.Contex
 			})
 		}
 
-		if ethtypes.Barn.IsBarnDelegatedPowerDecreasedEvent(&log) {
-			decrease, err := ethtypes.Barn.BarnDelegatedPowerDecreasedEvent(log)
+		if ethtypes.Barn.IsDelegatedPowerDecreasedEvent(&log) {
+			decrease, err := ethtypes.Barn.DelegatedPowerDecreasedEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode delegate power increased event")
 			}

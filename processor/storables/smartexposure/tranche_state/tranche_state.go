@@ -10,6 +10,8 @@ import (
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
+	smartexposure2 "github.com/barnbridge/meminero/state/smartexposure"
+
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
 	"github.com/ethereum/go-ethereum/common"
@@ -59,8 +61,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 	var mu = &sync.Mutex{}
 	a := ethtypes.Epool.ABI
 
-	for trancheAddress, tranche := range s.state.SETranches() {
-		if s.block.Number < s.state.SEPoolByAddress(tranche.EPoolAddress).StartAtBlock {
+	for trancheAddress, tranche := range s.state.SmartExposure.SETranches() {
+		if s.block.Number < s.state.SmartExposure.SEPoolByAddress(tranche.EPoolAddress).StartAtBlock {
 			s.logger.WithField("tranche", trancheAddress).Info("skipping tranche due to StartAtBlock property")
 			continue
 		}
@@ -70,7 +72,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 		wg.Go(func() error {
 			subwg, _ := errgroup.WithContext(ctx)
-			var t smartexposure.TrancheFromChain
+			var t smartexposure2.TrancheFromChain
 			var currentRatio *big.Int
 
 			var conversionRate struct {

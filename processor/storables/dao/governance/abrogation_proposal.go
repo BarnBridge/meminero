@@ -19,9 +19,9 @@ import (
 
 func (s *GovStorable) handleAbrogationProposal(ctx context.Context, logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.Governance.IsGovernanceAbrogationProposalStartedEvent(&log) {
+		if ethtypes.Governance.IsAbrogationProposalStartedEvent(&log) {
 
-			cp, err := ethtypes.Governance.GovernanceAbrogationProposalStartedEvent(log)
+			cp, err := ethtypes.Governance.AbrogationProposalStartedEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode abrogation proposal started event")
 			}

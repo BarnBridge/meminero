@@ -5,7 +5,6 @@ require (
 	github.com/alethio/ethmock v0.0.0-20190820104914-7b8327fb645e // indirect
 	github.com/alethio/web3-go v0.0.6
 	github.com/btcsuite/btcd v0.22.0-beta // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/ethereum/go-ethereum v1.10.6
 	github.com/gin-gonic/gin v1.7.1
 	github.com/go-playground/validator/v10 v10.5.0 // indirect
@@ -17,7 +16,7 @@ require (
 	github.com/jackc/pgtype v1.7.0
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/jackc/tern v1.12.5
-	github.com/lacasian/ethwheels v0.0.7
+	github.com/lacasian/ethwheels v0.0.9
 	github.com/lacasian/gogo v0.0.0-20210409131350-2a34a42d506e
 	github.com/lacasian/logrus-module-formatter v0.0.0-20201126131010-ff27c57db003
 	github.com/leodido/go-urn v1.2.1 // indirect

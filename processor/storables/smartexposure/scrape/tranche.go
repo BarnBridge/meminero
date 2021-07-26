@@ -6,7 +6,8 @@ import (
 
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/processor/storables/smartexposure"
+	"github.com/barnbridge/meminero/state/smartexposure"
+
 	"github.com/barnbridge/meminero/utils"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
