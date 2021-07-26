@@ -1,14 +1,15 @@
 package notifications
 
-/*
 import (
 	"context"
 	"fmt"
 
-	"github.com/barnbridge/meminero/utils"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
+
+	"github.com/barnbridge/meminero/processor/storables/smartyield"
+	"github.com/barnbridge/meminero/utils"
 )
 
 const (
@@ -17,7 +18,8 @@ const (
 
 type SmartYieldJobData struct {
 	StartTime             int64           `json:"startTime"`
-	PoolAddress           string          `json:"pool"`
+	Pool                  smartyield.Pool `json:"pool"`
+	HasRewardPool         bool            `json:"hasRewardPool"`
 	Buyer                 string          `json:"buyer"`
 	Amount                decimal.Decimal `json:"amount"`
 	IncludedInBlockNumber int64           `json:"includedInBlockNumber"`
@@ -28,11 +30,9 @@ func NewSmartYieldTokenBoughtJob(data *SmartYieldJobData) (*Job, error) {
 }
 
 func (jd *SmartYieldJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
-	log.Tracef("executing token bought from pool %s by %s", jd.PoolAddress, jd.Buyer)
+	log.Tracef("executing token bought from pool %s by %s", jd.Pool.PoolAddress, jd.Buyer)
 
-	syPool := state.PoolBySmartYieldAddress(jd.PoolAddress)
-	rewardsPool := state.RewardPoolForSYAddress(jd.PoolAddress)
-	if rewardsPool == nil {
+	if !jd.HasRewardPool {
 		return nil, nil
 	}
 
@@ -42,8 +42,8 @@ func (jd *SmartYieldJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*J
 		SmartYieldTokenBought,
 		jd.StartTime,
 		jd.StartTime+60*60*24,
-		fmt.Sprintf("Stake your %s junior tokens to earn extra yield", utils.PrettyToken(jd.Amount, syPool.UnderlyingDecimals)),
-		smartYieldMetadata(jd, syPool),
+		fmt.Sprintf("Stake your %s junior tokens to earn extra yield", utils.PrettyToken(jd.Amount, jd.Pool.UnderlyingDecimals)),
+		smartYieldMetadata(jd, jd.Pool),
 		jd.IncludedInBlockNumber,
 	)
 	if err != nil {
@@ -53,12 +53,11 @@ func (jd *SmartYieldJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx) ([]*J
 	return nil, nil
 }
 
-func smartYieldMetadata(jd *SmartYieldJobData, pool *types.SYPool) map[string]interface{} {
+func smartYieldMetadata(jd *SmartYieldJobData, pool smartyield.Pool) map[string]interface{} {
 	m := make(map[string]interface{})
 	m["amount"] = jd.Amount.String()
 	m["underlyingSymbol"] = pool.UnderlyingSymbol
 	m["protocolId"] = pool.ProtocolId
-	m["syPoolAddress"] = jd.PoolAddress
+	m["syPoolAddress"] = jd.Pool.PoolAddress
 	return m
 }
-*/
