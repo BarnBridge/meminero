@@ -27,8 +27,8 @@ func (m *Manager) loadAllSETranches(ctx context.Context) error {
 	m.seTranches = make(map[string]*types.SETranche)
 	for rows.Next() {
 		var p types.SETranche
-		var factor decimal.Decimal
-		err := rows.Scan(&p.EPoolAddress, &p.ETokenAddress, &p.ETokenSymbol, &factor, &p.TargetRatio, &p.TokenARatio, &p.TokenBRatio)
+		var factor, targetRatio decimal.Decimal
+		err := rows.Scan(&p.EPoolAddress, &p.ETokenAddress, &p.ETokenSymbol, &factor, &targetRatio, &p.TokenARatio, &p.TokenBRatio)
 		if err != nil {
 			return errors.Wrap(err, "could not scan tranches from database")
 		}
@@ -36,6 +36,7 @@ func (m *Manager) loadAllSETranches(ctx context.Context) error {
 		p.EPoolAddress = utils.NormalizeAddress(p.EPoolAddress)
 		p.ETokenAddress = utils.NormalizeAddress(p.ETokenAddress)
 		p.SFactorE = factor.BigInt()
+		p.TargetRatio = targetRatio.BigInt()
 		m.seTranches[p.ETokenAddress] = &p
 	}
 

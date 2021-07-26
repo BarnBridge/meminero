@@ -11,7 +11,7 @@ type SETranche struct {
 	ETokenAddress string
 	ETokenSymbol  string
 	SFactorE      *big.Int
-	TargetRatio   decimal.Decimal
+	TargetRatio   *big.Int
 	TokenARatio   decimal.Decimal
 	TokenBRatio   decimal.Decimal
 }
