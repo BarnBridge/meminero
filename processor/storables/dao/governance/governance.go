@@ -115,6 +115,12 @@ func (s *GovStorable) Rollback(ctx context.Context, tx pgx.Tx) error {
 }
 
 func (s *GovStorable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
+	start := time.Now()
+	s.logger.Debug("storing")
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).Debug("done storing")
+	}()
+
 	err := s.storeProposals(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store proposals")

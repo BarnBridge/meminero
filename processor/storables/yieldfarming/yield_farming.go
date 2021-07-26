@@ -2,6 +2,7 @@ package yieldfarming
 
 import (
 	"context"
+	"time"
 
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
@@ -29,6 +30,12 @@ func New(block *types.Block) *Storable {
 }
 
 func (s *Storable) Execute(ctx context.Context) error {
+	start := time.Now()
+	s.logger.Debug("executing")
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).Debug("done")
+	}()
+
 	var logs []gethtypes.Log
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
@@ -56,6 +63,12 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 }
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
+	start := time.Now()
+	s.logger.Debug("storing")
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).Debug("done storing")
+	}()
+
 	err := s.storeStakingActions(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store erc20transfers")

@@ -28,17 +28,22 @@ var scrapeSingleCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		database, err := db.New()
+		d, err := db.New()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		state, err := state.NewManager(database.Connection())
+		err = d.Migrate(context.Background())
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		g, err := glue.New(database.Connection(), state)
+		state, err := state.NewManager(d.Connection())
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		g, err := glue.New(d.Connection(), state)
 		if err != nil {
 			log.Fatal(err)
 		}
