@@ -12,7 +12,3 @@ create table yield_farming.transactions
     log_index         integer                    not null,
     created_at        timestamp default now()
 );
-
----- create above / drop below ----
-
-drop table if exists yield_farming.transactions;

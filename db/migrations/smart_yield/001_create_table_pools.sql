@@ -20,6 +20,4 @@ create table smart_yield.pools
     created_at            timestamp default now()
 );
 
----- create above / drop below ----
-
-drop table if exists smart_yield.pools;
+create unique index pools_pool_address_idx on smart_yield.pools (pool_address);

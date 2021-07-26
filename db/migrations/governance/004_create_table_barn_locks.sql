@@ -12,8 +12,3 @@ create table governance.barn_locks
 );
 
 create index user_locked_until_idx on governance.barn_locks (user_address asc, included_in_block desc, log_index desc);
-
----- create above / drop below ----
-
-drop table if exists governance.barn_locks;
-drop index if exists governance.user_locked_until_idx;

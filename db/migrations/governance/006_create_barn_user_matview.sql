@@ -18,8 +18,3 @@ create trigger refresh_barn_users
     on governance.barn_delegate_changes
     for each statement
 execute procedure governance.refresh_barn_users();
-
----- create above / drop below ----
-
-drop function governance.refresh_barn_users;
-drop materialized view governance.barn_users;

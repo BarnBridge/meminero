@@ -11,7 +11,3 @@ create table smart_exposure.tranches
 
     created_at     timestamp default now()
 );
-
----- create above / drop below ----
-
-drop table if exists smart_exposure.tranches;

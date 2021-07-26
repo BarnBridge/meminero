@@ -12,8 +12,4 @@ create table smart_yield.reward_pools
     created_at             timestamp        default now()
 );
 
-
----- create above / drop below ----
-
-drop table if exists smart_yield.reward_pools;
-drop type if exists reward_pool_type;
+create unique index reward_pools_pool_address_idx on smart_yield.reward_pools (pool_address);

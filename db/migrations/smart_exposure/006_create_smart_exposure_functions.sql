@@ -252,13 +252,3 @@ begin
     return value;
 end;
 $$;
-
----- create above / drop below ----
-
-drop function if exists smart_exposure.active_position_at_ts(user_address text, ts bigint);
-drop function if exists smart_exposure.get_ratio_deviation(_e_token_address text, start bigint, _date_trunc text);
-drop function if exists smart_exposure.get_token_price_chart(_token_address text, start bigint, _date_trunc text);
-drop function if exists smart_exposure.get_tranche_details(_e_token_address text);
-drop function if exists smart_exposure.user_portfolio_value(addr text, ts bigint);
-drop function if exists smart_exposure.user_portfolio_value_by_pool(addr text, ts bigint, _pool_address text);
-

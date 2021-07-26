@@ -1,9 +1,7 @@
 create table labels
 (
     address text not null,
-    label text not null
+    label   text not null
 );
 
----- create above / drop below ----
-
-drop table if exists labels;
+create unique index labels_address_idx on labels (address);

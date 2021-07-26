@@ -21,9 +21,3 @@ create index rewards_staking_actions_pool_addr_idx on smart_yield.rewards_stakin
                                                                                            tx_index desc, log_index
                                                                                            desc);
 
-
----- create above / drop below ----
-
-drop table if exists smart_yield.rewards_staking_actions;
-drop index if exists smart_yield.rewards_staking_actions_pool_addr_idx;
-drop type if exists reward_action;

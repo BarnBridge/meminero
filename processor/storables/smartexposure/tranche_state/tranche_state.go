@@ -49,17 +49,22 @@ func (s *Storable) Execute(ctx context.Context) error {
 	}()
 
 	s.processed.trancheState = make(map[string]*TrancheState)
-	s.processed.tokenPrices = make(map[string]decimal.Decimal)
-
-	err := s.getTokensPrice(ctx)
+	var err error
+	err, s.processed.tokenPrices = smartexposure.GetTokensPrice(ctx, s.state, s.block.Number)
 	if err != nil {
 		return err
 	}
+
 	wg, _ := errgroup.WithContext(ctx)
 	var mu = &sync.Mutex{}
 	a := ethtypes.Epool.ABI
 
 	for trancheAddress, tranche := range s.state.SETranches() {
+		if s.block.Number < s.state.SEPoolByAddress(tranche.EPoolAddress).StartAtBlock {
+			s.logger.WithField("tranche", trancheAddress).Info("skipping tranche due to StartAtBlock property")
+			continue
+		}
+
 		trancheAddress := trancheAddress
 		tranche := tranche
 
@@ -75,8 +80,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 			subwg.Go(eth.CallContractFunction(*a, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t, s.block.Number))
 
-			wg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio, s.block.Number))
-			wg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &conversionRate, s.block.Number))
+			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio, s.block.Number))
+			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &conversionRate, s.block.Number))
 			err := subwg.Wait()
 			if err != nil {
 				return err

@@ -15,13 +15,11 @@ create table smart_exposure.transaction_history
     created_at        timestamp default now()
 );
 
-create index transaction_history_user_address_chronological_idx
-    on smart_exposure.transaction_history (user_address asc, included_in_block desc, tx_index desc, log_index desc);
+create index transaction_history_user_address_chronological_idx on smart_exposure.transaction_history (user_address asc, included_in_block desc, tx_index desc, log_index desc);
 
-create index transaction_history_etoken_address_chronological_idx
-    on smart_exposure.transaction_history (etoken_address asc, included_in_block desc, tx_index desc, log_index desc);
-
-
----- create above / drop below ----
-
-drop table if exists smart_exposure.transaction_history;
+create index transaction_history_etoken_address_chronological_idx on smart_exposure.transaction_history (etoken_address
+                                                                                                         asc,
+                                                                                                         included_in_block
+                                                                                                         desc, tx_index
+                                                                                                         desc, log_index
+                                                                                                         desc);

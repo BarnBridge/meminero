@@ -16,10 +16,3 @@ create table public.erc20_transfers
 create index erc20_transfers_sender_idx on public.erc20_transfers (sender asc, block_timestamp desc);
 
 create index erc20_transfers_receiver_idx on public.erc20_transfers (receiver asc, block_timestamp desc);
-
-
----- create above / drop below ----
-
-drop table if exists public.erc20_transfers;
-drop index if exists public.erc20_transfers_sender_idx;
-drop index if exists public.erc20_transfers_receiver_idx;

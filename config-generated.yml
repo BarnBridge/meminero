@@ -73,3 +73,10 @@ storable:
     yieldfarming:
         address: ""
         enabled: true
+syncer:
+    # The datasets to sync
+    datasets: []
+    # The network to sync
+    network: ""
+    # Path to sync files folder
+    path: ""

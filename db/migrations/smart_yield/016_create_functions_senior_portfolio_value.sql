@@ -102,12 +102,3 @@ begin
     return value;
 end;
 $$;
-
----- create above / drop below ----
-
-drop function if exists smart_yield.current_owner_of_token_at_ts(address text, id bigint, ts bigint);
-drop function if exists smart_yield.senior_bond_value_at_ts(token_address text, token_id bigint, ts bigint);
-drop function if exists smart_yield.senior_bond_redeemed_at_ts(token_address text, token_id bigint, ts bigint);
-drop function if exists smart_yield.senior_underlying_price_at_ts(addr text, ts bigint);
-drop function if exists smart_yield.senior_portfolio_at_ts(addr text, ts bigint);
-drop function if exists smart_yield.senior_bond_value_at_ts(token_address text, token_id bigint, ts bigint);

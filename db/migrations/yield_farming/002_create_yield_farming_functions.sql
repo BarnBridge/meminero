@@ -39,8 +39,3 @@ begin
                                           on d.point = w.point;
 end
 $$;
----- create above / drop below ----
-
-drop function if exists yield_farming.yf_sum_actions_by_token(a_type staking_action_type, _token_address text,
-                                                              _start_time bigint, _end_time bigint, scale text);
-drop function if exists yield_farming.yf_stats_by_token(_token_address text, _start_time bigint, _end_time bigint, scale text);

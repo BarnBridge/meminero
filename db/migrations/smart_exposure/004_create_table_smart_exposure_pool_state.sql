@@ -10,9 +10,4 @@ create table smart_exposure.pool_state
     included_in_block     bigint not null
 );
 
-create index pool_state_pool_address_idx
-    on smart_exposure.pool_state (pool_address asc, block_timestamp desc);
-
----- create above / drop below ----
-
-drop table if exists smart_exposure.pool_state;
+create index pool_state_pool_address_idx on smart_exposure.pool_state (pool_address asc, block_timestamp desc);

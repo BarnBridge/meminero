@@ -63,9 +63,9 @@ begin
 
     -- check if there's a abrogation proposal that passed
     if ( select count(*) from governance.abrogation_proposals where proposal_id = id ) > 0 then
-        select into abrogationProposalQuorum governance.bond_staked_at_ts(to_timestamp(( select create_time - 1
-                                                                                         from governance.abrogation_proposals
-                                                                                         where proposal_id = id ))) / 2;
+        select into abrogationProposalQuorum governance.bond_staked_at_ts(( select create_time - 1
+                                                                            from governance.abrogation_proposals
+                                                                            where proposal_id = id )) / 2;
 
         if coalesce(( select sum(power) from governance.abrogation_proposal_votes(id) where support = true ), 0) >=
            abrogationProposalQuorum then
@@ -78,7 +78,3 @@ begin
     return 'EXPIRED';
 end;
 $$;
-
----- create above / drop below ----
-
-drop function if exists governance.proposal_state(id bigint);
