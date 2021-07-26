@@ -15,7 +15,7 @@ func (m *Manager) loadAllTokens(ctx context.Context) error {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}
 
-	m.Tokens = make(map[string]types.Token)
+	m.Tokens = make(map[string]*types.Token)
 	for rows.Next() {
 		var t types.Token
 		err := rows.Scan(&t.Address, &t.Symbol, &t.Decimals, &t.AggregatorAddress, &t.PriceProviderType)
@@ -24,7 +24,7 @@ func (m *Manager) loadAllTokens(ctx context.Context) error {
 		}
 		t.Address = utils.NormalizeAddress(t.Address)
 		t.AggregatorAddress = utils.NormalizeAddress(t.AggregatorAddress)
-		m.Tokens[t.Address] = t
+		m.Tokens[t.Address] = &t
 	}
 
 	return nil
@@ -50,7 +50,11 @@ func (m *Manager) StoreToken(ctx context.Context, token types.Token) error {
 		return err
 	}
 
-	m.Tokens[utils.NormalizeAddress(token.Address)] = token
+	m.Tokens[utils.NormalizeAddress(token.Address)] = &token
 
 	return nil
+}
+
+func (m *Manager) GetTokenByAddress(addr string) *types.Token {
+	return m.Tokens[utils.NormalizeAddress(addr)]
 }

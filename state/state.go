@@ -19,7 +19,7 @@ type Manager struct {
 	db     *pgxpool.Pool
 	mu     *sync.Mutex
 
-	Tokens            map[string]types.Token
+	Tokens            map[string]*types.Token
 	monitoredAccounts map[string]bool
 	monitoredERC20    map[string]bool
 

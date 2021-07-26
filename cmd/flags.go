@@ -76,6 +76,10 @@ func addStorableSmartYieldFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.smartYield.notifications", true, "Enable/disable smart yield notifications")
 }
 
+func addStorableTokenPricesFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().Bool("storable.tokenPrices.enabled", true, "Enable/disable token prices storable")
+}
+
 func addSyncerFlags(cmd *cobra.Command) {
 	cmd.Flags().String("syncer.path", "", "Path to sync files folder")
 	cmd.Flags().String("syncer.network", "", "The network to sync")
