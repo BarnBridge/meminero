@@ -18,9 +18,3 @@ create table smart_yield.senior_redeem_events
 create index senior_redeem_events_senior_bond_address_id_idx on smart_yield.senior_redeem_events (senior_bond_address asc, senior_bond_id asc, block_timestamp desc);
 
 create index senior_redeem_events_user_address_idx on smart_yield.senior_redeem_events (owner_address);
-
----- create above / drop below ----
-
-drop table if exists smart_yield.senior_redeem_events;
-drop index if exists smart_yield.senior_redeem_events_senior_bond_address_id_idx;
-drop index if exists smart_yield.senior_redeem_events_user_address_idx;

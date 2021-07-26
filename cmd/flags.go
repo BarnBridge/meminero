@@ -70,3 +70,9 @@ func addStorableBarnFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.barn.notifications", true, "Enable/disable barn notifications")
 	cmd.PersistentFlags().String("storable.barn.address", "", "Address of barn staking contract")
 }
+
+func addSyncerFlags(cmd *cobra.Command) {
+	cmd.Flags().String("syncer.path", "", "Path to sync files folder")
+	cmd.Flags().String("syncer.network", "", "The network to sync")
+	cmd.Flags().StringSlice("syncer.datasets", []string{}, "The datasets to sync")
+}

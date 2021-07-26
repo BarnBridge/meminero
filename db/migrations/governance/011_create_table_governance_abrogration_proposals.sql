@@ -13,8 +13,3 @@ create table governance.abrogation_proposals
 );
 
 create index abrogation_proposals_proposal_id_idx on governance.abrogation_proposals (proposal_id desc);
-
----- create above / drop below ----
-
-drop table if exists governance.abrogation_proposals;
-drop index if exists governance.abrogation_proposals_proposal_id_idx;

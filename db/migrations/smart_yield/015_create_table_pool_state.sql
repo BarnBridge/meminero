@@ -21,10 +21,3 @@ create table smart_yield.pool_state
 create index state_pool_address_idx on smart_yield.pool_state (pool_address asc, block_timestamp desc);
 
 create index state_apy_trend_idx on smart_yield.pool_state (pool_address, date_trunc('day'::text, block_timestamp));
-
-
----- create above / drop below ----
-
-drop table if exists smart_yield.pool_state;
-drop index if exists smart_yield.state_pool_address_idx;
-drop index if exists smart_yield.state_apy_trend_idx;

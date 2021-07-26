@@ -26,7 +26,3 @@ begin
 end;
 
 $$;
-
----- create above / drop below ----
-
-drop function if exists governance.abrogation_proposal_votes(id bigint);

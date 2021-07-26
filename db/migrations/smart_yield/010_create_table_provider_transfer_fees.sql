@@ -14,7 +14,3 @@ create table smart_yield.provider_transfer_fees
     log_index         integer not null,
     created_at        timestamp default now()
 );
-
----- create above / drop below ----
-
-drop table if exists smart_yield.provider_transfer_fees;

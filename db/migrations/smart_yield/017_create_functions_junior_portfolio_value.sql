@@ -225,18 +225,3 @@ begin
     return value;
 end;
 $$;
-
----- create above / drop below ----
-
-drop function if exists smart_yield.junior_active_positions_at_ts(user_address text, ts bigint);
-drop function if exists smart_yield.pool_underlying_price_at_ts(addr text, ts bigint);
-drop function if exists smart_yield.junior_active_balance_at_ts(user_address text, ts bigint);
-drop function if exists smart_yield.junior_bond_value_at_ts(token_address text, token_id bigint, ts bigint);
-drop function if exists smart_yield.junior_bond_redeemed_at_ts(token_address text, token_id bigint, ts bigint);
-drop function if exists smart_yield.junior_underlying_price_at_ts(addr text, ts bigint);
-drop function if exists smart_yield.junior_locked_positions_at_ts(addr text, ts bigint);
-drop function if exists smart_yield.junior_locked_balance_at_ts(addr text, ts bigint);
-drop function if exists smart_yield.staked_amount_at_ts_by_reward_pool(pool text, address text, ts bigint);
-drop function if exists smart_yield.jtoken_price_scaled_at_ts(sy_address text, ts bigint);
-drop function if exists smart_yield.junior_staked_balance_at_ts(user_address text, ts bigint);
-drop function if exists smart_yield.junior_portfolio_value_at_ts(addr text, ts bigint);

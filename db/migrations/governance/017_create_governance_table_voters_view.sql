@@ -18,7 +18,3 @@ select user_address,
        governance.voting_power(user_address)                                                                      as voting_power,
        governance.has_active_delegation(user_address)
 from governance.barn_users;
-
----- create above / drop below ----
-
-drop view governance.voters

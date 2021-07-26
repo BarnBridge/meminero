@@ -10,7 +10,3 @@ create table public.blocks
 create index blocks_block_hash_idx on public.blocks (block_hash);
 
 create unique index blocks_number_idx on public.blocks (number);
-
----- create above / drop below ----
-
-drop table if exists public.blocks;

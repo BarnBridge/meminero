@@ -18,8 +18,3 @@ create table smart_yield.senior_entry_events
 );
 
 create index senior_entry_events_senior_bond_address_id_idx on smart_yield.senior_entry_events (senior_bond_address, senior_bond_id);
-
----- create above / drop below ----
-
-drop table if exists smart_yield.senior_entry_events;
-drop index if exists smart_yield.senior_entry_events_senior_bond_address_id_idx;

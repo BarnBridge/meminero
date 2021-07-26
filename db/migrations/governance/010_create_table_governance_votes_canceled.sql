@@ -12,8 +12,3 @@ create table governance.votes_canceled
 );
 
 create index votes_canceled_idx on governance.votes_canceled (proposal_id asc, user_id asc, block_timestamp desc);
-
----- create above / drop below ----
-
-drop table if exists governance.votes_canceled;
-drop index if exists governance.votes_canceled_idx;

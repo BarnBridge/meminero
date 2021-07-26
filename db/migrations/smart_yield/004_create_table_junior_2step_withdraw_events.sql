@@ -17,8 +17,3 @@ create table smart_yield.junior_2step_withdraw_events
 );
 
 create index junior_2step_withdraw_junior_bond_address_id_idx on smart_yield.junior_2step_withdraw_events (junior_bond_address, junior_bond_id);
-
----- create above / drop below ----
-
-drop table if exists smart_yield.junior_2step_withdraw_events;
-drop index if exists smart_yield.junior_2step_withdraw_junior_bond_address_id_idx;

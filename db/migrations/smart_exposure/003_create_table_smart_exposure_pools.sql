@@ -13,6 +13,4 @@ create table smart_exposure.pools
     created_at       timestamp default now()
 );
 
----- create above / drop below ----
-
-drop table if exists smart_exposure.pools;
+create unique index pools_pool_address_idx on smart_exposure.pools(pool_address);

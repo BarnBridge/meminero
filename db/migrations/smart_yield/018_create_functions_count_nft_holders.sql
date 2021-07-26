@@ -27,9 +27,8 @@ $$
 declare
     value bigint;
 begin
-    select into value smart_yield.number_of_nft_holders(( select senior_bond_address
-                                                          from smart_yield.pools
-                                                          where pool_address = _pool_address ));
+    select into value smart_yield.number_of_nft_holders(
+                              ( select senior_bond_address from smart_yield.pools where pool_address = _pool_address ));
 
     return value;
 end;
@@ -41,9 +40,8 @@ $$
 declare
     value bigint;
 begin
-    select into value smart_yield.number_of_nft_holders(( select junior_bond_address
-                                                          from smart_yield.pools
-                                                          where pool_address = _pool_address ));
+    select into value smart_yield.number_of_nft_holders(
+                              ( select junior_bond_address from smart_yield.pools where pool_address = _pool_address ));
 
     return value;
 end;
@@ -89,11 +87,3 @@ begin
     return value;
 end
 $$;
-
----- create above / drop below ----
-
-drop function if exists smart_yield.number_of_nft_holders(addr text);
-drop function if exists smart_yield.number_of_seniors(pool_address text);
-drop function if exists smart_yield.number_of_juniors_locked(pool_address text);
-drop function if exists smart_yield.number_of_jtoken_holders(addr text);
-drop function if exists smart_yield.junior_liquidity_locked(pool_address text);

@@ -14,10 +14,3 @@ create table governance.barn_delegate_actions
 );
 
 create index user_delegation_idx on governance.barn_delegate_actions (sender asc, included_in_block desc, log_index desc);
-
-
----- create above / drop below ----
-
-drop table if exists governance.barn_delegate_actions;
-drop index if exists governance.user_delegation_idx;
-drop type if exists delegate_action_type;

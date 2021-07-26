@@ -12,7 +12,3 @@ create table smart_yield.rewards_claims
     log_index            integer not null,
     created_at           timestamp default now()
 );
-
----- create above / drop below ----
-
-drop table if exists smart_yield.rewards_claims;

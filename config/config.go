@@ -14,6 +14,7 @@ type store struct {
 	ETH      eth      `mapstructure:"eth"`
 	EthTypes ethtypes `mapstructure:"ethtypes"`
 	Storable storable `mapstructure:"storable"`
+	Syncer   syncer   `mapstructure:"syncer"`
 }
 
 var Store store
