@@ -20,8 +20,8 @@ import (
 func (s *GovStorable) handleProposals(ctx context.Context, logs []gethtypes.Log) error {
 	var createdProposals []ethtypes.GovernanceProposalCreatedEvent
 	for _, log := range logs {
-		if ethtypes.Governance.IsGovernanceProposalCreatedEvent(&log) {
-			p, err := ethtypes.Governance.GovernanceProposalCreatedEvent(log)
+		if ethtypes.Governance.IsProposalCreatedEvent(&log) {
+			p, err := ethtypes.Governance.ProposalCreatedEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal created event")
 			}

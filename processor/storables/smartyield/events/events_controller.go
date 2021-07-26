@@ -10,8 +10,8 @@ import (
 func (s *Storable) decodeControllerEvent(log gethtypes.Log) error {
 	c := ethtypes.SmartYieldCompoundController
 
-	if c.IsSmartYieldCompoundControllerHarvestEvent(&log) {
-		e, err := c.SmartYieldCompoundControllerHarvestEvent(log)
+	if c.IsHarvestEvent(&log) {
+		e, err := c.HarvestEvent(log)
 		if err != nil {
 			return errors.Wrap(err, "could not decode Harvest event")
 		}

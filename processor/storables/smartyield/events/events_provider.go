@@ -10,8 +10,8 @@ import (
 func (s *Storable) decodeProviderEvent(log gethtypes.Log) error {
 	p := ethtypes.SmartYieldCompoundProvider
 
-	if p.IsSmartYieldCompoundProviderTransferFeesEvent(&log) {
-		e, err := p.SmartYieldCompoundProviderTransferFeesEvent(log)
+	if p.IsTransferFeesEvent(&log) {
+		e, err := p.TransferFeesEvent(log)
 		if err != nil {
 			return errors.Wrap(err, "could not decode TransferFees event")
 		}

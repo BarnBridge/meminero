@@ -14,8 +14,8 @@ import (
 
 func (s *GovStorable) handleEvents(logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.Governance.IsGovernanceProposalCreatedEvent(&log) {
-			e, err := ethtypes.Governance.GovernanceProposalCreatedEvent(log)
+		if ethtypes.Governance.IsProposalCreatedEvent(&log) {
+			e, err := ethtypes.Governance.ProposalCreatedEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal created event")
 			}
@@ -31,8 +31,8 @@ func (s *GovStorable) handleEvents(logs []gethtypes.Log) error {
 			continue
 		}
 
-		if ethtypes.Governance.IsGovernanceProposalQueuedEvent(&log) {
-			e, err := ethtypes.Governance.GovernanceProposalQueuedEvent(log)
+		if ethtypes.Governance.IsProposalQueuedEvent(&log) {
+			e, err := ethtypes.Governance.ProposalQueuedEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal queued event")
 			}
@@ -51,8 +51,8 @@ func (s *GovStorable) handleEvents(logs []gethtypes.Log) error {
 			continue
 		}
 
-		if ethtypes.Governance.IsGovernanceProposalExecutedEvent(&log) {
-			e, err := ethtypes.Governance.GovernanceProposalExecutedEvent(log)
+		if ethtypes.Governance.IsProposalExecutedEvent(&log) {
+			e, err := ethtypes.Governance.ProposalExecutedEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal executed event")
 			}
@@ -70,8 +70,8 @@ func (s *GovStorable) handleEvents(logs []gethtypes.Log) error {
 			continue
 		}
 
-		if ethtypes.Governance.IsGovernanceProposalCanceledEvent(&log) {
-			e, err := ethtypes.Governance.GovernanceProposalCanceledEvent(log)
+		if ethtypes.Governance.IsProposalCanceledEvent(&log) {
+			e, err := ethtypes.Governance.ProposalCanceledEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode proposal canceled event")
 			}
