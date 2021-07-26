@@ -28,4 +28,5 @@ func init() {
 	addStorableBarnFlags(scrapeCmd)
 	addStorableYieldFarmingFlags(scrapeCmd)
 	addStorableSmartYieldFlags(scrapeCmd)
+	addStorableSmartExposureFlags(scrapeCmd)
 }

@@ -4,17 +4,17 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/processor/storables/smartexposure"
 	"github.com/barnbridge/meminero/utils"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 )
 
-func (m *Manager) SETranches() map[string]*types.SETranche {
+func (m *Manager) SETranches() map[string]*smartexposure.SETranche {
 	return m.seTranches
 }
 
-func (m *Manager) SETrancheByETokenAddress(address string) *types.SETranche {
+func (m *Manager) SETrancheByETokenAddress(address string) *smartexposure.SETranche {
 	return m.seTranches[address]
 }
 
@@ -24,9 +24,9 @@ func (m *Manager) loadAllSETranches(ctx context.Context) error {
 		return errors.Wrap(err, "could not query database for SmartExposure tranches")
 	}
 
-	m.seTranches = make(map[string]*types.SETranche)
+	m.seTranches = make(map[string]*smartexposure.SETranche)
 	for rows.Next() {
-		var p types.SETranche
+		var p smartexposure.SETranche
 		var factor, targetRatio decimal.Decimal
 		err := rows.Scan(&p.EPoolAddress, &p.ETokenAddress, &p.ETokenSymbol, &factor, &targetRatio, &p.TokenARatio, &p.TokenBRatio)
 		if err != nil {
@@ -43,6 +43,6 @@ func (m *Manager) loadAllSETranches(ctx context.Context) error {
 	return nil
 }
 
-func (m *Manager) AddNewTrancheToState(tranche types.SETranche) {
+func (m *Manager) AddNewTrancheToState(tranche smartexposure.SETranche) {
 	m.seTranches[tranche.ETokenAddress] = &tranche
 }

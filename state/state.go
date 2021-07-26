@@ -4,6 +4,7 @@ import (
 	"context"
 	"sync"
 
+	"github.com/barnbridge/meminero/processor/storables/smartexposure"
 	"github.com/go-redis/redis"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
@@ -22,8 +23,8 @@ type Manager struct {
 	monitoredAccounts map[string]bool
 	monitoredERC20    map[string]bool
 
-	sePools    map[string]*types.SEPool
-	seTranches map[string]*types.SETranche
+	sePools    map[string]*smartexposure.SEPool
+	seTranches map[string]*smartexposure.SETranche
 }
 
 // NewManager instantiates a new task manager and also takes care of the redis connection management

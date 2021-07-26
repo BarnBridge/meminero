@@ -7,7 +7,6 @@ import (
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
-	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
@@ -30,7 +29,7 @@ func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []e
 		}
 
 		ratioA, ratioB := s.calculateRatios(newTranche.SFactorE, newTranche.TargetRatio)
-		s.processed.newTranches = append(s.processed.newTranches, types.SETranche{
+		s.processed.newTranches = append(s.processed.newTranches, smartexposure.SETranche{
 			EPoolAddress:  utils.NormalizeAddress(t.EPool.String()),
 			ETokenAddress: utils.NormalizeAddress(t.EToken.String()),
 			ETokenSymbol:  symbol,

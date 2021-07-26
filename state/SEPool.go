@@ -3,17 +3,17 @@ package state
 import (
 	"context"
 
-	"github.com/barnbridge/meminero/types"
+	"github.com/barnbridge/meminero/processor/storables/smartexposure"
 	"github.com/barnbridge/meminero/utils"
 
 	"github.com/pkg/errors"
 )
 
-func (m *Manager) SEPools() map[string]*types.SEPool {
+func (m *Manager) SEPools() map[string]*smartexposure.SEPool {
 	return m.sePools
 }
 
-func (m *Manager) SEPoolByETokenAddress(address string) *types.SEPool {
+func (m *Manager) SEPoolByETokenAddress(address string) *smartexposure.SEPool {
 	tranche := m.seTranches[utils.NormalizeAddress(address)]
 	if tranche.ETokenAddress == "" {
 		return nil
@@ -22,7 +22,7 @@ func (m *Manager) SEPoolByETokenAddress(address string) *types.SEPool {
 	return m.sePools[tranche.EPoolAddress]
 }
 
-func (m *Manager) SEPoolByAddress(address string) *types.SEPool {
+func (m *Manager) SEPoolByAddress(address string) *smartexposure.SEPool {
 	return m.sePools[utils.NormalizeAddress(address)]
 }
 
@@ -32,9 +32,9 @@ func (m *Manager) loadAllSEPools(ctx context.Context) error {
 		return errors.Wrap(err, "could not query database for SmartExposure pools")
 	}
 
-	m.sePools = make(map[string]*types.SEPool)
+	m.sePools = make(map[string]*smartexposure.SEPool)
 	for rows.Next() {
-		var p types.SEPool
+		var p smartexposure.SEPool
 		err := rows.Scan(&p.EPoolAddress, &p.ProtocolId, &p.ATokenAddress, &p.ATokenSymbol, &p.ATokenDecimals, &p.BTokenAddress, &p.BTokenSymbol, &p.BTokenDecimals, &p.StartAtBlock)
 		if err != nil {
 			return errors.Wrap(err, "could not scan pools from database")

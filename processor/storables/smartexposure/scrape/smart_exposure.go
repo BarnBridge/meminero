@@ -6,6 +6,7 @@ import (
 
 	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/processor/storables/smartexposure"
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
@@ -23,7 +24,7 @@ type Storable struct {
 
 	processed struct {
 		seTransactions []SETransaction
-		newTranches    []types.SETranche
+		newTranches    []smartexposure.SETranche
 	}
 }
 
