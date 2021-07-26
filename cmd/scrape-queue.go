@@ -43,12 +43,17 @@ var scrapeQueueCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		db, err := db.New()
+		d, err := db.New()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		state, err := state.NewManager(db.Connection())
+		err = d.Migrate(context.Background())
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		state, err := state.NewManager(d.Connection())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -59,7 +64,7 @@ var scrapeQueueCmd = &cobra.Command{
 		}
 
 		if config.Store.Feature.Integrity.Enabled {
-			integrityChecker := integrity.NewChecker(db.Connection(), tracker, state)
+			integrityChecker := integrity.NewChecker(d.Connection(), tracker, state)
 			go integrityChecker.Run(ctx)
 		}
 
@@ -71,7 +76,7 @@ var scrapeQueueCmd = &cobra.Command{
 			go keeper.Run(ctx)
 		}
 
-		g, err := glue.New(db.Connection(), state)
+		g, err := glue.New(d.Connection(), state)
 		if err != nil {
 			log.Fatal(err)
 		}

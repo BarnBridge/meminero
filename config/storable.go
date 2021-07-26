@@ -7,6 +7,7 @@ type storable struct {
 	Erc20Transfers        erc20Transfers        `mapstructure:"erc20transfers"`
 	YieldFarming          yieldFarming          `mapstructure:"yieldFarming"`
 	SmartExposure         smartExposure         `mapstructure:"smartExposure"`
+	SmartYield            smartYield            `mapstructure:"smartYield"`
 }
 
 type accountERC20Transfers struct {
@@ -39,4 +40,9 @@ type smartExposure struct {
 	EPoolPeripheryAddress string
 	ETokenFactoryAddress  string
 	EPoolHelperAddress    string
+}
+
+type smartYield struct {
+	Enabled       bool
+	Notifications bool
 }

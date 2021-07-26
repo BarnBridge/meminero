@@ -78,6 +78,11 @@ func addStorableSmartExposureFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().String("storable.smart-exposure.EPoolHelperAddress", "", "Address of EPool helper contract")
 }
 
+func addStorableSmartYieldFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().Bool("storable.smartYield.enabled", true, "Enable/disable smart yield scraping")
+	cmd.PersistentFlags().Bool("storable.smartYield.notifications", true, "Enable/disable smart yield notifications")
+}
+
 func addSyncerFlags(cmd *cobra.Command) {
 	cmd.Flags().String("syncer.path", "", "Path to sync files folder")
 	cmd.Flags().String("syncer.network", "", "The network to sync")

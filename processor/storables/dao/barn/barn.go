@@ -93,6 +93,12 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 }
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
+	start := time.Now()
+	s.logger.Debug("storing")
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).Debug("done storing")
+	}()
+
 	err := s.storeDelegateChanges(ctx, tx)
 	if err != nil {
 		return err

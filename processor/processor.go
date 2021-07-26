@@ -141,6 +141,12 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 }
 
 func (p *Processor) storeAll(ctx context.Context, db *pgxpool.Pool) error {
+	start := time.Now()
+	p.logger.Info("storing data to database")
+	defer func() {
+		p.logger.WithField("duration", time.Since(start)).Info("done storing data to database")
+	}()
+
 	tx, err := db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return errors.Wrap(err, "could not start database transaction")

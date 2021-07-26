@@ -95,7 +95,6 @@ func (s *GovStorable) handleEvents(logs []gethtypes.Log) error {
 
 func (s *GovStorable) storeEvents(ctx context.Context, tx pgx.Tx) error {
 	if len(s.Processed.proposalEvents) == 0 {
-		s.logger.WithField("handler", "proposal events").Debug("no events found")
 		return nil
 	}
 
