@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
+	"path"
 	"reflect"
-	"strings"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -31,13 +31,8 @@ type SyncAble interface {
 	Sync(tx pgx.Tx) error
 }
 
-func basePath() string {
-	return strings.TrimSuffix(config.Store.Syncer.Path, "/") + "/" +
-		strings.TrimSuffix(config.Store.Syncer.Network, "/") + "/"
-}
-
 func readFileInto(file string, v interface{}) error {
-	path := basePath() + file
+	path := path.Join(config.Store.Syncer.Path, config.Store.Syncer.Network, file)
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
