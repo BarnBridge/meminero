@@ -40,7 +40,7 @@ func New(block *types.Block, state *state.Manager) *Storable {
 	return &Storable{
 		block:  block,
 		state:  state,
-		logger: logrus.WithField("module", "storable(smartExposure.TrancheState)"),
+		logger: logrus.WithField("module", "storable(smartExposure.trancheState)"),
 	}
 }
 
