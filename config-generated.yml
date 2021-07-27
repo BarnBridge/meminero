@@ -78,6 +78,8 @@ storable:
     smartyield:
         enabled: true
         notifications: true
+        rewards:
+            factories: ""
     tokenprices:
         enabled: true
     yieldfarming:

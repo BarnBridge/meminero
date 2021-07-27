@@ -21,7 +21,7 @@ func (s *Storable) processNewPoolSingle(ctx context.Context, log ethtypes.SmartY
 		return nil
 	}
 
-	a := *ethtypes.SmartYieldPoolFactorySingle.ABI
+	a := *ethtypes.SmartYieldPoolSingle.ABI
 
 	var rewardToken, poolToken common.Address
 
@@ -41,7 +41,7 @@ func (s *Storable) processNewPoolSingle(ctx context.Context, log ethtypes.SmartY
 	p.PoolTokenAddress = utils.NormalizeAddress(poolToken.String())
 	p.StartAtBlock = s.block.Number
 
-	s.processed.PoolsSingle = append(s.processed.PoolsSingle, p)
+	s.processed.Pools = append(s.processed.Pools, p)
 
 	s.state.SmartYield.CacheRewardPool(p)
 
@@ -55,7 +55,7 @@ func (s *Storable) processNewPoolMulti(ctx context.Context, log ethtypes.SmartYi
 		return nil
 	}
 
-	a := *ethtypes.SmartYieldPoolFactoryMulti.ABI
+	a := *ethtypes.SmartYieldPoolMulti.ABI
 
 	var numRewardTokens *big.Int
 
@@ -97,7 +97,7 @@ func (s *Storable) processNewPoolMulti(ctx context.Context, log ethtypes.SmartYi
 	p.PoolTokenAddress = utils.NormalizeAddress(poolToken.String())
 	p.StartAtBlock = s.block.Number
 
-	s.processed.PoolsMulti = append(s.processed.PoolsMulti, p)
+	s.processed.Pools = append(s.processed.Pools, p)
 
 	s.state.SmartYield.CacheRewardPool(p)
 

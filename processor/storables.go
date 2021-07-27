@@ -11,6 +11,7 @@ import (
 	seTranches "github.com/barnbridge/meminero/processor/storables/smartexposure/tranche_state"
 	syERC721 "github.com/barnbridge/meminero/processor/storables/smartyield/erc721"
 	syEvents "github.com/barnbridge/meminero/processor/storables/smartyield/events"
+	syRewards "github.com/barnbridge/meminero/processor/storables/smartyield/rewards"
 	"github.com/barnbridge/meminero/processor/storables/tokenprices"
 	"github.com/barnbridge/meminero/processor/storables/yieldfarming"
 )
@@ -55,5 +56,6 @@ func (p *Processor) registerSmartYield() {
 	if config.Store.Storable.SmartYield.Enabled {
 		p.storables = append(p.storables, syEvents.New(p.Block, p.state))
 		p.storables = append(p.storables, syERC721.New(p.Block, p.state))
+		p.storables = append(p.storables, syRewards.New(p.Block, p.state))
 	}
 }

@@ -3,9 +3,12 @@ package rewards
 import (
 	"context"
 
+	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
+	"github.com/shopspring/decimal"
 
 	"github.com/barnbridge/meminero/eth"
+	"github.com/barnbridge/meminero/processor/storables/smartyield"
 	"github.com/barnbridge/meminero/utils"
 )
 
@@ -36,4 +39,24 @@ func (s *Storable) checkTokenExists(tokenAddress string) error {
 	}
 
 	return nil
+}
+
+func (s *Storable) txHistory(user string, amount decimal.Decimal, tranche string, txType smartyield.TxType, raw gethtypes.Log) []interface{} {
+	rp := s.state.SmartYield.RewardPoolByAddress(raw.Address.String())
+	p := s.state.SmartYield.PoolByAddress(rp.PoolTokenAddress)
+
+	return []interface{}{
+		p.ProtocolId,
+		p.PoolAddress,
+		p.UnderlyingAddress,
+		utils.NormalizeAddress(user),
+		amount,
+		tranche,
+		txType,
+		s.block.BlockCreationTime,
+		s.block.Number,
+		utils.NormalizeAddress(raw.TxHash.String()),
+		raw.TxIndex,
+		raw.Index,
+	}
 }

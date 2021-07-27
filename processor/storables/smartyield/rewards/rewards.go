@@ -24,8 +24,7 @@ type Storable struct {
 	factories []string
 
 	processed struct {
-		PoolsSingle []smartyield.RewardPool
-		PoolsMulti  []smartyield.RewardPool
+		Pools       []smartyield.RewardPool
 		Claims      []ethtypes.SmartYieldPoolSingleClaimEvent
 		ClaimsMulti []ethtypes.SmartYieldPoolMultiClaimRewardTokenEvent
 		Deposits    []ethtypes.SmartYieldPoolSingleDepositEvent
@@ -37,7 +36,7 @@ func New(block *types.Block, state *state.Manager) *Storable {
 	return &Storable{
 		block:     block,
 		state:     state,
-		logger:    logrus.WithField("module", "smartYield.rewards"),
+		logger:    logrus.WithField("module", "storable(smartYield.rewards)"),
 		factories: strings.Split(config.Store.Storable.SmartYield.Rewards.Factories, ","),
 	}
 }

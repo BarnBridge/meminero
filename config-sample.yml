@@ -84,6 +84,18 @@ storable:
     enabled : true
     address : "0x4cAE362D7F227e3d306f70ce4878E245563F3069"
     notifications : false
+  smartexposure:
+    enabled: true
+    epoolhelperaddress: ""
+    epoolperipheryaddress: ""
+    etokenfactoryaddress: ""
+  smartyield:
+    enabled: true
+    notifications: true
+    rewards:
+      factories: "0x2e93403C675Ccb9C564edf2dC6001233d0650582,0x27FE2BFBb6be96D64Db0e741078A1f29Aa20226B,0x53a44A97cD2E9fb9d92ADe742a3C284695A4d72e"
+  tokenprices:
+    enabled: true
   yieldfarming:
     address: ""
     enabled: true

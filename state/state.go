@@ -84,6 +84,11 @@ func (m *Manager) RefreshCache(ctx context.Context) error {
 		return errors.Wrap(err, "could not fetch smart yield pools")
 	}
 
+	err = m.SmartYield.LoadRewardPools(ctx, m.db)
+	if err != nil {
+		return errors.Wrap(err, "could not fetch smart yield reward pools")
+	}
+
 	return nil
 }
 
