@@ -1,9 +1,8 @@
 package barn
 
 import (
-	"math/big"
-
 	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/shopspring/decimal"
 )
 
 type DelegateAction struct {
@@ -14,8 +13,8 @@ type DelegateAction struct {
 type DelegateChange struct {
 	Sender              string
 	Receiver            string
-	Amount              *big.Int
-	ToNewDelegatedPower *big.Int
+	Amount              decimal.Decimal
+	ToNewDelegatedPower decimal.Decimal
 	ActionType          ActionType
 
 	TransactionHash  string
@@ -25,8 +24,8 @@ type DelegateChange struct {
 
 type StakingAction struct {
 	UserAddress  string
-	Amount       *big.Int
-	BalanceAfter *big.Int
+	Amount       decimal.Decimal
+	BalanceAfter decimal.Decimal
 	ActionType   ActionType
 
 	TransactionHash  string

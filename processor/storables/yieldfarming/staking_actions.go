@@ -3,13 +3,11 @@ package yieldfarming
 import (
 	"context"
 
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
-	"github.com/shopspring/decimal"
-
-	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *Storable) decodeStakingActions(logs []gethtypes.Log) error {
@@ -22,7 +20,7 @@ func (s *Storable) decodeStakingActions(logs []gethtypes.Log) error {
 			s.processed.stakingActions = append(s.processed.stakingActions, StakingAction{
 				UserAddress:      utils.NormalizeAddress(d.User.String()),
 				TokenAddress:     utils.NormalizeAddress(d.TokenAddress.String()),
-				Amount:           d.Amount,
+				Amount:           d.AmountDecimal(0),
 				ActionType:       DEPOSIT,
 				TransactionHash:  utils.NormalizeAddress(d.Raw.TxHash.String()),
 				TransactionIndex: int64(d.Raw.TxIndex),
@@ -38,7 +36,7 @@ func (s *Storable) decodeStakingActions(logs []gethtypes.Log) error {
 			s.processed.stakingActions = append(s.processed.stakingActions, StakingAction{
 				UserAddress:      utils.NormalizeAddress(w.User.String()),
 				TokenAddress:     utils.NormalizeAddress(w.TokenAddress.String()),
-				Amount:           w.Amount,
+				Amount:           w.AmountDecimal(0),
 				ActionType:       WITHDRAW,
 				TransactionHash:  utils.NormalizeAddress(w.Raw.TxHash.String()),
 				TransactionIndex: int64(w.Raw.TxIndex),
@@ -57,11 +55,10 @@ func (s *Storable) storeStakingActions(ctx context.Context, tx pgx.Tx) error {
 	var rows [][]interface{}
 
 	for _, t := range s.processed.stakingActions {
-		value := decimal.NewFromBigInt(t.Amount, 0)
 		rows = append(rows, []interface{}{
 			t.UserAddress,
 			t.TokenAddress,
-			value,
+			t.Amount,
 			t.ActionType,
 			s.block.BlockCreationTime,
 			s.block.Number,

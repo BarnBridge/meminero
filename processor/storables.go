@@ -6,8 +6,12 @@ import (
 	"github.com/barnbridge/meminero/processor/storables/dao/barn"
 	"github.com/barnbridge/meminero/processor/storables/dao/governance"
 	"github.com/barnbridge/meminero/processor/storables/erc20transfers"
+	sePools "github.com/barnbridge/meminero/processor/storables/smartexposure/pool_state"
+	seScrape "github.com/barnbridge/meminero/processor/storables/smartexposure/scrape"
+	seTranches "github.com/barnbridge/meminero/processor/storables/smartexposure/tranche_state"
 	syERC721 "github.com/barnbridge/meminero/processor/storables/smartyield/erc721"
 	syEvents "github.com/barnbridge/meminero/processor/storables/smartyield/events"
+	"github.com/barnbridge/meminero/processor/storables/tokenprices"
 	"github.com/barnbridge/meminero/processor/storables/yieldfarming"
 )
 
@@ -34,7 +38,17 @@ func (p *Processor) registerStorables() {
 		p.storables = append(p.storables, yieldfarming.New(p.Block))
 	}
 
+	if config.Store.Storable.SmartExposure.Enabled {
+		p.storables = append(p.storables, seScrape.New(p.Block, p.state))
+		p.storables = append(p.storables, seTranches.New(p.Block, p.state))
+		p.storables = append(p.storables, sePools.New(p.Block, p.state))
+	}
+
 	p.registerSmartYield()
+
+	if config.Store.Storable.TokenPrices.Enabled {
+		p.storables = append(p.storables, tokenprices.New(p.Block, p.state))
+	}
 }
 
 func (p *Processor) registerSmartYield() {

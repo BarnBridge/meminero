@@ -31,6 +31,7 @@ tmp/
 .gdb_history
 
 config.yml
+config-*.yml
 meminero
 .dump/
 .volumes

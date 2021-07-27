@@ -3,13 +3,11 @@ package barn
 import (
 	"context"
 
-	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
-	"github.com/shopspring/decimal"
-
 	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/notifications"
 	"github.com/barnbridge/meminero/utils"
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
 )
 
 func (s *Storable) storeDelegateActions(ctx context.Context, tx pgx.Tx) error {
@@ -50,14 +48,12 @@ func (s *Storable) storeDelegateChanges(ctx context.Context, tx pgx.Tx) error {
 	var rows [][]interface{}
 	var jobs []*notifications.Job
 	for _, d := range s.processed.delegateChanges {
-		value := decimal.NewFromBigInt(d.Amount, 0)
-		newDelegated := decimal.NewFromBigInt(d.ToNewDelegatedPower, 0)
 		rows = append(rows, []interface{}{
 			d.ActionType,
 			d.Sender,
 			d.Receiver,
-			value,
-			newDelegated,
+			d.Amount,
+			d.ToNewDelegatedPower,
 			s.block.BlockCreationTime,
 			s.block.Number,
 			d.TransactionHash,
@@ -70,7 +66,7 @@ func (s *Storable) storeDelegateChanges(ctx context.Context, tx pgx.Tx) error {
 					StartTime:             s.block.BlockCreationTime,
 					From:                  d.Sender,
 					To:                    d.Receiver,
-					Amount:                decimal.NewFromBigInt(d.ToNewDelegatedPower, 0),
+					Amount:                d.ToNewDelegatedPower,
 					IncludedInBlockNumber: s.block.Number,
 				}
 				j, err := notifications.NewDelegateStartJob(&jd)
@@ -135,14 +131,11 @@ func (s *Storable) storeStakingActionsEvents(ctx context.Context, tx pgx.Tx) err
 	}
 	var rows [][]interface{}
 	for _, a := range s.processed.stakingActions {
-		amount := decimal.NewFromBigInt(a.Amount, 0)
-		balanceAfter := decimal.NewFromBigInt(a.BalanceAfter, 0)
-
 		rows = append(rows, []interface{}{
 			a.UserAddress,
 			a.ActionType,
-			amount,
-			balanceAfter,
+			a.Amount,
+			a.BalanceAfter,
 			s.block.BlockCreationTime,
 			s.block.Number,
 			a.TransactionHash,

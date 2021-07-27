@@ -5,7 +5,6 @@ import (
 
 	"github.com/barnbridge/meminero/utils"
 	"github.com/jackc/pgx/v4"
-	"github.com/shopspring/decimal"
 )
 
 func (s *Storable) storeERC20Transfers(ctx context.Context, tx pgx.Tx) error {
@@ -16,13 +15,11 @@ func (s *Storable) storeERC20Transfers(ctx context.Context, tx pgx.Tx) error {
 	var rows [][]interface{}
 
 	for _, t := range s.processed.transfers {
-		value := decimal.NewFromBigInt(t.Value, 0)
-
 		rows = append(rows, []interface{}{
 			utils.NormalizeAddress(t.Raw.Address.String()),
 			utils.NormalizeAddress(t.From.String()),
 			utils.NormalizeAddress(t.To.String()),
-			value,
+			t.ValueDecimal(0),
 			s.block.BlockCreationTime,
 			s.block.Number,
 			utils.NormalizeAddress(t.Raw.TxHash.String()),
