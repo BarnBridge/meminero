@@ -11,6 +11,7 @@ import (
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
 	types2 "github.com/barnbridge/meminero/processor/storables/smartexposure/types"
+	"github.com/barnbridge/meminero/processor/storables/tokenprices"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/jackc/pgx/v4"
@@ -52,8 +53,13 @@ func (s *Storable) Execute(ctx context.Context) error {
 	}()
 
 	s.processed.trancheState = make(map[string]TrancheState)
-	var err error
-	s.processed.tokenPrices, err = smartexposure.GetTokensPrice(ctx, s.state, s.block.Number)
+	tokens, err := smartexposure.BuildTokensSliceForSE(s.state)
+	if err != nil {
+		return err
+	}
+
+	s.processed.tokenPrices = make(map[string]decimal.Decimal)
+	s.processed.tokenPrices, err = tokenprices.GetTokensPrices(ctx, tokens, s.block.Number)
 	if err != nil {
 		return err
 	}

@@ -70,6 +70,16 @@ storable:
         enabled: true
         # Enable/disable governance notifications
         notifications: true
+    smartexposure:
+        enabled: true
+        epoolhelperaddress: ""
+        epoolperipheryaddress: ""
+        etokenfactoryaddress: ""
+    smartyield:
+        enabled: true
+        notifications: true
+    tokenprices:
+        enabled: true
     yieldfarming:
         address: ""
         enabled: true

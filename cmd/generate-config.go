@@ -63,7 +63,10 @@ func init() {
 	addStorableYieldFarmingFlags(generateConfigCmd)
 	addStorableMonitoredERC20TransfersFlags(generateConfigCmd)
 	addStorableSmartYieldFlags(generateConfigCmd)
+
 	addStorableSmartExposureFlags(generateConfigCmd)
+
+	addStorableTokenPricesFlags(generateConfigCmd)
 
 	addSyncerFlags(generateConfigCmd)
 }

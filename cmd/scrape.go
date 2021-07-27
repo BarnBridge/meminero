@@ -29,4 +29,6 @@ func init() {
 	addStorableYieldFarmingFlags(scrapeCmd)
 	addStorableSmartYieldFlags(scrapeCmd)
 	addStorableSmartExposureFlags(scrapeCmd)
+	addStorableTokenPricesFlags(scrapeCmd)
+
 }

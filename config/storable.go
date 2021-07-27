@@ -8,6 +8,7 @@ type storable struct {
 	YieldFarming          yieldFarming          `mapstructure:"yieldFarming"`
 	SmartExposure         smartExposure         `mapstructure:"smartExposure"`
 	SmartYield            smartYield            `mapstructure:"smartYield"`
+	TokenPrices           tokenPrices           `mapstructure:"tokenPrices"`
 }
 
 type accountERC20Transfers struct {
@@ -45,4 +46,8 @@ type smartExposure struct {
 type smartYield struct {
 	Enabled       bool
 	Notifications bool
+}
+
+type tokenPrices struct {
+	Enabled bool
 }
