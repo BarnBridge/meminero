@@ -17,11 +17,11 @@ func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 		pool := s.state.SmartExposure.SEPoolByAddress(t.EPoolAddress)
 		tranche := s.state.SmartExposure.SETrancheByETokenAddress(trancheAddress)
 
-		tokenAPrice := s.processed.tokenPrices[pool.ATokenAddress]
-		tokenBPrice := s.processed.tokenPrices[pool.BTokenAddress]
+		tokenAPrice := s.processed.tokenPrices[pool.TokenA.Address]
+		tokenBPrice := s.processed.tokenPrices[pool.TokenB.Address]
 
-		tokenALiquidity, _ := (t.TokenALiquidity.Shift(-int32(pool.ATokenDecimals)).Mul(tokenAPrice)).Float64()
-		tokenBLiquidity, _ := (t.TokenBLiquidity.Shift(-int32(pool.BTokenDecimals)).Mul(tokenBPrice)).Float64()
+		tokenALiquidity, _ := (t.TokenALiquidity.Shift(-int32(pool.TokenA.Decimals)).Mul(tokenAPrice)).Float64()
+		tokenBLiquidity, _ := (t.TokenBLiquidity.Shift(-int32(pool.TokenB.Decimals)).Mul(tokenBPrice)).Float64()
 
 		eTokenPrice, tokenARatio, tokenBRatio := s.getETokenPrice(*pool, t, *tranche)
 		price, _ := eTokenPrice.Float64()

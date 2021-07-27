@@ -19,14 +19,14 @@ func (se *SmartExposure) LoadPools(ctx context.Context, db *pgxpool.Pool) error 
 
 	for rows.Next() {
 		var p types.Pool
-		err := rows.Scan(&p.EPoolAddress, &p.ProtocolId, &p.ATokenAddress, &p.ATokenSymbol, &p.ATokenDecimals, &p.BTokenAddress, &p.BTokenSymbol, &p.BTokenDecimals, &p.StartAtBlock)
+		err := rows.Scan(&p.EPoolAddress, &p.ProtocolId, &p.TokenA.Address, &p.TokenA.Symbol, &p.TokenA.Decimals, &p.TokenB.Address, &p.TokenB.Symbol, &p.TokenB.Decimals, &p.StartAtBlock)
 		if err != nil {
 			return errors.Wrap(err, "could not scan pools from database")
 		}
 
 		p.EPoolAddress = utils.NormalizeAddress(p.EPoolAddress)
-		p.ATokenAddress = utils.NormalizeAddress(p.ATokenAddress)
-		p.BTokenAddress = utils.NormalizeAddress(p.BTokenAddress)
+		p.TokenA.Address = utils.NormalizeAddress(p.TokenA.Address)
+		p.TokenB.Address = utils.NormalizeAddress(p.TokenB.Address)
 
 		se.Pools[p.EPoolAddress] = p
 	}

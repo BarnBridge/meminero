@@ -5,19 +5,16 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/shopspring/decimal"
+
+	globalTypes "github.com/barnbridge/meminero/types"
 )
 
 type Pool struct {
 	EPoolAddress string
 	ProtocolId   string
 
-	ATokenAddress  string
-	ATokenSymbol   string
-	ATokenDecimals int64
-
-	BTokenAddress  string
-	BTokenSymbol   string
-	BTokenDecimals int64
+	TokenA globalTypes.Token
+	TokenB globalTypes.Token
 
 	StartAtBlock int64
 }

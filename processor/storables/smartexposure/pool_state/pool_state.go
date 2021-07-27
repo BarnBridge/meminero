@@ -89,11 +89,11 @@ func (s *Storable) Execute(ctx context.Context) error {
 			mu.Lock()
 			var liqA, liqB decimal.Decimal
 			for _, t := range _tranches {
-				liqA = liqA.Add(decimal.NewFromBigInt(t.ReserveA, -int32(pool.ATokenDecimals)))
-				liqB = liqB.Add(decimal.NewFromBigInt(t.ReserveB, -int32(pool.BTokenDecimals)))
+				liqA = liqA.Add(decimal.NewFromBigInt(t.ReserveA, -int32(pool.TokenA.Decimals)))
+				liqB = liqB.Add(decimal.NewFromBigInt(t.ReserveB, -int32(pool.TokenB.Decimals)))
 			}
-			liqA = liqA.Mul(s.processed.tokenPrices[pool.ATokenAddress])
-			liqB = liqB.Mul(s.processed.tokenPrices[pool.BTokenAddress])
+			liqA = liqA.Mul(s.processed.tokenPrices[pool.TokenA.Address])
+			liqB = liqB.Mul(s.processed.tokenPrices[pool.TokenB.Address])
 			s.processed.poolStates[address] = PoolState{
 				PoolAddress:          address,
 				PoolLiquidity:        liqA.Add(liqB),
