@@ -52,7 +52,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 	s.processed.trancheState = make(map[string]*TrancheState)
 	var err error
-	err, s.processed.tokenPrices = smartexposure.GetTokensPrice(ctx, s.state, s.block.Number)
+	s.processed.tokenPrices, err = smartexposure.GetTokensPrice(ctx, s.state, s.block.Number)
 	if err != nil {
 		return err
 	}
@@ -92,12 +92,12 @@ func (s *Storable) Execute(ctx context.Context) error {
 			mu.Lock()
 			s.processed.trancheState[trancheAddress] = &TrancheState{
 				EPoolAddress:    tranche.EPoolAddress,
-				CurrentRatio:    currentRatio,
+				CurrentRatio:    decimal.NewFromBigInt(currentRatio, 0),
 				TokenALiquidity: t.ReserveA,
 				TokenBLiquidity: t.ReserveB,
 				ConversionRate: ConversionRate{
-					AmountAConversion: conversionRate.AmountA,
-					AmountBConversion: conversionRate.AmountB,
+					AmountAConversion: decimal.NewFromBigInt(conversionRate.AmountA, 0),
+					AmountBConversion: decimal.NewFromBigInt(conversionRate.AmountB, 0),
 				},
 			}
 

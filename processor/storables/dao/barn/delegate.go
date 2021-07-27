@@ -42,8 +42,8 @@ func (s *Storable) handleDelegateEvents(logs []gethtypes.Log, ctx context.Contex
 			s.processed.delegateChanges = append(s.processed.delegateChanges, DelegateChange{
 				Sender:              utils.NormalizeAddress(increase.From.String()),
 				Receiver:            utils.NormalizeAddress(increase.To.String()),
-				Amount:              increase.Amount,
-				ToNewDelegatedPower: increase.ToNewDelegatedPower,
+				Amount:              increase.AmountDecimal(0),
+				ToNewDelegatedPower: increase.ToNewDelegatedPowerDecimal(0),
 				ActionType:          DELEGATE_INCREASE,
 				TransactionHash:     utils.NormalizeAddress(increase.Raw.TxHash.String()),
 				TransactionIndex:    int64(increase.Raw.TxIndex),
@@ -59,8 +59,8 @@ func (s *Storable) handleDelegateEvents(logs []gethtypes.Log, ctx context.Contex
 			s.processed.delegateChanges = append(s.processed.delegateChanges, DelegateChange{
 				Sender:              utils.NormalizeAddress(decrease.From.String()),
 				Receiver:            utils.NormalizeAddress(decrease.To.String()),
-				Amount:              decrease.Amount,
-				ToNewDelegatedPower: decrease.ToNewDelegatedPower,
+				Amount:              decrease.AmountDecimal(0),
+				ToNewDelegatedPower: decrease.ToNewDelegatedPowerDecimal(0),
 				ActionType:          DELEGATE_DECREASE,
 				TransactionHash:     utils.NormalizeAddress(decrease.Raw.TxHash.String()),
 				TransactionIndex:    int64(decrease.Raw.TxIndex),
