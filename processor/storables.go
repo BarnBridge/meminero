@@ -12,6 +12,7 @@ import (
 	syERC721 "github.com/barnbridge/meminero/processor/storables/smartyield/erc721"
 	syEvents "github.com/barnbridge/meminero/processor/storables/smartyield/events"
 	syRewards "github.com/barnbridge/meminero/processor/storables/smartyield/rewards"
+	syState "github.com/barnbridge/meminero/processor/storables/smartyield/state"
 	"github.com/barnbridge/meminero/processor/storables/tokenprices"
 	"github.com/barnbridge/meminero/processor/storables/yieldfarming"
 )
@@ -57,5 +58,6 @@ func (p *Processor) registerSmartYield() {
 		p.storables = append(p.storables, syEvents.New(p.Block, p.state))
 		p.storables = append(p.storables, syERC721.New(p.Block, p.state))
 		p.storables = append(p.storables, syRewards.New(p.Block, p.state))
+		p.storables = append(p.storables, syState.New(p.Block, p.state))
 	}
 }
