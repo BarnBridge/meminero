@@ -49,7 +49,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 	s.processed.poolStates = make(map[string]*PoolState)
 	var err error
-	err, s.processed.tokenPrices = smartexposure.GetTokensPrice(ctx, s.state, s.block.Number)
+	s.processed.tokenPrices, err = smartexposure.GetTokensPrice(ctx, s.state, s.block.Number)
 	if err != nil {
 		return err
 	}
@@ -85,8 +85,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 			var liqA, liqB decimal.Decimal
 
 			for _, t := range _tranches {
-				liqA = liqA.Add(decimal.NewFromBigInt(t.ReserveA, -int32(pool.ATokenDecimals)))
-				liqB = liqB.Add(decimal.NewFromBigInt(t.ReserveB, -int32(pool.BTokenDecimals)))
+				liqA = liqA.Add(t.ReserveA.Shift(-int32(pool.ATokenDecimals)))
+				liqB = liqB.Add(t.ReserveB.Shift(-int32(pool.BTokenDecimals)))
 			}
 
 			liqA = liqA.Mul(s.processed.tokenPrices[pool.ATokenAddress])

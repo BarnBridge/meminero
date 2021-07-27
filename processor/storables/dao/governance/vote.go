@@ -3,13 +3,11 @@ package governance
 import (
 	"context"
 
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
-	"github.com/shopspring/decimal"
-
-	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *GovStorable) handleVotes(logs []gethtypes.Log) error {
@@ -43,12 +41,11 @@ func (s *GovStorable) storeProposalVotes(ctx context.Context, tx pgx.Tx) error {
 
 	var rows [][]interface{}
 	for _, v := range s.Processed.votes {
-		power := decimal.NewFromBigInt(v.Power, 0)
 		rows = append(rows, []interface{}{
 			v.ProposalId.Int64(),
 			utils.NormalizeAddress(v.User.String()),
 			v.Support,
-			power,
+			v.PowerDecimal(0),
 			s.block.BlockCreationTime,
 			v.Raw.BlockNumber,
 			utils.NormalizeAddress(v.Raw.TxHash.String()),

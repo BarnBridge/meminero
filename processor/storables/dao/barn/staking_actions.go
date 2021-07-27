@@ -17,8 +17,8 @@ func (s *Storable) handleStakingActions(logs []gethtypes.Log) error {
 			}
 			s.processed.stakingActions = append(s.processed.stakingActions, StakingAction{
 				UserAddress:      utils.NormalizeAddress(deposit.User.String()),
-				Amount:           deposit.Amount,
-				BalanceAfter:     deposit.NewBalance,
+				Amount:           deposit.AmountDecimal(0),
+				BalanceAfter:     deposit.NewBalanceDecimal(0),
 				ActionType:       DEPOSIT,
 				TransactionHash:  utils.NormalizeAddress(deposit.Raw.TxHash.String()),
 				TransactionIndex: int64(deposit.Raw.TxIndex),
@@ -33,8 +33,8 @@ func (s *Storable) handleStakingActions(logs []gethtypes.Log) error {
 			}
 			s.processed.stakingActions = append(s.processed.stakingActions, StakingAction{
 				UserAddress:      utils.NormalizeAddress(withdraw.User.String()),
-				Amount:           withdraw.AmountWithdrew,
-				BalanceAfter:     withdraw.AmountLeft,
+				Amount:           withdraw.AmountWithdrewDecimal(0),
+				BalanceAfter:     withdraw.AmountLeftDecimal(0),
 				ActionType:       WITHDRAW,
 				TransactionHash:  utils.NormalizeAddress(withdraw.Raw.TxHash.String()),
 				TransactionIndex: int64(withdraw.Raw.TxIndex),

@@ -83,9 +83,9 @@ func (s *Storable) saveJuniorEntryEvents(ctx context.Context, tx pgx.Tx) error {
 		rows = append(rows, []interface{}{
 			p.PoolAddress,
 			utils.NormalizeAddress(e.Buyer.String()),
-			decimal.NewFromBigInt(e.UnderlyingIn, 0),
-			decimal.NewFromBigInt(e.TokensOut, 0),
-			decimal.NewFromBigInt(e.Fee, 0),
+			e.UnderlyingInDecimal(0),
+			e.TokensOutDecimal(0),
+			e.FeeDecimal(0),
 			s.block.BlockCreationTime,
 			s.block.Number,
 			utils.NormalizeAddress(e.Raw.TxHash.String()),
@@ -97,7 +97,7 @@ func (s *Storable) saveJuniorEntryEvents(ctx context.Context, tx pgx.Tx) error {
 			StartTime:             s.block.BlockCreationTime,
 			Pool:                  *p,
 			Buyer:                 utils.NormalizeAddress(e.Buyer.String()),
-			Amount:                decimal.NewFromBigInt(e.TokensOut, 0),
+			Amount:                e.TokensOutDecimal(0),
 			IncludedInBlockNumber: s.block.Number,
 		}
 		j, err := notifications.NewSmartYieldTokenBoughtJob(&jd)
@@ -154,9 +154,9 @@ func (s *Storable) saveJuniorInstantWithdrawEvents(ctx context.Context, tx pgx.T
 		rows = append(rows, []interface{}{
 			p.PoolAddress,
 			utils.NormalizeAddress(e.Seller.String()),
-			decimal.NewFromBigInt(e.TokensIn, 0),
-			decimal.NewFromBigInt(e.UnderlyingOut, 0),
-			decimal.NewFromBigInt(e.Forfeits, 0),
+			e.TokensInDecimal(0),
+			e.UnderlyingOutDecimal(0),
+			e.ForfeitsDecimal(0),
 			s.block.BlockCreationTime,
 			s.block.Number,
 			utils.NormalizeAddress(e.Raw.TxHash.String()),
@@ -203,7 +203,7 @@ func (s *Storable) saveJunior2StepWithdrawEvents(ctx context.Context, tx pgx.Tx)
 			utils.NormalizeAddress(e.Buyer.String()),
 			p.JuniorBondAddress,
 			e.JuniorBondId.Int64(),
-			decimal.NewFromBigInt(e.TokensIn, 0),
+			e.TokensInDecimal(0),
 			e.MaturesAt.Int64(),
 			s.block.BlockCreationTime,
 			s.block.Number,
@@ -252,7 +252,7 @@ func (s *Storable) saveJunior2StepRedeemEvents(ctx context.Context, tx pgx.Tx) e
 			utils.NormalizeAddress(e.Owner.String()),
 			p.JuniorBondAddress,
 			e.JuniorBondId.Int64(),
-			decimal.NewFromBigInt(e.UnderlyingOut, 0),
+			e.UnderlyingOutDecimal(0),
 			s.block.BlockCreationTime,
 			s.block.Number,
 			utils.NormalizeAddress(e.Raw.TxHash.String()),
@@ -299,8 +299,8 @@ func (s *Storable) saveSeniorEntryEvents(ctx context.Context, tx pgx.Tx) error {
 			utils.NormalizeAddress(e.Buyer.String()),
 			p.SeniorBondAddress,
 			e.SeniorBondId.Int64(),
-			decimal.NewFromBigInt(e.UnderlyingIn, 0),
-			decimal.NewFromBigInt(e.Gain, 0),
+			e.UnderlyingInDecimal(0),
+			e.GainDecimal(0),
 			e.ForDays.Int64(),
 			s.block.BlockCreationTime,
 			s.block.Number,
@@ -350,7 +350,7 @@ func (s *Storable) saveSeniorRedeemEvents(ctx context.Context, tx pgx.Tx) error 
 			utils.NormalizeAddress(e.Owner.String()),
 			p.SeniorBondAddress,
 			e.SeniorBondId.Int64(),
-			decimal.NewFromBigInt(e.Fee, 0),
+			e.FeeDecimal(0),
 			s.block.BlockCreationTime,
 			s.block.Number,
 			utils.NormalizeAddress(e.Raw.TxHash.String()),
@@ -418,7 +418,7 @@ func (s *Storable) saveTransactionHistory(ctx context.Context, tx pgx.Tx) error 
 			return errors.Wrap(err, "could not find senior bond details")
 		}
 
-		amount := underlyingIn.Add(gain).Sub(decimal.NewFromBigInt(e.Fee, 0))
+		amount := underlyingIn.Add(gain).Sub(e.FeeDecimal(0))
 
 		rows = append(rows, s.txHistory(e.Owner.String(), amount.Coefficient(), smartyield.SeniorTranche, smartyield.SeniorRedeem, e.Raw))
 	}
@@ -499,11 +499,11 @@ func (s *Storable) saveControllerHarvestEvents(ctx context.Context, tx pgx.Tx) e
 			p.ProtocolId,
 			p.ControllerAddress,
 			utils.NormalizeAddress(e.Caller.String()),
-			decimal.NewFromBigInt(e.CompRewardTotal, 0),
-			decimal.NewFromBigInt(e.CompRewardSold, 0),
-			decimal.NewFromBigInt(e.UnderlyingPoolShare, 0),
-			decimal.NewFromBigInt(e.UnderlyingReward, 0),
-			decimal.NewFromBigInt(e.HarvestCost, 0),
+			e.CompRewardTotalDecimal(0),
+			e.CompRewardSoldDecimal(0),
+			e.UnderlyingPoolShareDecimal(0),
+			e.UnderlyingRewardDecimal(0),
+			e.HarvestCostDecimal(0),
 			s.block.BlockCreationTime,
 			s.block.Number,
 			utils.NormalizeAddress(e.Raw.TxHash.String()),
@@ -543,7 +543,7 @@ func (s *Storable) saveProviderTransferFeesEvents(ctx context.Context, tx pgx.Tx
 			p.ProviderAddress,
 			utils.NormalizeAddress(e.Caller.String()),
 			utils.NormalizeAddress(e.FeesOwner.String()),
-			decimal.NewFromBigInt(e.Fees, 0),
+			e.FeesDecimal(0),
 			s.block.BlockCreationTime,
 			s.block.Number,
 			utils.NormalizeAddress(e.Raw.TxHash.String()),

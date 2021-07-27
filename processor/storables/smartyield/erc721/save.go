@@ -136,8 +136,8 @@ func (s *Storable) saveTxHistory(ctx context.Context, tx pgx.Tx) error {
 			}
 		}
 
-		rows = append(rows, s.txHistory(e.From.String(), amount.Coefficient(), strings.ToUpper(tokenType), tokenActionTypeSend, e.Raw))
-		rows = append(rows, s.txHistory(e.To.String(), amount.Coefficient(), strings.ToUpper(tokenType), tokenActionTypeReceive, e.Raw))
+		rows = append(rows, s.txHistory(e.From.String(), amount, strings.ToUpper(tokenType), tokenActionTypeSend, e.Raw))
+		rows = append(rows, s.txHistory(e.To.String(), amount, strings.ToUpper(tokenType), tokenActionTypeReceive, e.Raw))
 	}
 
 	_, err := tx.CopyFrom(

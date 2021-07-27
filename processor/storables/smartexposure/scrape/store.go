@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v4"
-	"github.com/shopspring/decimal"
 )
 
 func (s *Storable) storeEPoolTransactions(ctx context.Context, tx pgx.Tx) error {
@@ -15,16 +14,12 @@ func (s *Storable) storeEPoolTransactions(ctx context.Context, tx pgx.Tx) error 
 
 	var rows [][]interface{}
 	for _, t := range s.processed.seTransactions {
-		amount := decimal.NewFromBigInt(t.Amount, 0)
-		amountA := decimal.NewFromBigInt(t.AmountA, 0)
-		amountB := decimal.NewFromBigInt(t.AmountB, 0)
-
 		rows = append(rows, []interface{}{
 			t.UserAddress,
 			t.ETokenAddress,
-			amount,
-			amountA,
-			amountB,
+			t.Amount,
+			t.AmountA,
+			t.AmountB,
 			t.TransactionType,
 			s.block.BlockCreationTime,
 			s.block.Number,
@@ -51,16 +46,14 @@ func (s *Storable) storeNewTranches(ctx context.Context, tx pgx.Tx) error {
 
 	var rows [][]interface{}
 	for _, t := range s.processed.newTranches {
-		factor := decimal.NewFromBigInt(t.SFactorE, 0)
-		targetRatio := decimal.NewFromBigInt(t.TargetRatio, 0)
 		ratioA, _ := t.TokenARatio.Float64()
 		ratioB, _ := t.TokenBRatio.Float64()
 		rows = append(rows, []interface{}{
 			t.EPoolAddress,
 			t.ETokenAddress,
 			t.ETokenSymbol,
-			factor,
-			targetRatio,
+			t.SFactorE,
+			t.TargetRatio,
 			ratioA,
 			ratioB,
 			s.block.Number,

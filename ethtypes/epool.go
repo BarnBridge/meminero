@@ -10,6 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/lacasian/ethwheels/ethgen"
+	"github.com/shopspring/decimal"
 )
 
 // Reference imports to suppress errors
@@ -18,6 +19,7 @@ var (
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = web3types.Log{}
+	_ = decimal.NewFromBigInt
 )
 
 const EpoolABI = "[{\"inputs\":[{\"internalType\":\"contractIController\",\"name\":\"_controller\",\"type\":\"address\"},{\"internalType\":\"contractIETokenFactory\",\"name\":\"_eTokenFactory\",\"type\":\"address\"},{\"internalType\":\"contractIERC20\",\"name\":\"_tokenA\",\"type\":\"address\"},{\"internalType\":\"contractIERC20\",\"name\":\"_tokenB\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_aggregator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"inverseRate\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"}],\"name\":\"AddedTranche\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cumulativeFeeA\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cumulativeFeeB\",\"type\":\"uint256\"}],\"name\":\"CollectedFees\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountA\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountB\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"IssuedEToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"deltaA\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"deltaB\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rChange\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rDiv\",\"type\":\"uint256\"}],\"name\":\"RebalancedTranches\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"RecoveredToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountA\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountB\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"RedeemedEToken\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"aggregator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"inverseRate\",\"type\":\"bool\"}],\"name\":\"SetAggregator\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"controller\",\"type\":\"address\"}],\"name\":\"SetController\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"feeRate\",\"type\":\"uint256\"}],\"name\":\"SetFeeRate\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"minRDiv\",\"type\":\"uint256\"}],\"name\":\"SetMinRDiv\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"interval\",\"type\":\"uint256\"}],\"name\":\"SetRebalanceInterval\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"FEE_RATE_LIMIT\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"TRANCHE_LIMIT\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"targetRatio\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"eTokenName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"eTokenSymbol\",\"type\":\"string\"}],\"name\":\"addTranche\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"collectFees\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cumulativeFeeA\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cumulativeFeeB\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"eTokenFactory\",\"outputs\":[{\"internalType\":\"contractIETokenFactory\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"feeRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAggregator\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getController\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"}],\"name\":\"getTranche\",\"outputs\":[{\"components\":[{\"internalType\":\"contractIEToken\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sFactorE\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveB\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"targetRatio\",\"type\":\"uint256\"}],\"internalType\":\"structIEPool.Tranche\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTranches\",\"outputs\":[{\"components\":[{\"internalType\":\"contractIEToken\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sFactorE\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveB\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"targetRatio\",\"type\":\"uint256\"}],\"internalType\":\"structIEPool.Tranche[]\",\"name\":\"_tranches\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"issueExact\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amountA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountB\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastRebalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"fracDelta\",\"type\":\"uint256\"}],\"name\":\"rebalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"deltaA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deltaB\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rChange\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rDiv\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rebalanceInterval\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rebalanceMinRDiv\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"recover\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"redeemExact\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amountA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountB\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sFactorA\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sFactorB\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_aggregator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"inverseRate\",\"type\":\"bool\"}],\"name\":\"setAggregator\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_controller\",\"type\":\"address\"}],\"name\":\"setController\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_feeRate\",\"type\":\"uint256\"}],\"name\":\"setFeeRate\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"minRDiv\",\"type\":\"uint256\"}],\"name\":\"setMinRDiv\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"interval\",\"type\":\"uint256\"}],\"name\":\"setRebalanceInterval\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenA\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokenB\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"tranches\",\"outputs\":[{\"internalType\":\"contractIEToken\",\"name\":\"eToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"sFactorE\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveA\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reserveB\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"targetRatio\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"tranchesByIndex\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]"
@@ -38,6 +40,10 @@ func NewEpoolDecoder() *EpoolDecoder {
 type EpoolSetMinRDivEvent struct {
 	MinRDiv *big.Int
 	Raw     types.Log
+}
+
+func (e *EpoolSetMinRDivEvent) MinRDivDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.MinRDiv, exp)
 }
 
 func (d *EpoolDecoder) SetMinRDivEventID() common.Hash {
@@ -166,6 +172,10 @@ type EpoolSetFeeRateEvent struct {
 	Raw     types.Log
 }
 
+func (e *EpoolSetFeeRateEvent) FeeRateDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.FeeRate, exp)
+}
+
 func (d *EpoolDecoder) SetFeeRateEventID() common.Hash {
 	return common.HexToHash("0x6717373928cccf59cc9912055cfa8db86e7085b95c94c15862b121114aa333be")
 }
@@ -212,6 +222,18 @@ type EpoolRedeemedETokenEvent struct {
 	Raw     types.Log
 }
 
+func (e *EpoolRedeemedETokenEvent) AmountDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Amount, exp)
+}
+
+func (e *EpoolRedeemedETokenEvent) AmountADecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.AmountA, exp)
+}
+
+func (e *EpoolRedeemedETokenEvent) AmountBDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.AmountB, exp)
+}
+
 func (d *EpoolDecoder) RedeemedETokenEventID() common.Hash {
 	return common.HexToHash("0x6ccf4b3c348e324c7a3cc286369614139a347bbff3f2315520c87ce795c50dde")
 }
@@ -253,6 +275,10 @@ type EpoolRecoveredTokenEvent struct {
 	Token  common.Address
 	Amount *big.Int
 	Raw    types.Log
+}
+
+func (e *EpoolRecoveredTokenEvent) AmountDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Amount, exp)
 }
 
 func (d *EpoolDecoder) RecoveredTokenEventID() common.Hash {
@@ -299,6 +325,18 @@ type EpoolIssuedETokenEvent struct {
 	AmountB *big.Int
 	User    common.Address
 	Raw     types.Log
+}
+
+func (e *EpoolIssuedETokenEvent) AmountDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Amount, exp)
+}
+
+func (e *EpoolIssuedETokenEvent) AmountADecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.AmountA, exp)
+}
+
+func (e *EpoolIssuedETokenEvent) AmountBDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.AmountB, exp)
 }
 
 func (d *EpoolDecoder) IssuedETokenEventID() common.Hash {
@@ -387,6 +425,14 @@ type EpoolCollectedFeesEvent struct {
 	Raw            types.Log
 }
 
+func (e *EpoolCollectedFeesEvent) CumulativeFeeADecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.CumulativeFeeA, exp)
+}
+
+func (e *EpoolCollectedFeesEvent) CumulativeFeeBDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.CumulativeFeeB, exp)
+}
+
 func (d *EpoolDecoder) CollectedFeesEventID() common.Hash {
 	return common.HexToHash("0xaeb342f3c261bafef9d4f2cccd5ada643628fa7f7fadb7035ee1e91c2385b873")
 }
@@ -432,6 +478,22 @@ type EpoolRebalancedTranchesEvent struct {
 	Raw     types.Log
 }
 
+func (e *EpoolRebalancedTranchesEvent) DeltaADecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.DeltaA, exp)
+}
+
+func (e *EpoolRebalancedTranchesEvent) DeltaBDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.DeltaB, exp)
+}
+
+func (e *EpoolRebalancedTranchesEvent) RChangeDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.RChange, exp)
+}
+
+func (e *EpoolRebalancedTranchesEvent) RDivDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.RDiv, exp)
+}
+
 func (d *EpoolDecoder) RebalancedTranchesEventID() common.Hash {
 	return common.HexToHash("0xe219e81e936fbe5bc0195b0cc0755ef3e79c6910fc4398345d8b4c6c267fd40f")
 }
@@ -472,6 +534,10 @@ func (d *EpoolDecoder) RebalancedTranchesEvent(l types.Log) (EpoolRebalancedTran
 type EpoolSetRebalanceIntervalEvent struct {
 	Interval *big.Int
 	Raw      types.Log
+}
+
+func (e *EpoolSetRebalanceIntervalEvent) IntervalDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Interval, exp)
 }
 
 func (d *EpoolDecoder) SetRebalanceIntervalEventID() common.Hash {

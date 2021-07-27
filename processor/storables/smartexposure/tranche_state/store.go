@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v4"
-	"github.com/shopspring/decimal"
 )
 
 func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
@@ -21,16 +20,12 @@ func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 		tokenAPrice := s.processed.tokenPrices[pool.ATokenAddress]
 		tokenBPrice := s.processed.tokenPrices[pool.BTokenAddress]
 
-		tokenALiquidity, _ := (decimal.NewFromBigInt(t.TokenALiquidity, -int32(pool.ATokenDecimals)).Mul(tokenAPrice)).Float64()
-		tokenBLiquidity, _ := (decimal.NewFromBigInt(t.TokenBLiquidity, -int32(pool.BTokenDecimals)).Mul(tokenBPrice)).Float64()
+		tokenALiquidity, _ := (t.TokenALiquidity.Shift(-int32(pool.ATokenDecimals)).Mul(tokenAPrice)).Float64()
+		tokenBLiquidity, _ := (t.TokenBLiquidity.Shift(-int32(pool.BTokenDecimals)).Mul(tokenBPrice)).Float64()
 
 		eTokenPrice, tokenARatio, tokenBRatio := s.getETokenPrice(*pool, *t, *tranche)
 		price, _ := eTokenPrice.Float64()
 
-		amountAConversion := decimal.NewFromBigInt(t.ConversionRate.AmountAConversion, 0)
-		amountBConversion := decimal.NewFromBigInt(t.ConversionRate.AmountBConversion, 0)
-
-		currentRatio := decimal.NewFromBigInt(t.CurrentRatio, 0)
 		ratioA, _ := tokenARatio.Float64()
 		ratioB, _ := tokenBRatio.Float64()
 
@@ -39,9 +34,9 @@ func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 			trancheAddress,
 			tokenALiquidity,
 			tokenBLiquidity,
-			currentRatio,
-			amountAConversion,
-			amountBConversion,
+			t.CurrentRatio,
+			t.ConversionRate.AmountAConversion,
+			t.ConversionRate.AmountBConversion,
 			price,
 			ratioA,
 			ratioB,
