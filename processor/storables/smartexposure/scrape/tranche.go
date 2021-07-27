@@ -2,7 +2,6 @@ package scrape
 
 import (
 	"context"
-	"sync"
 
 	"golang.org/x/sync/errgroup"
 
@@ -17,44 +16,35 @@ import (
 )
 
 func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []ethtypes.EtokenfactoryCreatedETokenEvent) error {
-	wg, _ := errgroup.WithContext(ctx)
-	var mu = &sync.Mutex{}
-
 	for _, t := range tranches {
-		t := t
-		wg.Go(func() error {
-			var newTranche types.TrancheFromChain
-			err := eth.CallContractFunction(*ethtypes.Epool.ABI, t.EPool.String(), "getTranche", []interface{}{t.EToken}, &newTranche)()
-			if err != nil {
-				return errors.Wrap(err, "could not get tranche details from chain")
-			}
+		var newTranche types.TrancheFromChain
+		var symbol string
 
-			var symbol string
-			err = eth.CallContractFunction(*ethtypes.ERC20.ABI, t.EToken.String(), "symbol", []interface{}{}, &symbol)()
-			if err != nil {
-				return errors.Wrap(err, "could not get tranche symbol from chain")
-			}
+		wg, _ := errgroup.WithContext(ctx)
+		wg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, t.EPool.String(), "getTranche", []interface{}{t.EToken}, &newTranche))
+		wg.Go(eth.CallContractFunction(*ethtypes.ERC20.ABI, t.EToken.String(), "symbol", []interface{}{}, &symbol))
 
-			mu.Lock()
-			factor := decimal.NewFromBigInt(newTranche.SFactorE, 0)
-			targetRatio := decimal.NewFromBigInt(newTranche.TargetRatio, 0)
-			ratioA, ratioB := s.calculateRatios(factor, targetRatio)
-			s.processed.newTranches = append(s.processed.newTranches, types.Tranche{
-				EPoolAddress:  utils.NormalizeAddress(t.EPool.String()),
-				ETokenAddress: utils.NormalizeAddress(t.EToken.String()),
-				ETokenSymbol:  symbol,
-				SFactorE:      factor,
-				TargetRatio:   targetRatio,
-				TokenARatio:   ratioA,
-				TokenBRatio:   ratioB,
-			})
-			mu.Unlock()
+		err := wg.Wait()
+		if err != nil {
+			return errors.Wrap(err, "could not get tranche details from chain")
+		}
 
-			return nil
+		factor := decimal.NewFromBigInt(newTranche.SFactorE, 0)
+		targetRatio := decimal.NewFromBigInt(newTranche.TargetRatio, 0)
+		ratioA, ratioB := s.calculateRatios(factor, targetRatio)
+		s.processed.newTranches = append(s.processed.newTranches, types.Tranche{
+			EPoolAddress:  utils.NormalizeAddress(t.EPool.String()),
+			ETokenAddress: utils.NormalizeAddress(t.EToken.String()),
+			ETokenSymbol:  symbol,
+			SFactorE:      factor,
+			TargetRatio:   targetRatio,
+			TokenARatio:   ratioA,
+			TokenBRatio:   ratioB,
 		})
 	}
 
-	return wg.Wait()
+	return nil
+
 }
 
 func (s *Storable) calculateRatios(factor decimal.Decimal, targetRatio decimal.Decimal) (decimal.Decimal, decimal.Decimal) {
