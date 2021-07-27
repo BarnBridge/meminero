@@ -9,15 +9,18 @@ import (
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
+	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 	"golang.org/x/sync/errgroup"
 )
 
-func GetTokensPrice(ctx context.Context, state *state.Manager, blockNumber int64) (error, map[string]decimal.Decimal) {
-	wg, _ := errgroup.WithContext(ctx)
+func GetTokensPrice(ctx context.Context, state *state.Manager, blockNumber int64) ( map[string]decimal.Decimal, error) {
+	eg, _ := errgroup.WithContext(ctx)
 	var mu = &sync.Mutex{}
+
 	tokensPrices := make(map[string]decimal.Decimal)
 	tokens := make(map[string]types.Token)
+
 	for _, pool := range state.SmartExposure.SEPools() {
 		tokens[pool.ATokenAddress] = state.Tokens[pool.ATokenAddress]
 		tokens[pool.BTokenAddress] = state.Tokens[pool.BTokenAddress]
@@ -25,19 +28,26 @@ func GetTokensPrice(ctx context.Context, state *state.Manager, blockNumber int64
 
 	for _, t := range tokens {
 		t := t
-		var tokenPrice *big.Int
-		wg.Go(eth.CallContractFunction(*ethtypes.Ethaggregator.ABI, t.AggregatorAddress, "latestAnswer", []interface{}{}, &tokenPrice))
+		eg.Go(func() error {
+			var tokenPrice *big.Int
+			err := eth.CallContractFunction(*ethtypes.Ethaggregator.ABI, t.AggregatorAddress, "latestAnswer", []interface{}{}, &tokenPrice)()
+			if err != nil {
+				return err
+			}
 
-		err := wg.Wait()
-		if err != nil {
-			return err, nil
-		}
+			mu.Lock()
+			// NOTE there might be times when decimals might be different than 8
+			tokensPrices[t.Address] = decimal.NewFromBigInt(tokenPrice, -int32(8))
+			mu.Unlock()
 
-		mu.Lock()
-		tokensPrices[t.Address] = decimal.NewFromBigInt(tokenPrice, -int32(8))
-		mu.Unlock()
-
+			return nil
+		})
 	}
 
-	return nil, tokensPrices
+	err := eg.Wait()
+	if err != nil {
+		return  nil, errors.Wrap(err, "failed to call latestAnswer")
+	}
+
+	return tokensPrices, nil
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/barnbridge/meminero/utils"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
-	"github.com/shopspring/decimal"
 )
 
 func (se *SmartExposure) LoadPools(ctx context.Context, db *pgxpool.Pool) error {
@@ -41,16 +40,13 @@ func (se *SmartExposure) LoadTranches(ctx context.Context, db *pgxpool.Pool) err
 
 	for rows.Next() {
 		var p SETranche
-		var factor, targetRatio decimal.Decimal
-		err := rows.Scan(&p.EPoolAddress, &p.ETokenAddress, &p.ETokenSymbol, &factor, &targetRatio, &p.TokenARatio, &p.TokenBRatio)
+		err := rows.Scan(&p.EPoolAddress, &p.ETokenAddress, &p.ETokenSymbol, &p.SFactorE, &p.TargetRatio, &p.TokenARatio, &p.TokenBRatio)
 		if err != nil {
 			return errors.Wrap(err, "could not scan tranches from database")
 		}
 
 		p.EPoolAddress = utils.NormalizeAddress(p.EPoolAddress)
 		p.ETokenAddress = utils.NormalizeAddress(p.ETokenAddress)
-		p.SFactorE = factor.BigInt()
-		p.TargetRatio = targetRatio.BigInt()
 		se.Tranches[p.ETokenAddress] = &p
 	}
 

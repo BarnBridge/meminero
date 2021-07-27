@@ -1,15 +1,15 @@
 package scrape
 
 import (
-	"math/big"
+	"github.com/shopspring/decimal"
 )
 
 type SETransaction struct {
 	ETokenAddress   string
 	UserAddress     string
-	Amount          *big.Int
-	AmountA         *big.Int
-	AmountB         *big.Int
+	Amount          decimal.Decimal
+	AmountA         decimal.Decimal
+	AmountB         decimal.Decimal
 	TransactionType string
 
 	TxHash   string

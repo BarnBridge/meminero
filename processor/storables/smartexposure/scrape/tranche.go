@@ -2,7 +2,6 @@ package scrape
 
 import (
 	"context"
-	"math/big"
 
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
@@ -43,8 +42,8 @@ func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []e
 	return nil
 }
 
-func (s *Storable) calculateRatios(factor *big.Int, targetRatio *big.Int) (decimal.Decimal, decimal.Decimal) {
-	ratioWithDec := decimal.NewFromBigInt(targetRatio, 0).Div(decimal.NewFromBigInt(factor, 0))
+func (s *Storable) calculateRatios(factor decimal.Decimal, targetRatio decimal.Decimal) (decimal.Decimal, decimal.Decimal) {
+	ratioWithDec :=targetRatio.Div(factor)
 	tokenBRatio := decimal.NewFromInt(1).Div(ratioWithDec.Add(decimal.NewFromInt(1)))
 	tokenARatio := decimal.NewFromInt(1).Sub(tokenBRatio)
 

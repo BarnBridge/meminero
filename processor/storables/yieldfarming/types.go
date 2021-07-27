@@ -1,13 +1,13 @@
 package yieldfarming
 
 import (
-	"math/big"
+	"github.com/shopspring/decimal"
 )
 
 type StakingAction struct {
 	UserAddress      string
 	TokenAddress     string
-	Amount           *big.Int
+	Amount           decimal.Decimal
 	TransactionHash  string
 	TransactionIndex int64
 	LogIndex         int64
