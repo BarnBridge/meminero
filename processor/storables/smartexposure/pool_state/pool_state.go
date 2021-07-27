@@ -55,7 +55,6 @@ func (s *Storable) Execute(ctx context.Context) error {
 		return err
 	}
 
-	s.processed.tokenPrices = make(map[string]decimal.Decimal)
 	s.processed.tokenPrices, err = tokenprices.GetTokensPrices(ctx, tokens, s.block.Number)
 	if err != nil {
 		return err
