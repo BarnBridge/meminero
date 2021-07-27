@@ -27,13 +27,15 @@ func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []e
 			return errors.Wrap(err, "could not get tranche symbol from chain")
 		}
 
-		ratioA, ratioB := s.calculateRatios(newTranche.SFactorE, newTranche.TargetRatio)
+		factor := decimal.NewFromBigInt(newTranche.SFactorE, 0)
+		targetRatio := decimal.NewFromBigInt(newTranche.TargetRatio, 0)
+		ratioA, ratioB := s.calculateRatios(factor, targetRatio)
 		s.processed.newTranches = append(s.processed.newTranches, types.Tranche{
 			EPoolAddress:  utils.NormalizeAddress(t.EPool.String()),
 			ETokenAddress: utils.NormalizeAddress(t.EToken.String()),
 			ETokenSymbol:  symbol,
-			SFactorE:      newTranche.SFactorE,
-			TargetRatio:   newTranche.TargetRatio,
+			SFactorE:      factor,
+			TargetRatio:   targetRatio,
 			TokenARatio:   ratioA,
 			TokenBRatio:   ratioB,
 		})

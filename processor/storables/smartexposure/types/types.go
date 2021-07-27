@@ -1,6 +1,8 @@
 package types
 
 import (
+	"math/big"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/shopspring/decimal"
 )
@@ -31,9 +33,9 @@ type Tranche struct {
 }
 
 type TrancheFromChain struct {
-	Etoken      common.Address  `json:"eToken"`
-	SFactorE    decimal.Decimal `json:"sFactorE"`
-	ReserveA    decimal.Decimal `json:"reserveA"`
-	ReserveB    decimal.Decimal `json:"reserveB"`
-	TargetRatio decimal.Decimal `json:"targetRatio"`
+	Etoken      common.Address `json:"eToken"`
+	SFactorE    *big.Int       `json:"sFactorE"`
+	ReserveA    *big.Int       `json:"reserveA"`
+	ReserveB    *big.Int       `json:"reserveB"`
+	TargetRatio *big.Int       `json:"targetRatio"`
 }

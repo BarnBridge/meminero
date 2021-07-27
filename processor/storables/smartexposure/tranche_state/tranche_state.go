@@ -10,7 +10,7 @@ import (
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
-	types2 "github.com/barnbridge/meminero/processor/storables/smartexposure/types"
+	seTypes "github.com/barnbridge/meminero/processor/storables/smartexposure/types"
 	"github.com/barnbridge/meminero/processor/storables/tokenprices"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -75,20 +75,20 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 		trancheAddress := trancheAddress
 		tranche := tranche
-		wg.Go(func() error {
-			subwg, _ := errgroup.WithContext(ctx)
-			var t types2.TrancheFromChain
-			var currentRatio *big.Int
 
+		wg.Go(func() error {
+			var t seTypes.TrancheFromChain
+			var currentRatio *big.Int
 			var conversionRate struct {
 				AmountA *big.Int `json:"amountA"`
 				AmountB *big.Int `json:"amountB"`
 			}
 
+			subwg, _ := errgroup.WithContext(ctx)
 			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t, s.block.Number))
-
 			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio, s.block.Number))
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &conversionRate, s.block.Number))
+			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE.BigInt()}, &conversionRate, s.block.Number))
+
 			err := subwg.Wait()
 			if err != nil {
 				return err
@@ -98,19 +98,17 @@ func (s *Storable) Execute(ctx context.Context) error {
 			s.processed.trancheState[trancheAddress] = TrancheState{
 				EPoolAddress:    tranche.EPoolAddress,
 				CurrentRatio:    decimal.NewFromBigInt(currentRatio, 0),
-				TokenALiquidity: t.ReserveA,
-				TokenBLiquidity: t.ReserveB,
+				TokenALiquidity: decimal.NewFromBigInt(t.ReserveA, 0),
+				TokenBLiquidity: decimal.NewFromBigInt(t.ReserveB, 0),
 				ConversionRate: ConversionRate{
 					AmountAConversion: decimal.NewFromBigInt(conversionRate.AmountA, 0),
 					AmountBConversion: decimal.NewFromBigInt(conversionRate.AmountB, 0),
 				},
 			}
-
 			mu.Unlock()
 
 			return nil
 		})
-
 	}
 
 	err = wg.Wait()
@@ -119,7 +117,6 @@ func (s *Storable) Execute(ctx context.Context) error {
 	}
 
 	return nil
-
 }
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {

@@ -89,8 +89,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 			mu.Lock()
 			var liqA, liqB decimal.Decimal
 			for _, t := range _tranches {
-				liqA = liqA.Add(t.ReserveA.Shift(-int32(pool.ATokenDecimals)))
-				liqB = liqB.Add(t.ReserveB.Shift(-int32(pool.BTokenDecimals)))
+				liqA = liqA.Add(decimal.NewFromBigInt(t.ReserveA, -int32(pool.ATokenDecimals)))
+				liqB = liqB.Add(decimal.NewFromBigInt(t.ReserveB, -int32(pool.BTokenDecimals)))
 			}
 			liqA = liqA.Mul(s.processed.tokenPrices[pool.ATokenAddress])
 			liqB = liqB.Mul(s.processed.tokenPrices[pool.BTokenAddress])
