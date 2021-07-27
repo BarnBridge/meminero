@@ -4,11 +4,12 @@ import (
 	"context"
 	"sync"
 
-	"github.com/barnbridge/meminero/state/smartexposure"
 	"github.com/go-redis/redis"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/barnbridge/meminero/state/smartexposure"
 
 	"github.com/barnbridge/meminero/state/smartyield"
 	"github.com/barnbridge/meminero/types"

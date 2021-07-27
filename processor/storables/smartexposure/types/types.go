@@ -1,11 +1,11 @@
-package smartexposure
+package types
 
 import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/shopspring/decimal"
 )
 
-type SEPool struct {
+type Pool struct {
 	EPoolAddress string
 	ProtocolId   string
 
@@ -20,7 +20,7 @@ type SEPool struct {
 	StartAtBlock int64
 }
 
-type SETranche struct {
+type Tranche struct {
 	EPoolAddress  string
 	ETokenAddress string
 	ETokenSymbol  string

@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/barnbridge/meminero/state/smartexposure"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/ethtypes"
+	types2 "github.com/barnbridge/meminero/processor/storables/smartexposure/types"
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
@@ -25,7 +25,7 @@ type Storable struct {
 
 	processed struct {
 		seTransactions []SETransaction
-		newTranches    []smartexposure.SETranche
+		newTranches    []types2.Tranche
 	}
 }
 

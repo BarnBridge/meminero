@@ -23,7 +23,7 @@ func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 		tokenALiquidity, _ := (t.TokenALiquidity.Shift(-int32(pool.ATokenDecimals)).Mul(tokenAPrice)).Float64()
 		tokenBLiquidity, _ := (t.TokenBLiquidity.Shift(-int32(pool.BTokenDecimals)).Mul(tokenBPrice)).Float64()
 
-		eTokenPrice, tokenARatio, tokenBRatio := s.getETokenPrice(*pool, *t, *tranche)
+		eTokenPrice, tokenARatio, tokenBRatio := s.getETokenPrice(*pool, t, *tranche)
 		price, _ := eTokenPrice.Float64()
 
 		ratioA, _ := tokenARatio.Float64()

@@ -4,9 +4,11 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/barnbridge/meminero/utils"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/meminero/processor/storables/smartexposure/types"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (se *SmartExposure) LoadPools(ctx context.Context, db *pgxpool.Pool) error {
@@ -16,7 +18,7 @@ func (se *SmartExposure) LoadPools(ctx context.Context, db *pgxpool.Pool) error 
 	}
 
 	for rows.Next() {
-		var p SEPool
+		var p types.Pool
 		err := rows.Scan(&p.EPoolAddress, &p.ProtocolId, &p.ATokenAddress, &p.ATokenSymbol, &p.ATokenDecimals, &p.BTokenAddress, &p.BTokenSymbol, &p.BTokenDecimals, &p.StartAtBlock)
 		if err != nil {
 			return errors.Wrap(err, "could not scan pools from database")
@@ -26,7 +28,7 @@ func (se *SmartExposure) LoadPools(ctx context.Context, db *pgxpool.Pool) error 
 		p.ATokenAddress = utils.NormalizeAddress(p.ATokenAddress)
 		p.BTokenAddress = utils.NormalizeAddress(p.BTokenAddress)
 
-		se.Pools[p.EPoolAddress] = &p
+		se.Pools[p.EPoolAddress] = p
 	}
 
 	return nil
@@ -39,7 +41,7 @@ func (se *SmartExposure) LoadTranches(ctx context.Context, db *pgxpool.Pool) err
 	}
 
 	for rows.Next() {
-		var p SETranche
+		var p types.Tranche
 		err := rows.Scan(&p.EPoolAddress, &p.ETokenAddress, &p.ETokenSymbol, &p.SFactorE, &p.TargetRatio, &p.TokenARatio, &p.TokenBRatio)
 		if err != nil {
 			return errors.Wrap(err, "could not scan tranches from database")
@@ -47,7 +49,7 @@ func (se *SmartExposure) LoadTranches(ctx context.Context, db *pgxpool.Pool) err
 
 		p.EPoolAddress = utils.NormalizeAddress(p.EPoolAddress)
 		p.ETokenAddress = utils.NormalizeAddress(p.ETokenAddress)
-		se.Tranches[p.ETokenAddress] = &p
+		se.Tranches[p.ETokenAddress] = p
 	}
 
 	return nil

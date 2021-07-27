@@ -14,7 +14,6 @@ func (s *Storable) storePoolsState(ctx context.Context, tx pgx.Tx) error {
 	var rows [][]interface{}
 	for _, p := range s.processed.poolStates {
 		liq, _ := p.PoolLiquidity.Float64()
-
 		rows = append(rows, []interface{}{
 			p.PoolAddress,
 			liq,
@@ -25,7 +24,6 @@ func (s *Storable) storePoolsState(ctx context.Context, tx pgx.Tx) error {
 			s.block.Number,
 		})
 	}
-
 	_, err := tx.CopyFrom(
 		ctx,
 		pgx.Identifier{"smart_exposure", "pool_state"},

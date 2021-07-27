@@ -10,16 +10,17 @@ import (
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
-	smartexposure2 "github.com/barnbridge/meminero/state/smartexposure"
+	types2 "github.com/barnbridge/meminero/processor/storables/smartexposure/types"
 
-	"github.com/barnbridge/meminero/state"
-	"github.com/barnbridge/meminero/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/barnbridge/meminero/state"
+	"github.com/barnbridge/meminero/types"
 )
 
 type Storable struct {
@@ -29,7 +30,7 @@ type Storable struct {
 	logger *logrus.Entry
 
 	processed struct {
-		trancheState map[string]*TrancheState
+		trancheState map[string]TrancheState
 		tokenPrices  map[string]decimal.Decimal
 	}
 }
@@ -50,7 +51,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 			Trace("done")
 	}()
 
-	s.processed.trancheState = make(map[string]*TrancheState)
+	s.processed.trancheState = make(map[string]TrancheState)
 	var err error
 	s.processed.tokenPrices, err = smartexposure.GetTokensPrice(ctx, s.state, s.block.Number)
 	if err != nil {
@@ -59,9 +60,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 	wg, _ := errgroup.WithContext(ctx)
 	var mu = &sync.Mutex{}
-	a := ethtypes.Epool.ABI
 
-	for trancheAddress, tranche := range s.state.SmartExposure.SETranches() {
+	for trancheAddress, tranche := range s.state.SmartExposure.Tranches {
 		if s.block.Number < s.state.SmartExposure.SEPoolByAddress(tranche.EPoolAddress).StartAtBlock {
 			s.logger.WithField("tranche", trancheAddress).Info("skipping tranche due to StartAtBlock property")
 			continue
@@ -69,10 +69,9 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 		trancheAddress := trancheAddress
 		tranche := tranche
-
 		wg.Go(func() error {
 			subwg, _ := errgroup.WithContext(ctx)
-			var t smartexposure2.TrancheFromChain
+			var t types2.TrancheFromChain
 			var currentRatio *big.Int
 
 			var conversionRate struct {
@@ -80,7 +79,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 				AmountB *big.Int `json:"amountB"`
 			}
 
-			subwg.Go(eth.CallContractFunction(*a, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t, s.block.Number))
+			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t, s.block.Number))
 
 			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio, s.block.Number))
 			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE}, &conversionRate, s.block.Number))
@@ -90,7 +89,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 			}
 
 			mu.Lock()
-			s.processed.trancheState[trancheAddress] = &TrancheState{
+			s.processed.trancheState[trancheAddress] = TrancheState{
 				EPoolAddress:    tranche.EPoolAddress,
 				CurrentRatio:    decimal.NewFromBigInt(currentRatio, 0),
 				TokenALiquidity: t.ReserveA,

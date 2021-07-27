@@ -5,19 +5,18 @@ import (
 
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/state/smartexposure"
+	"github.com/barnbridge/meminero/processor/storables/smartexposure/types"
 
-	"github.com/barnbridge/meminero/utils"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
+
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []ethtypes.EtokenfactoryCreatedETokenEvent) error {
 	for _, t := range tranches {
-
-		var newTranche smartexposure.TrancheFromChain
-		a := ethtypes.Epool.ABI
-		err := eth.CallContractFunction(*a, t.EPool.String(), "getTranche", []interface{}{t.EToken}, &newTranche)()
+		var newTranche types.TrancheFromChain
+		err := eth.CallContractFunction(*ethtypes.Epool.ABI, t.EPool.String(), "getTranche", []interface{}{t.EToken}, &newTranche)()
 		if err != nil {
 			return errors.Wrap(err, "could not get tranche details from chain")
 		}
@@ -29,7 +28,7 @@ func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []e
 		}
 
 		ratioA, ratioB := s.calculateRatios(newTranche.SFactorE, newTranche.TargetRatio)
-		s.processed.newTranches = append(s.processed.newTranches, smartexposure.SETranche{
+		s.processed.newTranches = append(s.processed.newTranches, types.Tranche{
 			EPoolAddress:  utils.NormalizeAddress(t.EPool.String()),
 			ETokenAddress: utils.NormalizeAddress(t.EToken.String()),
 			ETokenSymbol:  symbol,
@@ -43,9 +42,8 @@ func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []e
 }
 
 func (s *Storable) calculateRatios(factor decimal.Decimal, targetRatio decimal.Decimal) (decimal.Decimal, decimal.Decimal) {
-	ratioWithDec :=targetRatio.Div(factor)
+	ratioWithDec := targetRatio.Div(factor)
 	tokenBRatio := decimal.NewFromInt(1).Div(ratioWithDec.Add(decimal.NewFromInt(1)))
 	tokenARatio := decimal.NewFromInt(1).Sub(tokenBRatio)
-
 	return tokenARatio, tokenBRatio
 }
