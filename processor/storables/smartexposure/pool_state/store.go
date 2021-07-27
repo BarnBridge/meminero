@@ -18,7 +18,7 @@ func (s *Storable) storePoolsState(ctx context.Context, tx pgx.Tx) error {
 			p.PoolAddress,
 			liq,
 			p.LastRebalance.BigInt().Int64(),
-			p.RebalancingInterval.BigInt().Int64(),
+			p.RebalancingInterval.IntPart(),
 			p.RebalancingCondition,
 			s.block.BlockCreationTime,
 			s.block.Number,

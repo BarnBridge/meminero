@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	_ "github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
@@ -15,7 +15,7 @@ import (
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/processor/storables/smartexposure"
-	types2 "github.com/barnbridge/meminero/processor/storables/smartexposure/types"
+	seTypes "github.com/barnbridge/meminero/processor/storables/smartexposure/types"
 	"github.com/barnbridge/meminero/processor/storables/tokenprices"
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
@@ -37,7 +37,7 @@ func New(block *types.Block, state *state.Manager) *Storable {
 	return &Storable{
 		block:  block,
 		state:  state,
-		logger: logrus.WithField("module", "storable(smart_exposure_pool_state)"),
+		logger: logrus.WithField("module", "storable(smartExposure.poolState)"),
 	}
 }
 
@@ -74,21 +74,21 @@ func (s *Storable) Execute(ctx context.Context) error {
 		pool := pool
 		wg.Go(func() error {
 			subwg, _ := errgroup.WithContext(ctx)
-			var _tranches []types2.TrancheFromChain
+			var tranches []seTypes.TrancheFromChain
 			var lastRebalance, rebalancingInterval, rebalancingCondition *big.Int
 
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "getTranches", []interface{}{}, &_tranches))
+			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "getTranches", []interface{}{}, &tranches))
 			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "lastRebalance", []interface{}{}, &lastRebalance))
 			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "rebalanceInterval", []interface{}{}, &rebalancingInterval))
 			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "rebalanceMinRDiv", []interface{}{}, &rebalancingCondition))
 			err := subwg.Wait()
 			if err != nil {
-				return err
+				return errors.Wrap(err, "could not get pool info from chain ")
 			}
 
 			mu.Lock()
 			var liqA, liqB decimal.Decimal
-			for _, t := range _tranches {
+			for _, t := range tranches {
 				liqA = liqA.Add(decimal.NewFromBigInt(t.ReserveA, -int32(pool.TokenA.Decimals)))
 				liqB = liqB.Add(decimal.NewFromBigInt(t.ReserveB, -int32(pool.TokenB.Decimals)))
 			}
@@ -102,11 +102,12 @@ func (s *Storable) Execute(ctx context.Context) error {
 				RebalancingCondition: decimal.NewFromBigInt(rebalancingCondition, 0),
 			}
 			mu.Unlock()
+
 			return nil
 		})
 	}
-	err = wg.Wait()
-	return err
+
+	return wg.Wait()
 }
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
@@ -124,7 +125,7 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
 	err := s.storePoolsState(ctx, tx)
 
-	return err
+	return errors.Wrap(err, "could not store pools state")
 }
 
 func (s *Storable) Result() interface{} {
