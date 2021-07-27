@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
 )
 
 func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
@@ -15,8 +16,15 @@ func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 
 	for trancheAddress, t := range s.processed.trancheState {
 		pool := s.state.SmartExposure.PoolByAddress(t.EPoolAddress)
-		tranche := s.state.SmartExposure.TrancheByETokenAddress(trancheAddress)
+		if pool == nil {
+			return errors.New("could not find pool by address")
+		}
 
+		tranche := s.state.SmartExposure.TrancheByETokenAddress(trancheAddress)
+		if tranche == nil {
+			return errors.New("could not find tranche by address")
+		}
+		
 		tokenAPrice := s.processed.tokenPrices[pool.TokenA.Address]
 		tokenBPrice := s.processed.tokenPrices[pool.TokenB.Address]
 

@@ -6,6 +6,10 @@ import (
 )
 
 func (se *SmartExposure) PoolByAddress(address string) *types.Pool {
-	pool := se.Pools[utils.NormalizeAddress(address)]
+	pool, exists := se.Pools[utils.NormalizeAddress(address)]
+	if !exists {
+		return nil
+	}
+
 	return &pool
 }

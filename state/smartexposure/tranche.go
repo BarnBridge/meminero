@@ -6,7 +6,11 @@ import (
 )
 
 func (se *SmartExposure) TrancheByETokenAddress(address string) *types.Tranche {
-	t := se.Tranches[utils.NormalizeAddress(address)]
+	t, exists := se.Tranches[utils.NormalizeAddress(address)]
+	if !exists {
+		return nil
+	}
+
 	return &t
 }
 
