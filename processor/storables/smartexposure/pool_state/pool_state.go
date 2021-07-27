@@ -123,6 +123,13 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 }
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
+	s.logger.Trace("executing")
+	start := time.Now()
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).
+			Trace("done")
+	}()
+
 	err := s.storePoolsState(ctx, tx)
 
 	return errors.Wrap(err, "could not store pools state")

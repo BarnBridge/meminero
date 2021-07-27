@@ -17,7 +17,7 @@ func (s *Storable) storePoolsState(ctx context.Context, tx pgx.Tx) error {
 		rows = append(rows, []interface{}{
 			p.PoolAddress,
 			liq,
-			p.LastRebalance.BigInt().Int64(),
+			p.LastRebalance.IntPart(),
 			p.RebalancingInterval.IntPart(),
 			p.RebalancingCondition,
 			s.block.BlockCreationTime,
