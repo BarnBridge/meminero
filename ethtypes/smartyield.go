@@ -10,6 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/lacasian/ethwheels/ethgen"
+	"github.com/shopspring/decimal"
 )
 
 // Reference imports to suppress errors
@@ -18,6 +19,7 @@ var (
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = web3types.Log{}
+	_ = decimal.NewFromBigInt
 )
 
 const SmartYieldABI = "[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name_\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol_\",\"type\":\"string\"},{\"internalType\":\"uint8\",\"name\":\"decimals_\",\"type\":\"uint8\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"juniorBondId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokensIn\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maturesAt\",\"type\":\"uint256\"}],\"name\":\"BuyJuniorBond\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"seniorBondId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"underlyingIn\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gain\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"forDays\",\"type\":\"uint256\"}],\"name\":\"BuySeniorBond\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"underlyingIn\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokensOut\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"BuyTokens\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"juniorBondId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"underlyingOut\",\"type\":\"uint256\"}],\"name\":\"RedeemJuniorBond\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"seniorBondId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"RedeemSeniorBond\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"tokensIn\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"underlyingOut\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"forfeits\",\"type\":\"uint256\"}],\"name\":\"SellTokens\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"EXP_SCALE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_UINT256\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"_setup\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"abond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"principal\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issuedAt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maturesAt\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"liquidated\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"abondDebt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"abondGain\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"abondPaid\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"}],\"name\":\"allowance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"principalAmount_\",\"type\":\"uint256\"},{\"internalType\":\"uint16\",\"name\":\"forDays_\",\"type\":\"uint16\"}],\"name\":\"bondGain\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"principalAmount_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minGain_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deadline_\",\"type\":\"uint256\"},{\"internalType\":\"uint16\",\"name\":\"forDays_\",\"type\":\"uint16\"}],\"name\":\"buyBond\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenAmount_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxMaturesAt_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deadline_\",\"type\":\"uint256\"}],\"name\":\"buyJuniorBond\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"underlyingAmount_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minTokens_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deadline_\",\"type\":\"uint256\"}],\"name\":\"buyTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"controller\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"decimals\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"subtractedValue\",\"type\":\"uint256\"}],\"name\":\"decreaseAllowance\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"addedValue\",\"type\":\"uint256\"}],\"name\":\"increaseAllowance\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"juniorBond\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"juniorBondId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"juniorBonds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maturesAt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"juniorBondsMaturingAt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tokens\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"juniorBondsMaturities\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"juniorBondsMaturitiesPrev\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"upUntilTimestamp_\",\"type\":\"uint256\"}],\"name\":\"liquidateJuniorBonds\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxBondDailyRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"price\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"bondId_\",\"type\":\"uint256\"}],\"name\":\"redeemBond\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"jBondId_\",\"type\":\"uint256\"}],\"name\":\"redeemJuniorBond\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenAmount_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minUnderlying_\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deadline_\",\"type\":\"uint256\"}],\"name\":\"sellTokens\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"seniorBond\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"seniorBondId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"seniorBonds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"principal\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"gain\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"issuedAt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maturesAt\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"liquidated\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newController_\",\"type\":\"address\"}],\"name\":\"setController\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"controller_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"pool_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"seniorBond_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"juniorBond_\",\"type\":\"address\"}],\"name\":\"setup\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tokensInJuniorBonds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"bondIds_\",\"type\":\"uint256[]\"}],\"name\":\"unaccountBonds\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"underlyingJuniors\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"underlyingLiquidatedJuniors\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"underlyingLoanable\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"underlyingTotal\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
@@ -42,6 +44,22 @@ type SmartYieldBuySeniorBondEvent struct {
 	Gain         *big.Int
 	ForDays      *big.Int
 	Raw          types.Log
+}
+
+func (e *SmartYieldBuySeniorBondEvent) SeniorBondIdDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.SeniorBondId, exp)
+}
+
+func (e *SmartYieldBuySeniorBondEvent) UnderlyingInDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.UnderlyingIn, exp)
+}
+
+func (e *SmartYieldBuySeniorBondEvent) GainDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Gain, exp)
+}
+
+func (e *SmartYieldBuySeniorBondEvent) ForDaysDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.ForDays, exp)
 }
 
 func (d *SmartYieldDecoder) BuySeniorBondEventID() common.Hash {
@@ -86,6 +104,10 @@ type SmartYieldApprovalEvent struct {
 	Spender common.Address
 	Value   *big.Int
 	Raw     types.Log
+}
+
+func (e *SmartYieldApprovalEvent) ValueDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Value, exp)
 }
 
 func (d *SmartYieldDecoder) ApprovalEventID() common.Hash {
@@ -133,6 +155,18 @@ type SmartYieldBuyTokensEvent struct {
 	Raw          types.Log
 }
 
+func (e *SmartYieldBuyTokensEvent) UnderlyingInDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.UnderlyingIn, exp)
+}
+
+func (e *SmartYieldBuyTokensEvent) TokensOutDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.TokensOut, exp)
+}
+
+func (e *SmartYieldBuyTokensEvent) FeeDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Fee, exp)
+}
+
 func (d *SmartYieldDecoder) BuyTokensEventID() common.Hash {
 	return common.HexToHash("0x90d8b08a6c17cc6733ded05f205dd10dd0538fb7890449f561eedef38c91a6fa")
 }
@@ -176,6 +210,18 @@ type SmartYieldBuyJuniorBondEvent struct {
 	TokensIn     *big.Int
 	MaturesAt    *big.Int
 	Raw          types.Log
+}
+
+func (e *SmartYieldBuyJuniorBondEvent) JuniorBondIdDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.JuniorBondId, exp)
+}
+
+func (e *SmartYieldBuyJuniorBondEvent) TokensInDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.TokensIn, exp)
+}
+
+func (e *SmartYieldBuyJuniorBondEvent) MaturesAtDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.MaturesAt, exp)
 }
 
 func (d *SmartYieldDecoder) BuyJuniorBondEventID() common.Hash {
@@ -223,6 +269,18 @@ type SmartYieldSellTokensEvent struct {
 	Raw           types.Log
 }
 
+func (e *SmartYieldSellTokensEvent) TokensInDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.TokensIn, exp)
+}
+
+func (e *SmartYieldSellTokensEvent) UnderlyingOutDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.UnderlyingOut, exp)
+}
+
+func (e *SmartYieldSellTokensEvent) ForfeitsDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Forfeits, exp)
+}
+
 func (d *SmartYieldDecoder) SellTokensEventID() common.Hash {
 	return common.HexToHash("0x95ff24e35ad23e93c0738cee55f0903db5c47b23968d07627a68fe23ebd11b6d")
 }
@@ -265,6 +323,10 @@ type SmartYieldTransferEvent struct {
 	To    common.Address
 	Value *big.Int
 	Raw   types.Log
+}
+
+func (e *SmartYieldTransferEvent) ValueDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Value, exp)
 }
 
 func (d *SmartYieldDecoder) TransferEventID() common.Hash {
@@ -311,6 +373,14 @@ type SmartYieldRedeemJuniorBondEvent struct {
 	Raw           types.Log
 }
 
+func (e *SmartYieldRedeemJuniorBondEvent) JuniorBondIdDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.JuniorBondId, exp)
+}
+
+func (e *SmartYieldRedeemJuniorBondEvent) UnderlyingOutDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.UnderlyingOut, exp)
+}
+
 func (d *SmartYieldDecoder) RedeemJuniorBondEventID() common.Hash {
 	return common.HexToHash("0xe34274b2ac2992188914cc9b0f4cb53202d013fc7b1996edb6b8564431f7bd53")
 }
@@ -353,6 +423,14 @@ type SmartYieldRedeemSeniorBondEvent struct {
 	SeniorBondId *big.Int
 	Fee          *big.Int
 	Raw          types.Log
+}
+
+func (e *SmartYieldRedeemSeniorBondEvent) SeniorBondIdDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.SeniorBondId, exp)
+}
+
+func (e *SmartYieldRedeemSeniorBondEvent) FeeDecimal(exp int32) decimal.Decimal {
+	return decimal.NewFromBigInt(e.Fee, exp)
 }
 
 func (d *SmartYieldDecoder) RedeemSeniorBondEventID() common.Hash {

@@ -9,6 +9,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
+	"github.com/barnbridge/meminero/state/smartexposure"
+
 	"github.com/barnbridge/meminero/state/smartyield"
 	"github.com/barnbridge/meminero/types"
 )
@@ -23,6 +25,8 @@ type Manager struct {
 	monitoredAccounts map[string]bool
 	monitoredERC20    map[string]bool
 
+	SmartExposure *smartexposure.SmartExposure
+
 	SmartYield *smartyield.SmartYield
 }
 
@@ -30,10 +34,11 @@ type Manager struct {
 // it subscribes to the best block tracker for new blocks which it'll add to the redis queue automatically
 func NewManager(db *pgxpool.Pool) (*Manager, error) {
 	m := &Manager{
-		db:         db,
-		logger:     logrus.WithField("module", "state"),
-		mu:         new(sync.Mutex),
-		SmartYield: smartyield.New(),
+		db:            db,
+		logger:        logrus.WithField("module", "state"),
+		mu:            new(sync.Mutex),
+		SmartYield:    smartyield.New(),
+		SmartExposure: smartexposure.New(),
 	}
 
 	var err error
@@ -62,6 +67,16 @@ func (m *Manager) RefreshCache(ctx context.Context) error {
 	err = m.loadAllERC20(ctx)
 	if err != nil {
 		return errors.Wrap(err, "could not fetch monitored erc20")
+	}
+
+	err = m.SmartExposure.LoadPools(ctx, m.db)
+	if err != nil {
+		return errors.Wrap(err, "could not fetch smart exposure pools")
+	}
+
+	err = m.SmartExposure.LoadTranches(ctx, m.db)
+	if err != nil {
+		return errors.Wrap(err, "could not fetch smart exposure tranches")
 	}
 
 	err = m.SmartYield.LoadPools(ctx, m.db)

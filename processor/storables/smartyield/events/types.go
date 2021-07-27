@@ -1,7 +1,7 @@
 package events
 
 import (
-	"math/big"
+	"github.com/shopspring/decimal"
 )
 
 type JuniorEntryEvent struct {
@@ -9,7 +9,7 @@ type JuniorEntryEvent struct {
 	ProtocolId             string
 	UnderlyingTokenAddress string
 	BuyerAddress           string
-	UnderlyingIn           *big.Int
-	TokensOut              *big.Int
-	Fee                    *big.Int
+	UnderlyingIn           decimal.Decimal
+	TokensOut              decimal.Decimal
+	Fee                    decimal.Decimal
 }

@@ -54,3 +54,8 @@ func (m *Manager) StoreToken(ctx context.Context, token types.Token) error {
 
 	return nil
 }
+
+func (m *Manager) GetTokenByAddress(addr string) *types.Token {
+	t :=  m.Tokens[utils.NormalizeAddress(addr)]
+	return &t
+}

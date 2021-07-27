@@ -71,12 +71,23 @@ func addStorableBarnFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().String("storable.barn.address", "", "Address of barn staking contract")
 }
 
+func addStorableSmartExposureFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().Bool("storable.smartExposure.enabled", true, "Enable/disable Smart Exposure scraping")
+	cmd.PersistentFlags().String("storable.smartExposure.EPoolPeripheryAddress", "", "Address of EPool periphery contract")
+	cmd.PersistentFlags().String("storable.smartExposure.ETokenFactoryAddress", "", "Address of EToken factory contract")
+	cmd.PersistentFlags().String("storable.smartExposure.EPoolHelperAddress", "", "Address of EPool helper contract")
+}
+
 func addStorableSmartYieldFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.smartYield.enabled", true, "Enable/disable smart yield scraping")
 	cmd.PersistentFlags().Bool("storable.smartYield.notifications", true, "Enable/disable smart yield notifications")
 
 	// using string instead of string slice because we can't pass string slice through env
 	cmd.PersistentFlags().String("storable.smartYield.rewards.factories", "", "Addresses of Pool Factories separated by comma")
+}
+
+func addStorableTokenPricesFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().Bool("storable.tokenPrices.enabled", true, "Enable/disable token prices storable")
 }
 
 func addSyncerFlags(cmd *cobra.Command) {
