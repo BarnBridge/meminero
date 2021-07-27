@@ -11,16 +11,16 @@ import (
 
 func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 	for _, log := range logs {
-
 		if ethtypes.Epool.IsIssuedETokenEvent(&log) {
 			t, err := ethtypes.Epool.IssuedETokenEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode IssuedEtoken event")
 			}
 
-			if utils.NormalizeAddress(t.User.String()) == config.Store.Storable.SmartExposure.EPoolPeripheryAddress {
+			if utils.NormalizeAddress(t.User.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.EPoolPeripheryAddress) {
 				continue
 			}
+
 			s.processed.seTransactions = append(s.processed.seTransactions, SETransaction{
 				ETokenAddress:   utils.NormalizeAddress(t.EToken.String()),
 				UserAddress:     utils.NormalizeAddress(t.User.String()),
@@ -39,7 +39,7 @@ func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 			if err != nil {
 				return errors.Wrap(err, "could not decode RedeemedEToken event")
 			}
-			if utils.NormalizeAddress(t.User.String()) == config.Store.Storable.SmartExposure.EPoolPeripheryAddress {
+			if utils.NormalizeAddress(t.User.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.EPoolPeripheryAddress) {
 				continue
 			}
 
