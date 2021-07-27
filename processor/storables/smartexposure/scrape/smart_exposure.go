@@ -49,7 +49,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 	var newETokens []ethtypes.EtokenfactoryCreatedETokenEvent
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
-			if s.state.SmartExposure.SEPoolByAddress(log.Address.String()) != nil ||
+			if s.state.SmartExposure.PoolByAddress(log.Address.String()) != nil ||
 				utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.EPoolPeripheryAddress) {
 				epoolTxs = append(epoolTxs, log)
 			}

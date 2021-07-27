@@ -35,14 +35,14 @@ func (se *SmartExposure) LoadPools(ctx context.Context, db *pgxpool.Pool) error 
 }
 
 func (se *SmartExposure) LoadTranches(ctx context.Context, db *pgxpool.Pool) error {
-	rows, err := db.Query(ctx, `select pool_address,etoken_address,etoken_symbol,s_factor_e,target_ratio,token_a_ratio,token_b_ratio from smart_exposure.tranches;`)
+	rows, err := db.Query(ctx, `select pool_address,etoken_address,etoken_symbol,s_factor_e,target_ratio,token_a_ratio,token_b_ratio,start_at_block from smart_exposure.tranches;`)
 	if err != nil && err != sql.ErrNoRows {
 		return errors.Wrap(err, "could not query database for SmartExposure tranches")
 	}
 
 	for rows.Next() {
 		var p types.Tranche
-		err := rows.Scan(&p.EPoolAddress, &p.ETokenAddress, &p.ETokenSymbol, &p.SFactorE, &p.TargetRatio, &p.TokenARatio, &p.TokenBRatio)
+		err := rows.Scan(&p.EPoolAddress, &p.ETokenAddress, &p.ETokenSymbol, &p.SFactorE, &p.TargetRatio, &p.TokenARatio, &p.TokenBRatio, &p.StartAtBlock)
 		if err != nil {
 			return errors.Wrap(err, "could not scan tranches from database")
 		}

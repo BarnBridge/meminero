@@ -5,7 +5,7 @@ import (
 	"github.com/barnbridge/meminero/utils"
 )
 
-func (se *SmartExposure) SETrancheByETokenAddress(address string) *types.Tranche {
+func (se *SmartExposure) TrancheByETokenAddress(address string) *types.Tranche {
 	t := se.Tranches[utils.NormalizeAddress(address)]
 	return &t
 }

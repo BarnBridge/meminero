@@ -68,7 +68,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 	var mu = &sync.Mutex{}
 
 	for trancheAddress, tranche := range s.state.SmartExposure.Tranches {
-		if s.block.Number < s.state.SmartExposure.SEPoolByAddress(tranche.EPoolAddress).StartAtBlock {
+		if s.block.Number < tranche.StartAtBlock {
 			s.logger.WithField("tranche", trancheAddress).Info("skipping tranche due to StartAtBlock property")
 			continue
 		}

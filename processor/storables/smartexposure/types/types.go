@@ -27,6 +27,7 @@ type Tranche struct {
 	TargetRatio   decimal.Decimal
 	TokenARatio   decimal.Decimal
 	TokenBRatio   decimal.Decimal
+	StartAtBlock  int64
 }
 
 type TrancheFromChain struct {
