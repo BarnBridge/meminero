@@ -15,7 +15,7 @@ import (
 )
 
 func GetTokensPrice(ctx context.Context, state *state.Manager, blockNumber int64) ( map[string]decimal.Decimal, error) {
-	eg, _ := errgroup.WithContext(ctx)
+	wg, _ := errgroup.WithContext(ctx)
 	var mu = &sync.Mutex{}
 
 	tokensPrices := make(map[string]decimal.Decimal)
@@ -28,7 +28,7 @@ func GetTokensPrice(ctx context.Context, state *state.Manager, blockNumber int64
 
 	for _, t := range tokens {
 		t := t
-		eg.Go(func() error {
+		wg.Go(func() error {
 			var tokenPrice *big.Int
 			err := eth.CallContractFunction(*ethtypes.Ethaggregator.ABI, t.AggregatorAddress, "latestAnswer", []interface{}{}, &tokenPrice)()
 			if err != nil {
@@ -44,7 +44,7 @@ func GetTokensPrice(ctx context.Context, state *state.Manager, blockNumber int64
 		})
 	}
 
-	err := eg.Wait()
+	err := wg.Wait()
 	if err != nil {
 		return  nil, errors.Wrap(err, "failed to call latestAnswer")
 	}
