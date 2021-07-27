@@ -37,4 +37,8 @@ type yieldFarming struct {
 type smartYield struct {
 	Enabled       bool
 	Notifications bool
+
+	Rewards struct {
+		Factories string
+	}
 }

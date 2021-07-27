@@ -13,7 +13,7 @@ func CallContractFunction(a abi.ABI, addr string, methodName string, methodArgs 
 	return func() error {
 		input, err := ABIGenerateInput(a, methodName, methodArgs...)
 		if err != nil {
-			return errors.Wrap(err, "could not generate input for contract call")
+			return errors.Wrapf(err, "could not generate input for contract call (%s.%s)", addr, methodName)
 		}
 		var data string
 
@@ -24,12 +24,12 @@ func CallContractFunction(a abi.ABI, addr string, methodName string, methodArgs 
 		}
 
 		if err != nil {
-			return errors.Wrap(err, "could not execute contract call")
+			return errors.Wrapf(err, "could not execute contract call (%s.%s)", addr, methodName)
 		}
 
 		err = DecodeFunctionOutputToInterface(a, methodName, data, result)
 		if err != nil {
-			return errors.Wrap(err, "could not decode contract call output")
+			return errors.Wrapf(err, "could not decode contract call output (%s.%s)", addr, methodName)
 		}
 
 		return nil

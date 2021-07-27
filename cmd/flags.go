@@ -74,6 +74,9 @@ func addStorableBarnFlags(cmd *cobra.Command) {
 func addStorableSmartYieldFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.smartYield.enabled", true, "Enable/disable smart yield scraping")
 	cmd.PersistentFlags().Bool("storable.smartYield.notifications", true, "Enable/disable smart yield notifications")
+
+	// using string instead of string slice because we can't pass string slice through env
+	cmd.PersistentFlags().String("storable.smartYield.rewards.factories", "", "Addresses of Pool Factories separated by comma")
 }
 
 func addSyncerFlags(cmd *cobra.Command) {

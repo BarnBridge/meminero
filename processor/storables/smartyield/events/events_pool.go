@@ -17,6 +17,8 @@ func (s *Storable) decodePoolEvent(log gethtypes.Log) error {
 		}
 
 		s.processed.JuniorEntryEvents = append(s.processed.JuniorEntryEvents, e)
+
+		return nil
 	}
 
 	if sy.IsSellTokensEvent(&log) {
@@ -26,6 +28,8 @@ func (s *Storable) decodePoolEvent(log gethtypes.Log) error {
 		}
 
 		s.processed.JuniorInstantWithdrawEvents = append(s.processed.JuniorInstantWithdrawEvents, e)
+
+		return nil
 	}
 
 	if sy.IsBuyJuniorBondEvent(&log) {
@@ -35,6 +39,8 @@ func (s *Storable) decodePoolEvent(log gethtypes.Log) error {
 		}
 
 		s.processed.Junior2StepWithdrawEvents = append(s.processed.Junior2StepWithdrawEvents, e)
+
+		return nil
 	}
 
 	if sy.IsRedeemJuniorBondEvent(&log) {
@@ -44,6 +50,8 @@ func (s *Storable) decodePoolEvent(log gethtypes.Log) error {
 		}
 
 		s.processed.Junior2StepRedeemEvents = append(s.processed.Junior2StepRedeemEvents, e)
+
+		return nil
 	}
 
 	if sy.IsBuySeniorBondEvent(&log) {
@@ -53,6 +61,8 @@ func (s *Storable) decodePoolEvent(log gethtypes.Log) error {
 		}
 
 		s.processed.SeniorEntryEvents = append(s.processed.SeniorEntryEvents, e)
+
+		return nil
 	}
 
 	if sy.IsRedeemSeniorBondEvent(&log) {
@@ -62,6 +72,8 @@ func (s *Storable) decodePoolEvent(log gethtypes.Log) error {
 		}
 
 		s.processed.SeniorRedeemEvents = append(s.processed.SeniorRedeemEvents, e)
+
+		return nil
 	}
 
 	if sy.IsTransferEvent(&log) {
@@ -71,6 +83,8 @@ func (s *Storable) decodePoolEvent(log gethtypes.Log) error {
 		}
 
 		s.processed.Transfers = append(s.processed.Transfers, e)
+
+		return nil
 	}
 
 	return nil
