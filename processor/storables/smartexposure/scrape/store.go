@@ -8,7 +8,6 @@ import (
 
 func (s *Storable) storeEPoolTransactions(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.seTransactions) == 0 {
-		s.logger.WithField("module", "smart exposure epool transactions").Debug("no events found")
 		return nil
 	}
 
