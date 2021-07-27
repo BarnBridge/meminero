@@ -11,6 +11,7 @@ import (
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
 	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
@@ -49,18 +50,23 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 	for _, t := range s.state.Tokens {
 		t := t
-		var tokenPrice *big.Int
-		wg.Go(eth.CallContractFunction(*ethtypes.Ethaggregator.ABI, t.AggregatorAddress, "latestAnswer", []interface{}{}, &tokenPrice))
+		wg.Go(func() error {
+			var tokenPrice *big.Int
+			err := eth.CallContractFunction(*ethtypes.Ethaggregator.ABI, t.AggregatorAddress, "latestAnswer", []interface{}{}, &tokenPrice, s.block.Number)()
+			if err != nil {
+				return err
+			}
 
-		err := wg.Wait()
-		if err != nil {
-			return err
-		}
+			mu.Lock()
+			s.processed.prices[t.Address] = decimal.NewFromBigInt(tokenPrice, -int32(8))
+			mu.Unlock()
 
-		mu.Lock()
-		s.processed.prices[t.Address] = decimal.NewFromBigInt(tokenPrice, -int32(8))
-		mu.Unlock()
-
+			return nil
+		})
+	}
+	err := wg.Wait()
+	if err != nil {
+		return errors.Wrap(err, "failed to call latestAnswer")
 	}
 	return nil
 }
