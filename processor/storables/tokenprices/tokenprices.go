@@ -27,7 +27,7 @@ func New(block *types.Block, state *state.Manager) *Storable {
 	return &Storable{
 		block:  block,
 		state:  state,
-		logger: logrus.WithField("module", "storable(tokensPrices)"),
+		logger: logrus.WithField("module", "storable(tokenPrices)"),
 	}
 }
 
@@ -38,8 +38,6 @@ func (s *Storable) Execute(ctx context.Context) error {
 		s.logger.WithField("duration", time.Since(start)).
 			Trace("done")
 	}()
-
-	s.processed.prices = make(map[string]decimal.Decimal)
 	var err error
 	s.processed.prices, err = GetTokensPrices(ctx, s.state.Tokens, s.block.Number)
 	if err != nil {

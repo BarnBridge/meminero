@@ -27,9 +27,9 @@ func GetTokensPrices(ctx context.Context, tokens map[string]types.Token, blockNu
 		t := t
 		wg.Go(func() error {
 			var tokenPrice *big.Int
-			err := eth.CallContractFunction(*ethtypes.Ethaggregator.ABI, t.AggregatorAddress, "latestAnswer", []interface{}{}, &tokenPrice, blockNumber)()
+			err := eth.CallContractFunction(*ethtypes.ETHAggregator.ABI, t.AggregatorAddress, "latestAnswer", []interface{}{}, &tokenPrice, blockNumber)()
 			if err != nil {
-				return err
+				return errors.Wrapf(err, "could not call latestAnswer on contract(%s)", t.AggregatorAddress)
 			}
 
 			mu.Lock()

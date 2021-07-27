@@ -76,10 +76,10 @@ func (s *Storable) Execute(ctx context.Context) error {
 			var tranches []seTypes.TrancheFromChain
 			var lastRebalance, rebalancingInterval, rebalancingCondition *big.Int
 
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "getTranches", []interface{}{}, &tranches))
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "lastRebalance", []interface{}{}, &lastRebalance))
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "rebalanceInterval", []interface{}{}, &rebalancingInterval))
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, address, "rebalanceMinRDiv", []interface{}{}, &rebalancingCondition))
+			subwg.Go(eth.CallContractFunction(*ethtypes.EPool.ABI, address, "getTranches", []interface{}{}, &tranches))
+			subwg.Go(eth.CallContractFunction(*ethtypes.EPool.ABI, address, "lastRebalance", []interface{}{}, &lastRebalance))
+			subwg.Go(eth.CallContractFunction(*ethtypes.EPool.ABI, address, "rebalanceInterval", []interface{}{}, &rebalancingInterval))
+			subwg.Go(eth.CallContractFunction(*ethtypes.EPool.ABI, address, "rebalanceMinRDiv", []interface{}{}, &rebalancingCondition))
 			err := subwg.Wait()
 			if err != nil {
 				return errors.Wrap(err, "could not get pool info from chain ")

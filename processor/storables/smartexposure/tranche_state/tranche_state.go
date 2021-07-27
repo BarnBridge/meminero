@@ -84,9 +84,9 @@ func (s *Storable) Execute(ctx context.Context) error {
 			}
 
 			subwg, _ := errgroup.WithContext(ctx)
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t, s.block.Number))
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio, s.block.Number))
-			subwg.Go(eth.CallContractFunction(*ethtypes.Epoolhelper2.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE.BigInt()}, &conversionRate, s.block.Number))
+			subwg.Go(eth.CallContractFunction(*ethtypes.EPool.ABI, tranche.EPoolAddress, "getTranche", []interface{}{common.HexToAddress(trancheAddress)}, &t, s.block.Number))
+			subwg.Go(eth.CallContractFunction(*ethtypes.EPoolHelper.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "currentRatio", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress)}, &currentRatio, s.block.Number))
+			subwg.Go(eth.CallContractFunction(*ethtypes.EPoolHelper.ABI, config.Store.Storable.SmartExposure.EPoolHelperAddress, "tokenATokenBForEToken", []interface{}{common.HexToAddress(tranche.EPoolAddress), common.HexToAddress(trancheAddress), tranche.SFactorE.BigInt()}, &conversionRate, s.block.Number))
 
 			err := subwg.Wait()
 			if err != nil {

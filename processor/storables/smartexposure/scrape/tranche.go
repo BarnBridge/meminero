@@ -15,13 +15,13 @@ import (
 	"github.com/barnbridge/meminero/utils"
 )
 
-func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []ethtypes.EtokenfactoryCreatedETokenEvent) error {
+func (s *Storable) getTranchesDetailsFromChain(ctx context.Context, tranches []ethtypes.ETokenFactoryCreatedETokenEvent) error {
 	for _, t := range tranches {
 		var newTranche types.TrancheFromChain
 		var symbol string
 
 		wg, _ := errgroup.WithContext(ctx)
-		wg.Go(eth.CallContractFunction(*ethtypes.Epool.ABI, t.EPool.String(), "getTranche", []interface{}{t.EToken}, &newTranche))
+		wg.Go(eth.CallContractFunction(*ethtypes.EPool.ABI, t.EPool.String(), "getTranche", []interface{}{t.EToken}, &newTranche))
 		wg.Go(eth.CallContractFunction(*ethtypes.ERC20.ABI, t.EToken.String(), "symbol", []interface{}{}, &symbol))
 
 		err := wg.Wait()

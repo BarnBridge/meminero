@@ -46,7 +46,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 	}()
 
 	var epoolTxs []gethtypes.Log
-	var newETokens []ethtypes.EtokenfactoryCreatedETokenEvent
+	var newETokens []ethtypes.ETokenFactoryCreatedETokenEvent
 	for _, tx := range s.block.Txs {
 		for _, log := range tx.LogEntries {
 			if s.state.SmartExposure.PoolByAddress(log.Address.String()) != nil ||
@@ -55,8 +55,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 			}
 
 			if utils.NormalizeAddress(log.Address.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.ETokenFactoryAddress) &&
-				ethtypes.Etokenfactory.IsCreatedETokenEvent(&log) {
-				eToken, err := ethtypes.Etokenfactory.CreatedETokenEvent(log)
+				ethtypes.ETokenFactory.IsCreatedETokenEvent(&log) {
+				eToken, err := ethtypes.ETokenFactory.CreatedETokenEvent(log)
 				if err != nil {
 					return errors.Wrap(err, "could not decode Created EToken event")
 				}

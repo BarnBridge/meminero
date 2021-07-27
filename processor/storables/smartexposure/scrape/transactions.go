@@ -11,8 +11,8 @@ import (
 
 func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 	for _, log := range logs {
-		if ethtypes.Epool.IsIssuedETokenEvent(&log) {
-			t, err := ethtypes.Epool.IssuedETokenEvent(log)
+		if ethtypes.EPool.IsIssuedETokenEvent(&log) {
+			t, err := ethtypes.EPool.IssuedETokenEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode IssuedEtoken event")
 			}
@@ -35,8 +35,8 @@ func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 			})
 		}
 
-		if ethtypes.Epool.IsRedeemedETokenEvent(&log) {
-			t, err := ethtypes.Epool.RedeemedETokenEvent(log)
+		if ethtypes.EPool.IsRedeemedETokenEvent(&log) {
+			t, err := ethtypes.EPool.RedeemedETokenEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode RedeemedEToken event")
 			}
@@ -59,8 +59,8 @@ func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 			})
 		}
 
-		if ethtypes.Epoolperiphery.IsIssuedETokenEvent(&log) {
-			t, err := ethtypes.Epoolperiphery.IssuedETokenEvent(log)
+		if ethtypes.EPoolPeriphery.IsIssuedETokenEvent(&log) {
+			t, err := ethtypes.EPoolPeriphery.IssuedETokenEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode issuedEToken event from epoolperiphery contract")
 			}
@@ -78,8 +78,8 @@ func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 			})
 		}
 
-		if ethtypes.Epoolperiphery.IsRedeemedETokenEvent(&log) {
-			t, err := ethtypes.Epoolperiphery.RedeemedETokenEvent(log)
+		if ethtypes.EPoolPeriphery.IsRedeemedETokenEvent(&log) {
+			t, err := ethtypes.EPoolPeriphery.RedeemedETokenEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode RedeemedEToken event from epoolperiphery contract")
 			}
