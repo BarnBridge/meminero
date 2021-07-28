@@ -30,7 +30,6 @@ func (s *GovStorable) handleAbrogationProposal(ctx context.Context, logs []getht
 	}
 
 	if len(s.Processed.abrogationProposals) == 0 {
-		s.logger.WithField("handler", "abrogation proposal").Debug("no events found")
 		return nil
 	}
 

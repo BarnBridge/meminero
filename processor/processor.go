@@ -177,7 +177,7 @@ func (p *Processor) storeAll(ctx context.Context, db *pgxpool.Pool) error {
 func (p *Processor) storeBlock(ctx context.Context, tx pgx.Tx) error {
 	p.logger.Trace("storing block")
 	start := time.Now()
-	defer func() { p.logger.WithField("duration", time.Since(start)).Debug("done storing block") }()
+	defer func() { p.logger.WithField("duration", time.Since(start)).Trace("done storing block") }()
 
 	b := p.Block
 

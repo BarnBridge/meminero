@@ -39,7 +39,6 @@ func (s *Storable) storeEPoolTransactions(ctx context.Context, tx pgx.Tx) error 
 
 func (s *Storable) storeNewTranches(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.newTranches) == 0 {
-		s.logger.WithField("module", "smart exposure new tranches").Debug("no events found")
 		return nil
 	}
 

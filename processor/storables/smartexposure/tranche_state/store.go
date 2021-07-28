@@ -9,9 +9,9 @@ import (
 
 func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.trancheState) == 0 {
-		s.logger.WithField("handler", "tranche state").Debug("no events found")
 		return nil
 	}
+
 	var rows [][]interface{}
 
 	for trancheAddress, t := range s.processed.trancheState {
@@ -24,7 +24,7 @@ func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 		if tranche == nil {
 			return errors.New("could not find tranche by address")
 		}
-		
+
 		tokenAPrice := s.processed.tokenPrices[pool.TokenA.Address]
 		tokenBPrice := s.processed.tokenPrices[pool.TokenB.Address]
 

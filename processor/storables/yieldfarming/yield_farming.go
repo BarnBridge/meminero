@@ -31,9 +31,9 @@ func New(block *types.Block) *Storable {
 
 func (s *Storable) Execute(ctx context.Context) error {
 	start := time.Now()
-	s.logger.Debug("executing")
+	s.logger.Trace("executing")
 	defer func() {
-		s.logger.WithField("duration", time.Since(start)).Debug("done")
+		s.logger.WithField("duration", time.Since(start)).Trace("done")
 	}()
 
 	var logs []gethtypes.Log
@@ -45,7 +45,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 		}
 	}
 	if len(logs) == 0 {
-		s.logger.WithField("module", "yield farming").Debug("no events found")
+		return nil
 	}
 
 	err := s.decodeStakingActions(logs)
@@ -57,6 +57,12 @@ func (s *Storable) Execute(ctx context.Context) error {
 }
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
+	start := time.Now()
+	s.logger.WithField("block", s.block.Number).Trace("rolling back block")
+	defer func() {
+		s.logger.WithField("duration", time.Since(start)).Trace("done rolling back block")
+	}()
+
 	_, err := tx.Exec(ctx, `delete from yield_farming.transactions where included_in_block = $1`, s.block.Number)
 
 	return err
@@ -64,9 +70,9 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
 	start := time.Now()
-	s.logger.Debug("storing")
+	s.logger.Trace("storing")
 	defer func() {
-		s.logger.WithField("duration", time.Since(start)).Debug("done storing")
+		s.logger.WithField("duration", time.Since(start)).Trace("done storing")
 	}()
 
 	err := s.storeStakingActions(ctx, tx)

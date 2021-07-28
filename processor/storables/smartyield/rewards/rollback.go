@@ -1,11 +1,11 @@
-package erc721
+package rewards
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
 )
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
@@ -15,10 +15,18 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 		s.logger.WithField("duration", time.Since(start)).Trace("done rolling back block")
 	}()
 
-	_, err := tx.Exec(ctx, "delete from smart_yield.erc721_transfers where included_in_block = $1", s.block.Number)
-	if err != nil {
-		return errors.Wrap(err, "could not execute delete")
+	b := &pgx.Batch{}
+	tables := []string{"rewards_claims", "rewards_staking_actions"}
+	for _, t := range tables {
+		query := fmt.Sprintf(`delete from smart_yield.%s where included_in_block = $1`, t)
+		b.Queue(query, s.block.Number)
 	}
 
-	return nil
+	br := tx.SendBatch(ctx, b)
+	_, err := br.Exec()
+	if err != nil {
+		return err
+	}
+
+	return br.Close()
 }

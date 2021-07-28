@@ -16,3 +16,11 @@ func (sy *SmartYield) RewardPoolByAddress(addr string) *smartyield.RewardPool {
 
 	return nil
 }
+
+func (sy *SmartYield) CacheRewardPool(p smartyield.RewardPool) {
+	if sy.RewardPoolByAddress(p.PoolAddress) != nil {
+		return
+	}
+
+	sy.RewardPools = append(sy.RewardPools, p)
+}

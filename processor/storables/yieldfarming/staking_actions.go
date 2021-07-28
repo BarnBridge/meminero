@@ -3,11 +3,12 @@ package yieldfarming
 import (
 	"context"
 
-	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *Storable) decodeStakingActions(logs []gethtypes.Log) error {
@@ -49,9 +50,9 @@ func (s *Storable) decodeStakingActions(logs []gethtypes.Log) error {
 
 func (s *Storable) storeStakingActions(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.stakingActions) == 0 {
-		s.logger.WithField("module", "staking_actions").Debug("no events found")
 		return nil
 	}
+
 	var rows [][]interface{}
 
 	for _, t := range s.processed.stakingActions {

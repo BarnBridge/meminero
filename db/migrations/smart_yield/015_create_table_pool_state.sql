@@ -14,10 +14,8 @@ create table smart_yield.pool_state
     originator_apy     double precision not null,
     originator_net_apy double precision not null,
 
-    block_timestamp    timestamp        not null,
+    block_timestamp    bigint           not null,
     included_in_block  bigint           not null
 );
 
 create index state_pool_address_idx on smart_yield.pool_state (pool_address asc, block_timestamp desc);
-
-create index state_apy_trend_idx on smart_yield.pool_state (pool_address, date_trunc('day'::text, block_timestamp));

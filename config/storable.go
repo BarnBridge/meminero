@@ -46,6 +46,10 @@ type smartExposure struct {
 type smartYield struct {
 	Enabled       bool
 	Notifications bool
+
+	Rewards struct {
+		Factories string
+	}
 }
 
 type tokenPrices struct {

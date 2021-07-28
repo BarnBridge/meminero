@@ -73,7 +73,7 @@ redis:
 #storables
 storable:
   accountERC20Transfers:
-    enabled: false
+    enabled: true
   barn:
     enabled: true
     address: "0x10e138877df69Ca44Fdc68655f86c88CDe142D7F"
@@ -81,16 +81,28 @@ storable:
   erc20transfers:
     enabled: true
   governance:
-    enabled : true
-    address : "0x4cAE362D7F227e3d306f70ce4878E245563F3069"
-    notifications : false
+    enabled: true
+    address: "0x4cAE362D7F227e3d306f70ce4878E245563F3069"
+    notifications: true
+  smartexposure:
+    enabled: true
+    epoolhelperaddress: "0x8a63822d8c1be5590bbf72fb58e69285a776a5df"
+    epoolperipheryaddress: "0x33c8d6f8271675eda1a0e72558d4904c96c7a888"
+    etokenfactoryaddress: "0x3E2f548954A7F8169486936e2Bb616aabCe979E9"
+  smartyield:
+    enabled: true
+    notifications: true
+    rewards:
+      factories: "0x2e93403C675Ccb9C564edf2dC6001233d0650582,0x27FE2BFBb6be96D64Db0e741078A1f29Aa20226B,0x53a44A97cD2E9fb9d92ADe742a3C284695A4d72e"
+  tokenprices:
+    enabled: true
   yieldfarming:
-    address: ""
+    address: "0xb0fa2beee3cf36a7ac7e99b885b48538ab364853"
     enabled: true
 
 syncer:
   # The datasets to sync
-  datasets: []
+  datasets: [ ]
   # The network to sync
   network: "mainnet"
   # Path to sync files folder

@@ -17,7 +17,7 @@ func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 				return errors.Wrap(err, "could not decode IssuedEtoken event")
 			}
 
-			//ignore events that where userAddress = epoolPeripheryAddress because there exists another events that comes from epoolPeriphery
+			// ignore events that where userAddress = epoolPeripheryAddress because there exists another events that comes from epoolPeriphery
 			if utils.NormalizeAddress(t.User.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.EPoolPeripheryAddress) {
 				continue
 			}
@@ -41,7 +41,7 @@ func (s *Storable) decodePoolTransactions(logs []gethtypes.Log) error {
 				return errors.Wrap(err, "could not decode RedeemedEToken event")
 			}
 
-			//ignore events that where userAddress = epoolPeripheryAddress because there exists another events that comes from epoolPeriphery
+			// ignore events that where userAddress = epoolPeripheryAddress because there exists another events that comes from epoolPeriphery
 			if utils.NormalizeAddress(t.User.String()) == utils.NormalizeAddress(config.Store.Storable.SmartExposure.EPoolPeripheryAddress) {
 				continue
 			}
