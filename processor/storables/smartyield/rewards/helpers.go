@@ -23,7 +23,7 @@ func (s *Storable) isFactory(addr string) bool {
 	return false
 }
 
-func (s *Storable) checkTokenExists(tokenAddress string) error {
+func (s *Storable) checkTokenExists(ctx context.Context, tokenAddress string) error {
 	if s.state.CheckTokenExists(tokenAddress) {
 		return nil
 	}
@@ -33,7 +33,7 @@ func (s *Storable) checkTokenExists(tokenAddress string) error {
 		return errors.Wrap(err, "could not get erc20 info from chain")
 	}
 
-	err = s.state.StoreToken(context.Background(), *token)
+	err = s.state.StoreToken(ctx, *token)
 	if err != nil {
 		return errors.Wrap(err, "could not store token to state")
 	}

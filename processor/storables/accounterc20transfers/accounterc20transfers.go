@@ -86,9 +86,9 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 	start := time.Now()
-	s.logger.WithField("block", s.block.Number).Debug("rolling back block")
+	s.logger.WithField("block", s.block.Number).Trace("rolling back block")
 	defer func() {
-		s.logger.WithField("duration", time.Since(start)).Debug("done rolling back block")
+		s.logger.WithField("duration", time.Since(start)).Trace("done rolling back block")
 	}()
 
 	_, err := tx.Exec(ctx, `delete from account_erc20_transfers where included_in_block = $1`, s.block.Number)
@@ -98,9 +98,9 @@ func (s *Storable) Rollback(ctx context.Context, tx pgx.Tx) error {
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
 	start := time.Now()
-	s.logger.Debug("storing")
+	s.logger.Trace("storing")
 	defer func() {
-		s.logger.WithField("duration", time.Since(start)).Debug("done storing")
+		s.logger.WithField("duration", time.Since(start)).Trace("done storing")
 	}()
 
 	err := s.storeTransfers(ctx, tx)

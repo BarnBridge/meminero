@@ -3,11 +3,12 @@ package barn
 import (
 	"context"
 
+	"github.com/jackc/pgx/v4"
+	"github.com/pkg/errors"
+
 	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/notifications"
 	"github.com/barnbridge/meminero/utils"
-	"github.com/jackc/pgx/v4"
-	"github.com/pkg/errors"
 )
 
 func (s *Storable) storeDelegateActions(ctx context.Context, tx pgx.Tx) error {

@@ -31,7 +31,6 @@ func (s *GovStorable) handleProposals(ctx context.Context, logs []gethtypes.Log)
 	}
 
 	if len(createdProposals) == 0 {
-		s.logger.WithField("handler", "proposals").Debug("no events found")
 		return nil
 	}
 

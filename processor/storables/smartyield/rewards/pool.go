@@ -84,7 +84,7 @@ func (s *Storable) processNewPoolMulti(ctx context.Context, log ethtypes.SmartYi
 		addr := utils.NormalizeAddress(rt.String())
 		rewardTokensString = append(rewardTokensString, addr)
 
-		err := s.checkTokenExists(addr)
+		err := s.checkTokenExists(ctx, addr)
 		if err != nil {
 			return errors.Wrap(err, "could not ensure reward token exists")
 		}

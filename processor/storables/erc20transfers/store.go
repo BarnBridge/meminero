@@ -3,15 +3,16 @@ package erc20transfers
 import (
 	"context"
 
-	"github.com/barnbridge/meminero/utils"
 	"github.com/jackc/pgx/v4"
+
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *Storable) storeERC20Transfers(ctx context.Context, tx pgx.Tx) error {
 	if len(s.processed.transfers) == 0 {
-		s.logger.WithField("handler", "erc20Transfers").Debug("no events found")
 		return nil
 	}
+
 	var rows [][]interface{}
 
 	for _, t := range s.processed.transfers {

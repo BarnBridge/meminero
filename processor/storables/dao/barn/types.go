@@ -1,8 +1,9 @@
 package barn
 
 import (
-	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/shopspring/decimal"
+
+	"github.com/barnbridge/meminero/ethtypes"
 )
 
 type DelegateAction struct {

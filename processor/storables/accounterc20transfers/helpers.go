@@ -3,8 +3,9 @@ package accounterc20transfers
 import (
 	"context"
 
-	"github.com/barnbridge/meminero/utils"
 	"github.com/jackc/pgx/v4"
+
+	"github.com/barnbridge/meminero/utils"
 )
 
 const (

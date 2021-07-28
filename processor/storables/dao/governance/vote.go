@@ -3,11 +3,12 @@ package governance
 import (
 	"context"
 
-	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/utils"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *GovStorable) handleVotes(logs []gethtypes.Log) error {

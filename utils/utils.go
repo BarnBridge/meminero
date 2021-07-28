@@ -90,3 +90,11 @@ func PrettyToken(d decimal.Decimal, precision int64) string {
 	tenPowPrecision := decimal.NewFromInt(10).Pow(decimal.NewFromInt(precision))
 	return d.DivRound(tenPowPrecision, int32(precision)).StringFixed(2)
 }
+
+func JoinInterfaces(sep string, values ...interface{}) string {
+	strs := make([]string, len(values))
+	for i, v := range values {
+		strs[i] = fmt.Sprintf("%s", v)
+	}
+	return strings.Join(strs, sep)
+}

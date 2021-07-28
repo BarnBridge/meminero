@@ -16,9 +16,9 @@ import (
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
 	start := time.Now()
-	s.logger.Debug("storing")
+	s.logger.Trace("storing")
 	defer func() {
-		s.logger.WithField("duration", time.Since(start)).Debug("done storing")
+		s.logger.WithField("duration", time.Since(start)).Trace("done storing")
 	}()
 
 	err := s.saveJuniorEntryEvents(ctx, tx)
