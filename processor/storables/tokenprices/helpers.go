@@ -45,10 +45,6 @@ func GetTokensPrices(ctx context.Context, tokens map[string]types.Token, blockNu
 
 			mu.Lock()
 			priceScaled := decimal.NewFromBigInt(price, -int32(c.Decimals))
-			if c.Reverse {
-				priceScaled = decimal.NewFromInt(1).Div(priceScaled)
-			}
-
 			results[utils.NormalizeAddress(c.Address)] = priceScaled
 			mu.Unlock()
 
@@ -67,7 +63,12 @@ func GetTokensPrices(ctx context.Context, tokens map[string]types.Token, blockNu
 				price := decimal.NewFromInt(1)
 
 				for _, p := range v.Path {
-					price = price.Mul(results[utils.NormalizeAddress(p.Address)])
+					res := results[utils.NormalizeAddress(p.Address)]
+					if p.Reverse {
+						res = decimal.NewFromInt(1).Div(res)
+					}
+
+					price = price.Mul(res)
 				}
 
 				if prices[t.Address] == nil {
