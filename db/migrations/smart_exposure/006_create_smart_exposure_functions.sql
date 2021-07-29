@@ -63,7 +63,7 @@ begin
                         avg(price)                                                              as token_price
                  from public.token_prices
                  where token_address = _token_address
-                   and quote_asset = "USD"
+                   and quote_asset = 'USD'
                    and block_timestamp > start
                  group by point
                  order by point;
@@ -156,7 +156,7 @@ begin
                                                                                     price.block_timestamp
     from public.token_prices price
     where price.token_address = token_a_address
-      and price.quote_asset = "USD"
+      and price.quote_asset = 'USD'
     order by block_timestamp desc
     limit 1;
 
@@ -165,7 +165,7 @@ begin
                                                                                     price.block_timestamp
     from public.token_prices price
     where price.token_address = token_b_address
-      and price.quote_asset = "USD"
+      and price.quote_asset = 'USD'
     order by block_timestamp desc
     limit 1;
 
