@@ -19,7 +19,7 @@ type Storable struct {
 	state  *state.Manager
 
 	processed struct {
-		prices map[string]decimal.Decimal
+		prices map[string]map[string]decimal.Decimal
 	}
 }
 

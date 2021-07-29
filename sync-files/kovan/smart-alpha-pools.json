@@ -1,0 +1,12 @@
+{
+  "smart-alpha-pools": [
+    {
+      "poolName": "WETH/USD",
+      "poolAddress": "0xaBB09f4A87d211dbeCFCF6a8EB82DFadEc4deD63",
+      "poolTokenAddress": "0xb1A38F61E8c668c2A1349f9aFDBd16b774DE7051",
+      "juniorTokenAddress": "0x0A67296E905169D69a81C076845A13e0054150B7",
+      "seniorTokenAddress": "0xCB3b8Ce96a23729884621F36DEAEBC7159cF9F9d",
+      "oracleAddress": "0xE5e8D3384B15e076eD66f97E865EEDfE916d7298"
+    }
+  ]
+}

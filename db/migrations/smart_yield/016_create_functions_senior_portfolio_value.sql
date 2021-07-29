@@ -52,16 +52,13 @@ create or replace function smart_yield.senior_underlying_price_at_ts(addr text, 
     language plpgsql as
 $$
 declare
-    price double precision;
+    _price double precision;
 begin
-    select into price price_usd
-    from public.token_prices p
-    where p.token_address = ( select underlying_address from smart_yield.pools where senior_bond_address = addr )
-      and block_timestamp <= ts
-    order by block_timestamp desc
-    limit 1;
+    select into _price token_usd_price_at_ts(
+                              ( select underlying_address from smart_yield.pools where senior_bond_address = addr ),
+                              ts);
 
-    return price;
+    return _price;
 end;
 $$;
 
