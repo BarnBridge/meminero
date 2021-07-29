@@ -7,15 +7,16 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 
+	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
 )
 
 type SmartExposurePool struct {
-	PoolName     string `json:"poolName"`
-	EPoolAddress string `json:"ePoolAddress"`
-	TokenA       Token  `json:"tokenA"`
-	TokenB       Token  `json:"tokenB"`
-	StartAtBlock int64  `json:"startAtBlock"`
+	PoolName     string      `json:"poolName"`
+	EPoolAddress string      `json:"ePoolAddress"`
+	TokenA       types.Token `json:"tokenA"`
+	TokenB       types.Token `json:"tokenB"`
+	StartAtBlock int64       `json:"startAtBlock"`
 }
 
 type SmartExposurePools []SmartExposurePool

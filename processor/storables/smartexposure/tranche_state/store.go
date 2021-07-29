@@ -25,8 +25,8 @@ func (s *Storable) storeTranchesState(ctx context.Context, tx pgx.Tx) error {
 			return errors.New("could not find tranche by address")
 		}
 
-		tokenAPrice := s.processed.tokenPrices[pool.TokenA.Address]
-		tokenBPrice := s.processed.tokenPrices[pool.TokenB.Address]
+		tokenAPrice := s.processed.tokenPrices[pool.TokenA.Address]["USD"]
+		tokenBPrice := s.processed.tokenPrices[pool.TokenB.Address]["USD"]
 
 		tokenALiquidity, _ := (t.TokenALiquidity.Shift(-int32(pool.TokenA.Decimals)).Mul(tokenAPrice)).Float64()
 		tokenBLiquidity, _ := (t.TokenBLiquidity.Shift(-int32(pool.TokenB.Decimals)).Mul(tokenBPrice)).Float64()

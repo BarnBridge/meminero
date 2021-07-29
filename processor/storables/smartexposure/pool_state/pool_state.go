@@ -29,7 +29,7 @@ type Storable struct {
 
 	processed struct {
 		poolStates  map[string]PoolState
-		tokenPrices map[string]decimal.Decimal
+		tokenPrices map[string]map[string]decimal.Decimal
 	}
 }
 
@@ -91,8 +91,8 @@ func (s *Storable) Execute(ctx context.Context) error {
 				liqA = liqA.Add(decimal.NewFromBigInt(t.ReserveA, -int32(pool.TokenA.Decimals)))
 				liqB = liqB.Add(decimal.NewFromBigInt(t.ReserveB, -int32(pool.TokenB.Decimals)))
 			}
-			liqA = liqA.Mul(s.processed.tokenPrices[pool.TokenA.Address])
-			liqB = liqB.Mul(s.processed.tokenPrices[pool.TokenB.Address])
+			liqA = liqA.Mul(s.processed.tokenPrices[pool.TokenA.Address]["USD"])
+			liqB = liqB.Mul(s.processed.tokenPrices[pool.TokenB.Address]["USD"])
 			s.processed.poolStates[address] = PoolState{
 				PoolAddress:          address,
 				PoolLiquidity:        liqA.Add(liqB),

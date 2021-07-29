@@ -60,9 +60,10 @@ as
 $$
 begin
     return query select date_trunc(_date_trunc, to_timestamp(block_timestamp)::date)::timestamp as point,
-                        avg(price_usd)                                                          as token_price
+                        avg(price)                                                              as token_price
                  from public.token_prices
                  where token_address = _token_address
+                   and quote_asset = "USD"
                    and block_timestamp > start
                  group by point
                  order by point;
@@ -150,19 +151,21 @@ begin
     from smart_exposure.pools p
     where p.pool_address = _pool_address;
 
-    select into token_a_price_usd,token_a_included_in_block,token_a_block_timestamp price.price_usd,
+    select into token_a_price_usd,token_a_included_in_block,token_a_block_timestamp price.price,
                                                                                     price.included_in_block,
                                                                                     price.block_timestamp
     from public.token_prices price
     where price.token_address = token_a_address
+      and price.quote_asset = "USD"
     order by block_timestamp desc
     limit 1;
 
-    select into token_b_price_usd,token_b_included_in_block,token_b_block_timestamp price.price_usd,
+    select into token_b_price_usd,token_b_included_in_block,token_b_block_timestamp price.price,
                                                                                     price.included_in_block,
                                                                                     price.block_timestamp
     from public.token_prices price
     where price.token_address = token_b_address
+      and price.quote_asset = "USD"
     order by block_timestamp desc
     limit 1;
 

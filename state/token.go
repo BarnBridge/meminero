@@ -10,7 +10,7 @@ import (
 )
 
 func (m *Manager) loadAllTokens(ctx context.Context) error {
-	rows, err := m.db.Query(ctx, `select address,symbol,decimals,aggregator_address,price_provider_type from tokens`)
+	rows, err := m.db.Query(ctx, `select address, symbol, decimals, prices from tokens`)
 	if err != nil {
 		return errors.Wrap(err, "could not query database for monitored accounts")
 	}
@@ -18,12 +18,11 @@ func (m *Manager) loadAllTokens(ctx context.Context) error {
 	m.Tokens = make(map[string]types.Token)
 	for rows.Next() {
 		var t types.Token
-		err := rows.Scan(&t.Address, &t.Symbol, &t.Decimals, &t.AggregatorAddress, &t.PriceProviderType)
+		err := rows.Scan(&t.Address, &t.Symbol, &t.Decimals, &t.Prices)
 		if err != nil {
 			return errors.Wrap(err, "could no scan monitored accounts from database")
 		}
 		t.Address = utils.NormalizeAddress(t.Address)
-		t.AggregatorAddress = utils.NormalizeAddress(t.AggregatorAddress)
 		m.Tokens[t.Address] = t
 	}
 
@@ -45,7 +44,7 @@ func (m *Manager) StoreToken(ctx context.Context, token types.Token) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	_, err := m.db.Exec(ctx, `insert into tokens (address,symbol,decimals,aggregator_address,price_provider_type) values ($1,$2,$3,$4,$5)`, utils.NormalizeAddress(token.Address), token.Symbol, token.Decimals, token.AggregatorAddress, token.PriceProviderType)
+	_, err := m.db.Exec(ctx, `insert into tokens (address, symbol, decimals, prices) values ($1, $2, $3, $4)`, utils.NormalizeAddress(token.Address), token.Symbol, token.Decimals, token.Prices)
 	if err != nil {
 		return err
 	}
@@ -56,6 +55,6 @@ func (m *Manager) StoreToken(ctx context.Context, token types.Token) error {
 }
 
 func (m *Manager) GetTokenByAddress(addr string) *types.Token {
-	t :=  m.Tokens[utils.NormalizeAddress(addr)]
+	t := m.Tokens[utils.NormalizeAddress(addr)]
 	return &t
 }

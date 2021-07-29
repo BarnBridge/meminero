@@ -32,12 +32,8 @@ $$
 declare
     price double precision;
 begin
-    select into price price_usd
-    from public.token_prices p
-    where p.token_address = ( select underlying_address from smart_yield.pools where pool_address = addr )
-      and block_timestamp <= ts
-    order by block_timestamp desc
-    limit 1;
+    select into price token_usd_price_at_ts(
+                              ( select underlying_address from smart_yield.pools where pool_address = addr ), ts);
 
     return price;
 end;
@@ -102,12 +98,9 @@ $$
 declare
     price double precision;
 begin
-    select into price price_usd
-    from token_prices p
-    where p.token_address = ( select underlying_address from smart_yield.pools where junior_bond_address = addr )
-      and block_timestamp <= ts
-    order by block_timestamp desc
-    limit 1;
+    select into price token_usd_price_at_ts(
+                              ( select underlying_address from smart_yield.pools where junior_bond_address = addr ),
+                              ts);
 
     return price;
 end;

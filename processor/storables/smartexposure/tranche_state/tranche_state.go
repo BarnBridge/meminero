@@ -32,7 +32,7 @@ type Storable struct {
 
 	processed struct {
 		trancheState map[string]TrancheState
-		tokenPrices  map[string]decimal.Decimal
+		tokenPrices  map[string]map[string]decimal.Decimal
 	}
 }
 
