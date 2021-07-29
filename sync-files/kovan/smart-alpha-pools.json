@@ -2,11 +2,17 @@
   "smart-alpha-pools": [
     {
       "poolName": "WETH/USD",
-      "poolAddress": "0xaBB09f4A87d211dbeCFCF6a8EB82DFadEc4deD63",
-      "poolTokenAddress": "0xb1A38F61E8c668c2A1349f9aFDBd16b774DE7051",
-      "juniorTokenAddress": "0x0A67296E905169D69a81C076845A13e0054150B7",
-      "seniorTokenAddress": "0xCB3b8Ce96a23729884621F36DEAEBC7159cF9F9d",
-      "oracleAddress": "0xE5e8D3384B15e076eD66f97E865EEDfE916d7298"
+      "poolAddress": "0x97bad35821c20dBe590ac661F00cfe31Ab0AAE0D",
+      "poolToken": {
+        "address": "0x118E186bC7c025e1A8dA7570b72313CC88a1059b",
+        "symbol": "WETH",
+        "decimals": 8
+      },
+      "juniorTokenAddress": "0x9d4C71dBcDb4E4812db4600A4de62dbb4089c583",
+      "seniorTokenAddress": "0x072f818ccf9D92b8218E1d49Bb539Ea2Db46d8D5",
+      "oracleAddress": "0x625A407C5399D45C9919414270B687eb70501781",
+      "oracleAssetSymbol": "USD",
+      "startAtBlock": 26423219
     }
   ]
 }

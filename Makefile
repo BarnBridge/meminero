@@ -1,11 +1,17 @@
 VERSION := "$(shell git describe --abbrev=0 --tags 2> /dev/null || echo 'v0.0.0')+$(shell git rev-parse --short HEAD)"
 
-build:
+meminero: $(shell find . -name '*.go')
 	go build -ldflags "-X main.buildVersion=$(VERSION)"
 
-reset: build
+reset: meminero
 	./meminero reset --force
 	./meminero migrate
 
-sync-all: build
-	./meminero sync --syncer.datasets labels,tokens,monitored-accounts,monitored-erc20,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools
+sync-mainnet: meminero
+	./meminero sync --syncer.network mainnet --syncer.datasets labels,monitored-accounts,monitored-erc20,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
+
+sync-kovan: meminero
+	./meminero sync --syncer.network kovan --syncer.datasets labels,monitored-accounts,smart-alpha-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
+
+gen: meminero
+	./meminero generate-eth-types

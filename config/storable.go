@@ -8,6 +8,7 @@ type storable struct {
 	YieldFarming          yieldFarming          `mapstructure:"yieldFarming"`
 	SmartExposure         smartExposure         `mapstructure:"smartExposure"`
 	SmartYield            smartYield            `mapstructure:"smartYield"`
+	SmartAlpha            smartAlpha            `mapstructure:"smartAlpha"`
 	TokenPrices           tokenPrices           `mapstructure:"tokenPrices"`
 }
 
@@ -53,5 +54,9 @@ type smartYield struct {
 }
 
 type tokenPrices struct {
+	Enabled bool
+}
+
+type smartAlpha struct {
 	Enabled bool
 }
