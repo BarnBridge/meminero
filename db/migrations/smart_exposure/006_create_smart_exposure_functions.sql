@@ -23,7 +23,7 @@ begin
 end;
 $$;
 
-create function smart_exposure.get_ratio_deviation(_etoken_address text, start bigint, _date_trunc text)
+create or replace function smart_exposure.get_ratio_deviation(_etoken_address text, start bigint, _date_trunc text)
     returns TABLE
             (
                 point     timestamp without time zone,
@@ -39,7 +39,7 @@ begin
     from smart_exposure.tranches t
     where t.etoken_address = _etoken_address;
 
-    return query select date_trunc(_date_trunc, block_timestamp)::timestamp           as point,
+    return query select date_trunc(_date_trunc, to_timestamp(block_timestamp))::timestamp          as point,
                         avg(1 - ((ts.current_ratio::numeric(78, 18)) / target_ratio)) as deviation
                  from smart_exposure.tranche_state ts
                  where ts.etoken_address = _etoken_address
