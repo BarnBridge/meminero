@@ -12,7 +12,6 @@ begin
                                      from erc20_transfers
                                      where sender = user_address
                                        and block_timestamp <= ts
-
                                      union all
                                      select token_address as address, value as amount
                                      from erc20_transfers
@@ -49,9 +48,9 @@ begin
                                                                        from smart_yield.pools
                                                                        where pool_address = pool
                                                                        limit 1 )) * ( select jtoken_price / pow(10, 18)
-                                                                                      from smart_yield.state
+                                                                                      from smart_yield.pool_state
                                                                                       where pool_address = pool
-                                                                                        and block_timestamp <= to_timestamp(ts)
+                                                                                        and block_timestamp <= ts
                                                                                       order by block_timestamp desc
                                                                                       limit 1 ) *
                                   ( select smart_yield.pool_underlying_price_at_ts(pool, ts) ))
@@ -137,11 +136,11 @@ begin
                                              from smart_yield.pools
                                              where junior_bond_address = token_address )) *
                                    ( select jtoken_price / pow(10, 18)
-                                     from smart_yield.state
+                                     from smart_yield.pool_state
                                      where pool_address = ( select pool_address
                                                             from smart_yield.pools
                                                             where junior_bond_address = token_address )
-                                       and block_timestamp <= to_timestamp(ts)
+                                       and block_timestamp <= ts
                                      order by block_timestamp desc
                                      limit 1 ) * smart_yield.junior_underlying_price_at_ts(token_address, ts)), 0)
     from smart_yield.junior_locked_positions_at_ts(addr, ts);
@@ -175,9 +174,9 @@ declare
     value double precision;
 begin
     select into value jtoken_price / pow(10, 18)
-    from smart_yield.state
+    from smart_yield.pool_state
     where pool_address = sy_address
-      and block_timestamp <= to_timestamp(ts)
+      and block_timestamp <= ts
     order by block_timestamp desc
     limit 1;
 
@@ -195,7 +194,7 @@ begin
                                                                          ts)::numeric(78, 18) / pow(10,
                                                                                                     ( select underlying_decimals
                                                                                                       from smart_yield.pools as p
-                                                                                                      where p.sy_address = rp.pool_token_address )) *
+                                                                                                      where p.pool_address = rp.pool_token_address )) *
                           smart_yield.jtoken_price_scaled_at_ts(pool_token_address, ts) *
                           smart_yield.pool_underlying_price_at_ts(pool_token_address, ts))
     from smart_yield.reward_pools as rp;
@@ -213,7 +212,7 @@ declare
 begin
     select into value coalesce(smart_yield.junior_locked_balance_at_ts(addr, ts), 0) +
                       coalesce(smart_yield.junior_active_balance_at_ts(addr, ts), 0) +
-                      coalesce(smart_yield.junior_staked_balance_at_ts(addr, ts), 0);
+                      coalesce(public.junior_staked_balance_at_ts(addr, ts), 0);
 
     return value;
 end;
