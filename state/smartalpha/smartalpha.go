@@ -1,16 +1,22 @@
 package smartalpha
 
 import (
+	"github.com/jackc/pgx/v4/pgxpool"
+
 	"github.com/barnbridge/meminero/processor/storables/smartalpha"
 	"github.com/barnbridge/meminero/utils"
 )
 
 type SmartAlpha struct {
+	db *pgxpool.Pool
+
 	Pools []smartalpha.Pool
 }
 
-func New() *SmartAlpha {
-	return &SmartAlpha{}
+func New(db *pgxpool.Pool) *SmartAlpha {
+	return &SmartAlpha{
+		db: db,
+	}
 }
 
 func (sa *SmartAlpha) PoolByAddress(addr string) *smartalpha.Pool {

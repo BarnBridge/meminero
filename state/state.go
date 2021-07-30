@@ -40,7 +40,7 @@ func NewManager(db *pgxpool.Pool) (*Manager, error) {
 		mu:            new(sync.Mutex),
 		SmartYield:    smartyield.New(),
 		SmartExposure: smartexposure.New(),
-		SmartAlpha:    smartalpha.New(),
+		SmartAlpha:    smartalpha.New(db),
 	}
 
 	var err error

@@ -9,6 +9,7 @@ import (
 	"github.com/barnbridge/meminero/processor/storables/dao/governance"
 	"github.com/barnbridge/meminero/processor/storables/erc20transfers"
 	saEvents "github.com/barnbridge/meminero/processor/storables/smartalpha/events"
+	saState "github.com/barnbridge/meminero/processor/storables/smartalpha/state"
 	sePools "github.com/barnbridge/meminero/processor/storables/smartexposure/pool_state"
 	seScrape "github.com/barnbridge/meminero/processor/storables/smartexposure/scrape"
 	seTranches "github.com/barnbridge/meminero/processor/storables/smartexposure/tranche_state"
@@ -91,5 +92,6 @@ func (p *Processor) registerSmartAlpha() {
 		}
 
 		p.storables = append(p.storables, saEvents.New(p.Block, p.state))
+		p.storables = append(p.storables, saState.New(p.Block, p.state))
 	}
 }

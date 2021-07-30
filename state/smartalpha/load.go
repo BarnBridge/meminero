@@ -12,6 +12,8 @@ import (
 )
 
 func (sa *SmartAlpha) Load(ctx context.Context, db *pgxpool.Pool) error {
+	sa.Pools = []smartalpha.Pool{}
+
 	rows, err := db.Query(ctx, `
 		select pool_name,
 			   pool_address,

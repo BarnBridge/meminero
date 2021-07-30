@@ -12,6 +12,8 @@ import (
 )
 
 func (sy *SmartYield) LoadPools(ctx context.Context, db *pgxpool.Pool) error {
+	sy.Pools = []smartyield.Pool{}
+
 	rows, err := db.Query(ctx, `
 		select protocol_id,
 			   pool_address,
@@ -71,6 +73,8 @@ func (sy *SmartYield) LoadPools(ctx context.Context, db *pgxpool.Pool) error {
 }
 
 func (sy *SmartYield) LoadRewardPools(ctx context.Context, db *pgxpool.Pool) error {
+	sy.RewardPools = []smartyield.RewardPool{}
+
 	rows, err := db.Query(ctx, `
 		select pool_type, pool_address, pool_token_address, reward_token_addresses, start_at_block
 		from smart_yield.reward_pools
