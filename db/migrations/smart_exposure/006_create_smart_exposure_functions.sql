@@ -1,9 +1,5 @@
 create function smart_exposure.active_position_at_ts(user_address text, ts bigint)
-    returns TABLE
-            (
-                etoken_address text,
-                balance        numeric
-            )
+    returns TABLE(etoken_address text, balance numeric)
     language plpgsql
 as
 $$
@@ -13,7 +9,7 @@ begin
                                      where sender = user_address
                                        and block_timestamp <= ts
                                      union all
-                                     select etoken_address as address, value as amount
+                                     select token_address as address, value as amount
                                      from public.erc20_transfers
                                      where receiver = user_address
                                        and block_timestamp <= ts )
@@ -63,7 +59,7 @@ begin
                         avg(price)                                                              as token_price
                  from public.token_prices
                  where token_address = _token_address
-                   and quote_asset = "USD"
+                   and quote_asset = 'USD'
                    and block_timestamp > start
                  group by point
                  order by point;
@@ -156,7 +152,7 @@ begin
                                                                                     price.block_timestamp
     from public.token_prices price
     where price.token_address = token_a_address
-      and price.quote_asset = "USD"
+      and price.quote_asset = 'USD'
     order by block_timestamp desc
     limit 1;
 
@@ -165,7 +161,7 @@ begin
                                                                                     price.block_timestamp
     from public.token_prices price
     where price.token_address = token_b_address
-      and price.quote_asset = "USD"
+      and price.quote_asset = 'USD'
     order by block_timestamp desc
     limit 1;
 
@@ -229,7 +225,7 @@ begin
     select into value sum(coalesce(a.balance / pow(10, 18) * ( select etoken_price
                                                                from smart_exposure.tranche_state s
                                                                where s.etoken_address = a.etoken_address
-                                                                 and s.block_timestamp <= to_timestamp(ts)
+                                                                 and s.block_timestamp <= ts
                                                                order by s.block_timestamp desc
                                                                limit 1 ), 0))
     from smart_exposure.active_position_at_ts(addr, ts) a;
@@ -244,14 +240,14 @@ $$
 declare
     value double precision;
 begin
-    select into value sum(coalesce(a.balance / pow(10, 18) * ( select etoken_price
-                                                               from smart_exposure.tranche_state s
-                                                               where s.etoken_address = a.etoken_address
-                                                                 and s.block_timestamp <= to_timestamp(ts)
-                                                               order by s.block_timestamp desc
-                                                               limit 1 ), 0))
+    select into value sum(coalesce(a.balance / pow(10, 18) * (select etoken_price
+                                                              from smart_exposure.tranche_state s
+                                                              where s.etoken_address = a.etoken_address
+                                                                and s.block_timestamp <= ts
+                                                              order by s.block_timestamp desc
+                                                              limit 1), 0))
     from smart_exposure.active_position_at_ts(addr, ts) a
-    where a.etoken_address in ( select etoken_address from smart_exposure.tranches where pool_address = _pool_address );
+    where a.etoken_address in (select etoken_address from smart_exposure.tranches where pool_address = _pool_address);
     return value;
 end;
 $$;

@@ -22,7 +22,7 @@ begin
     select into _price price
     from public.token_prices p
     where p.token_address = addr
-      and quote_asset = "USD"
+      and quote_asset = 'USD'
       and block_timestamp <= ts
     order by block_timestamp desc
     limit 1;
