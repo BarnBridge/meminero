@@ -86,6 +86,10 @@ func addStorableSmartYieldFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().String("storable.smartYield.rewards.factories", "", "Addresses of Pool Factories separated by comma")
 }
 
+func addStorableSmartAlphaFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().Bool("storable.smartAlpha.enabled", true, "Enable/disable Smart Alpha scraping")
+}
+
 func addStorableTokenPricesFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("storable.tokenPrices.enabled", true, "Enable/disable token prices storable")
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
+	"github.com/barnbridge/meminero/state/smartalpha"
 	"github.com/barnbridge/meminero/state/smartexposure"
 
 	"github.com/barnbridge/meminero/state/smartyield"
@@ -26,8 +27,8 @@ type Manager struct {
 	monitoredERC20    map[string]bool
 
 	SmartExposure *smartexposure.SmartExposure
-
-	SmartYield *smartyield.SmartYield
+	SmartYield    *smartyield.SmartYield
+	SmartAlpha    *smartalpha.SmartAlpha
 }
 
 // NewManager instantiates a new task manager and also takes care of the redis connection management
@@ -39,6 +40,7 @@ func NewManager(db *pgxpool.Pool) (*Manager, error) {
 		mu:            new(sync.Mutex),
 		SmartYield:    smartyield.New(),
 		SmartExposure: smartexposure.New(),
+		SmartAlpha:    smartalpha.New(db),
 	}
 
 	var err error
@@ -87,6 +89,11 @@ func (m *Manager) RefreshCache(ctx context.Context) error {
 	err = m.SmartYield.LoadRewardPools(ctx, m.db)
 	if err != nil {
 		return errors.Wrap(err, "could not fetch smart yield reward pools")
+	}
+
+	err = m.SmartAlpha.Load(ctx, m.db)
+	if err != nil {
+		return errors.Wrap(err, "could not load smart alpha state")
 	}
 
 	return nil

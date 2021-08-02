@@ -3,8 +3,9 @@ package state
 import (
 	"context"
 
-	"github.com/barnbridge/meminero/utils"
 	"github.com/pkg/errors"
+
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (m *Manager) loadAllERC20(ctx context.Context) error {
@@ -16,7 +17,14 @@ func (m *Manager) loadAllERC20(ctx context.Context) error {
 		from smart_yield.pools
 		union
 		select etoken_address
-		from smart_exposure.tranches`)
+		from smart_exposure.tranches
+		union
+		select junior_token_address
+		from smart_alpha.pools
+		union
+		select senior_token_address
+		from smart_alpha.pools
+	`)
 	if err != nil {
 		return errors.Wrap(err, "could not query database for monitored erc20")
 	}

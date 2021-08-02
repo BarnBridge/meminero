@@ -31,8 +31,16 @@ type Storable struct {
 func New(block *types.Block) *Storable {
 	return &Storable{
 		block:  block,
-		logger: logrus.WithField("module", "storable(barn)"),
+		logger: logrus.WithField("module", "storable(dao.barn)"),
 	}
+}
+
+func (s *Storable) Name() string {
+	return "dao.barn"
+}
+
+func (s *Storable) DependsOn() []string {
+	return nil
 }
 
 func (s *Storable) Execute(ctx context.Context) error {

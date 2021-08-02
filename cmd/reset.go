@@ -58,6 +58,7 @@ var resetCmd = &cobra.Command{
 			drop schema if exists governance cascade;
 			drop schema if exists smart_yield cascade;
 			drop schema if exists smart_exposure cascade;
+			drop schema if exists smart_alpha cascade;
 		`)
 
 		if err != nil {
