@@ -184,7 +184,7 @@ begin
 end;
 $$;
 
-create function smart_yield.junior_staked_balance_at_ts(user_address text, ts bigint) returns double precision
+create or replace function smart_yield.junior_staked_balance_at_ts(user_address text, ts bigint) returns double precision
     language plpgsql as
 $$
 declare
@@ -204,7 +204,7 @@ end;
 
 $$;
 
-create function junior_portfolio_value_at_ts(addr text, ts bigint) returns double precision
+create or replace function smart_yield.junior_portfolio_value_at_ts(addr text, ts bigint) returns double precision
     language plpgsql as
 $$
 declare
