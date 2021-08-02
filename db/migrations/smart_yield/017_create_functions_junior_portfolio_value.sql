@@ -184,7 +184,7 @@ begin
 end;
 $$;
 
-create function junior_staked_balance_at_ts(user_address text, ts bigint) returns double precision
+create function smart_yield.junior_staked_balance_at_ts(user_address text, ts bigint) returns double precision
     language plpgsql as
 $$
 declare
@@ -212,7 +212,7 @@ declare
 begin
     select into value coalesce(smart_yield.junior_locked_balance_at_ts(addr, ts), 0) +
                       coalesce(smart_yield.junior_active_balance_at_ts(addr, ts), 0) +
-                      coalesce(public.junior_staked_balance_at_ts(addr, ts), 0);
+                      coalesce(smart_yield.junior_staked_balance_at_ts(addr, ts), 0);
 
     return value;
 end;
