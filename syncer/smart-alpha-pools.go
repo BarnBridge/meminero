@@ -28,8 +28,8 @@ func (p SmartAlphaPools) Sync(tx pgx.Tx) error {
 		_, err := tx.Exec(context.Background(), `
 			insert into smart_alpha.pools (pool_name, pool_address, pool_token_address, pool_token_symbol, pool_token_decimals,
 										   junior_token_address, senior_token_address, oracle_address, oracle_asset_symbol,
-										   start_at_block)
-			values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+										   epoch1_start, epoch_duration, start_at_block)
+			values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 			on conflict (pool_address) do update set pool_name            = $1,
 													 pool_token_address   = $3,
 													 pool_token_symbol    = $4,
@@ -38,7 +38,9 @@ func (p SmartAlphaPools) Sync(tx pgx.Tx) error {
 													 senior_token_address = $7,
 													 oracle_address       = $8,
 													 oracle_asset_symbol  = $9,
-													 start_at_block       = $10;
+													 epoch1_start         = $10,
+													 epoch_duration       = $11,
+													 start_at_block       = $12;
 		`,
 			pool.PoolName,
 			utils.NormalizeAddress(pool.PoolAddress),
@@ -49,6 +51,8 @@ func (p SmartAlphaPools) Sync(tx pgx.Tx) error {
 			utils.NormalizeAddress(pool.SeniorTokenAddress),
 			utils.NormalizeAddress(pool.OracleAddress),
 			pool.OracleAssetSymbol,
+			pool.Epoch1Start,
+			pool.EpochDuration,
 			pool.StartAtBlock,
 		)
 		if err != nil {

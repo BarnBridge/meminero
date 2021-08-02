@@ -9,6 +9,8 @@ create table if not exists smart_alpha.pools
     senior_token_address text    not null,
     oracle_address       text    not null,
     oracle_asset_symbol  text    not null,
+    epoch1_start         bigint  not null,
+    epoch_duration       bigint  not null,
     start_at_block       bigint  not null
 );
 

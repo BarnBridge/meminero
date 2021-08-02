@@ -12,6 +12,8 @@
       "seniorTokenAddress": "0x072f818ccf9D92b8218E1d49Bb539Ea2Db46d8D5",
       "oracleAddress": "0x625A407C5399D45C9919414270B687eb70501781",
       "oracleAssetSymbol": "USD",
+      "epoch1Start": 1627478400,
+      "epochDuration": 600,
       "startAtBlock": 26423219
     }
   ]
