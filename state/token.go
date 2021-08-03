@@ -44,6 +44,10 @@ func (m *Manager) StoreToken(ctx context.Context, token types.Token) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
+	if m.CheckTokenExists(token.Address) {
+		return nil
+	}
+
 	_, err := m.db.Exec(ctx, `insert into tokens (address, symbol, decimals, prices) values ($1, $2, $3, $4)`, utils.NormalizeAddress(token.Address), token.Symbol, token.Decimals, token.Prices)
 	if err != nil {
 		return err

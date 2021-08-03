@@ -134,6 +134,51 @@
       "underlyingSymbol": "USDT",
       "underlyingDecimals": 6,
       "startAtBlock": 12437178
+    },
+    {
+      "protocolId": "compound/v2",
+      "controllerAddress": "0xbd4DD68E8a91076D9d3a4d6fef49231bD6eB6Ed2",
+      "modelAddress": "0x94dA5ff0E19077Ef862fDCe6453E1b881f84c3aD",
+      "providerAddress": "0x6ac048eE380cBf0Cb22c30401e710c28d91EB94d",
+      "smartYieldAddress": "0x3E3349E43e5EeaAEDC5Dc2cf7e022919a6751907",
+      "oracleAddress": "0x7e443E581A0D5338AE505b4118416abB00B23d59",
+      "juniorBondAddress": "0xeC169c1D791A93B5076cfE4C37d17AFD8c69AaC1",
+      "seniorBondAddress": "0x0170f38fa8df1440521c8b8520BaAd0CdA132E82",
+      "receiptTokenAddress": "0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9",
+      "underlyingAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "underlyingSymbol": "USDT",
+      "underlyingDecimals": 6,
+      "startAtBlock": 12921412
+    },
+    {
+      "protocolId": "aave/v2",
+      "controllerAddress": "0x0E87Dc8aAd3494252E641AAd0745C009d08B8Cc8",
+      "modelAddress": "0x82d60B4b410a2d649b54d9f66CbD4f50B8C172Bc",
+      "providerAddress": "0x02Cbe7FeAa8B969aCC43ab368B6ed45Cb63F3354",
+      "smartYieldAddress": "0x4dB6fb0218cE5DA392f1E6475A554BAFcb62EF30",
+      "oracleAddress": "0xA498e9B320D10EaAf870E5cd122cbB8a880fAA0a",
+      "juniorBondAddress": "0xF01b8E8Bc9d4F9b6fE35b675719F9DD91DFB7E97",
+      "seniorBondAddress": "0x0C116A5D52E93442454375913DD341b664bB416c",
+      "receiptTokenAddress": "0xc9BC48c72154ef3e5425641a3c747242112a46AF",
+      "underlyingAddress": "0x03ab458634910aad20ef5f1c8ee96f1d6ac54919",
+      "underlyingSymbol": "RAI",
+      "underlyingDecimals": 18,
+      "startAtBlock": 12921656
+    },
+    {
+      "protocolId": "aave/v2",
+      "controllerAddress": "0xD7Ce4Ab97bCb296f9d67270855B0254B2a359305",
+      "modelAddress": "0x7ad380b6c5E48D3F49798775E5a98c841d3E80Cc",
+      "providerAddress": "0xFe2A30438f31CcFb5331044AF6957B971fC66309",
+      "smartYieldAddress": "0xEc810FDd49e756fB7Ce87DC9D53C7cAB58EAB4Ce",
+      "oracleAddress": "0x368B56f316e5B32Cc1fFC153b755D47Dc14301c6",
+      "juniorBondAddress": "0xAfB61CB63D3cC55F8ba56396F4d3d852f253fFe1",
+      "seniorBondAddress": "0x862537d28Bf2C56E01FCEd20E04060c8b44E6CeA",
+      "receiptTokenAddress": "0x6C5024Cd4F8A59110119C56f8933403A539555EB",
+      "underlyingAddress": "0x57ab1ec28d129707052df4df418d58a2d46d5f51",
+      "underlyingSymbol": "sUSD",
+      "underlyingDecimals": 18,
+      "startAtBlock": 12921859
     }
   ]
 }

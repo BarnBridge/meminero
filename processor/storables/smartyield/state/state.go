@@ -75,7 +75,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 			subwg.Go(eth.CallContractFunction(syAbi, p.PoolAddress, "price", []interface{}{}, &jtokenPrice, s.block.Number))
 			subwg.Go(eth.CallContractFunction(syAbi, p.PoolAddress, "abond", []interface{}{}, &abond, s.block.Number))
 			subwg.Go(func() error {
-				var maxBondDailyRate *big.Int
+				var maxBondDailyRate = big.NewInt(0)
 
 				err := eth.CallContractFunction(syAbi, p.PoolAddress, "maxBondDailyRate", []interface{}{}, &maxBondDailyRate, s.block.Number)()
 				if err != nil && !strings.Contains(err.Error(), "Reverted") {
@@ -94,7 +94,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 			if p.ProtocolId == "compound/v2" || p.ProtocolId == "cream/v2" {
 				subwg.Go(func() error {
-					var rate *big.Int
+					var rate = big.NewInt(0)
 
 					err := eth.CallContractFunction(controllerAbi, p.ControllerAddress, "spotDailySupplyRateProvider", []interface{}{}, &rate, s.block.Number)()
 					if err != nil && !strings.Contains(err.Error(), "Reverted") {
@@ -112,7 +112,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 				})
 
 				subwg.Go(func() error {
-					var rate *big.Int
+					var rate = big.NewInt(0)
 
 					err := eth.CallContractFunction(controllerAbi, p.ControllerAddress, "spotDailyRate", []interface{}{}, &rate, s.block.Number)()
 					if err != nil && !strings.Contains(err.Error(), "Reverted") {
@@ -130,7 +130,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 				})
 			} else if p.ProtocolId == "aave/v2" {
 				subwg.Go(func() error {
-					var rate *big.Int
+					var rate = big.NewInt(0)
 
 					err := eth.CallContractFunction(controllerAbi, p.ControllerAddress, "spotDailySupplyRateProvider", []interface{}{}, &rate, s.block.Number)()
 					if err != nil && !strings.Contains(err.Error(), "Reverted") {
@@ -160,10 +160,6 @@ func (s *Storable) Execute(ctx context.Context) error {
 			poolState.JTokenPrice = decimal.NewFromBigInt(jtokenPrice, 0)
 			poolState.Abond = abond
 
-			if poolState.JuniorLiquidity.Equal(decimal.Zero) {
-				poolState.JuniorAPY = poolState.OriginatorNetApy
-			}
-
 			abondGain := decimal.NewFromBigInt(abond.Gain, -int32(p.UnderlyingDecimals))
 			abondPrincipal := decimal.NewFromBigInt(abond.Principal, -int32(p.UnderlyingDecimals))
 			abondIssuedAt := decimal.NewFromBigInt(abond.IssuedAt, -18)
@@ -179,13 +175,18 @@ func (s *Storable) Execute(ctx context.Context) error {
 
 			seniorLiq := poolState.TotalLiquidity.Sub(poolState.JuniorLiquidity)
 
-			juniorApy := decimal.NewFromFloat(poolState.OriginatorNetApy).Add(
-				seniorLiq.
-					Div(poolState.JuniorLiquidity).
-					Mul(decimal.NewFromFloat(poolState.OriginatorNetApy - abondAPY)),
-			)
+			if poolState.JuniorLiquidity.Equal(decimal.Zero) {
+				poolState.JuniorAPY = poolState.OriginatorNetApy
+			} else {
+				juniorApy := decimal.NewFromFloat(poolState.OriginatorNetApy).Add(
+					seniorLiq.
+						Div(poolState.JuniorLiquidity).
+						Mul(decimal.NewFromFloat(poolState.OriginatorNetApy - abondAPY)),
+				)
 
-			poolState.JuniorAPY, _ = juniorApy.Float64()
+				poolState.JuniorAPY, _ = juniorApy.Float64()
+			}
+
 			poolState.AbondAPY = abondAPY
 
 			s.processedMu.Lock()
