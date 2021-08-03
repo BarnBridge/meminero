@@ -2,6 +2,7 @@ package processor
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v4"
@@ -55,11 +56,19 @@ func (p *Processor) rollbackAll(ctx context.Context, db *pgxpool.Pool) error {
 	}
 
 	for _, s := range p.storables {
+		var log = logrus.WithField("module", fmt.Sprintf("storable(%s)", s.ID()))
+
+		log.Trace("rolling back block")
+		start := time.Now()
+
 		err = s.Rollback(ctx, tx)
 		if err != nil {
 			tx.Rollback(context.Background())
 			return err
 		}
+
+		recordRollbackDuration(s.ID(), start)
+		log.WithField("duration", time.Since(start)).Trace("done rolling back block")
 	}
 
 	err = tx.Commit(ctx)
@@ -116,10 +125,18 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 		s := s
 
 		wg.Go(func() error {
+			log := logrus.WithField("module", fmt.Sprintf("storable(%s)", s.ID()))
+
+			log.Trace("executing")
+			start := time.Now()
+
 			err = s.Execute(ctx)
 			if err != nil {
 				return err
 			}
+
+			recordExecuteDuration(s.ID(), start)
+			log.WithField("duration", time.Since(start)).Trace("done executing")
 
 			return nil
 		})
@@ -159,11 +176,20 @@ func (p *Processor) storeAll(ctx context.Context, db *pgxpool.Pool) error {
 	}
 
 	for _, s := range p.storables {
+		log := logrus.WithField("module", fmt.Sprintf("storable(%s)", s.ID()))
+
+		log.Trace("saving")
+
+		start := time.Now()
+
 		err = s.SaveToDatabase(ctx, tx)
 		if err != nil {
 			tx.Rollback(ctx)
 			return err
 		}
+
+		recordSaveDuration(s.ID(), start)
+		log.WithField("duration", time.Since(start)).Trace("done saving")
 	}
 
 	err = tx.Commit(ctx)

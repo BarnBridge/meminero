@@ -15,4 +15,5 @@ type Storable interface {
 	Rollback(ctx context.Context, pgx pgx.Tx) error
 	SaveToDatabase(ctx context.Context, tx pgx.Tx) error
 	Result() interface{}
+	ID() string
 }
