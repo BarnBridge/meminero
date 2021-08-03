@@ -2,7 +2,6 @@ package events
 
 import (
 	"context"
-	"time"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -12,12 +11,6 @@ import (
 )
 
 func (s *Storable) SaveToDatabase(ctx context.Context, tx pgx.Tx) error {
-	start := time.Now()
-	s.logger.Trace("storing")
-	defer func() {
-		s.logger.WithField("duration", time.Since(start)).Trace("done storing")
-	}()
-
 	err := s.saveJoinEntryQueueEvents(ctx, tx)
 	if err != nil {
 		return errors.Wrap(err, "could not store join entry queue events")

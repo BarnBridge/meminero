@@ -1,6 +1,8 @@
 package smartalpha
 
 import (
+	"math/big"
+
 	"github.com/barnbridge/meminero/types"
 )
 
@@ -36,3 +38,28 @@ const (
 	StokenSend             TxType = "STOKEN_SEND"
 	StokenReceive          TxType = "STOKEN_RECEIVE"
 )
+
+type State struct {
+	PoolAddress                string
+	QueuedJuniorsUnderlyingIn  *big.Int
+	QueuedJuniorsUnderlyingOut *big.Int
+	QueuedJuniorTokensBurn     *big.Int
+	QueuedSeniorsUnderlyingIn  *big.Int
+	QueuedSeniorsUnderlyingOut *big.Int
+	QueuedSeniorTokensBurn     *big.Int
+	EstimatedJuniorLiquidity   *big.Int
+	EstimatedSeniorLiquidity   *big.Int
+	EstimatedJuniorTokenPrice  *big.Int
+	EstimatedSeniorTokenPrice  *big.Int
+}
+
+type EpochInfo struct {
+	PoolAddress            string
+	Epoch                  *big.Int
+	SeniorLiquidity        *big.Int
+	JuniorLiquidity        *big.Int
+	UpsideExposureRate     *big.Int
+	DownsideProtectionRate *big.Int
+	JuniorTokenPrice       *big.Int
+	SeniorTokenPrice       *big.Int
+}

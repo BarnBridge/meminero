@@ -19,6 +19,7 @@ type Proposal struct {
 	Executed     bool
 	Parameters   ProposalParameters
 }
+
 type ProposalParameters struct {
 	WarmUpDuration      *big.Int
 	ActiveDuration      *big.Int
