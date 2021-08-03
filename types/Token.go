@@ -7,9 +7,10 @@ type PriceProvider struct {
 }
 
 type Price struct {
-	Quote    string          `json:"quote"`
-	Provider string          `json:"provider"`
-	Path     []PriceProvider `json:"path"`
+	StartAtBlock int64           `json:"startAtBlock"`
+	Quote        string          `json:"quote"`
+	Provider     string          `json:"provider"`
+	Path         []PriceProvider `json:"path"`
 }
 
 type Token struct {

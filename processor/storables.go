@@ -66,6 +66,12 @@ func (p *Processor) registerSmartYield() {
 			logrus.Fatal("could not register smartYield storables because incomplete dependencies")
 		}
 
+		for _, pool := range p.state.SmartYield.Pools {
+			if !p.state.CheckTokenExists(pool.UnderlyingAddress) {
+				logrus.Fatalf("smart yield underlying token missing from tokens list: %s (%s)", pool.UnderlyingSymbol, pool.UnderlyingAddress)
+			}
+		}
+
 		p.storables = append(p.storables, syEvents.New(p.Block, p.state))
 		p.storables = append(p.storables, syERC721.New(p.Block, p.state))
 		p.storables = append(p.storables, syRewards.New(p.Block, p.state))
@@ -79,6 +85,16 @@ func (p *Processor) registerSmartExposure() {
 			logrus.Fatal("could not register smartExposure storables because incomplete dependencies")
 		}
 
+		for _, pool := range p.state.SmartExposure.Pools {
+			if !p.state.CheckTokenExists(pool.TokenA.Address) {
+				logrus.Fatalf("smart exposure underlying token missing from tokens list: %s (%s)", pool.TokenA.Symbol, pool.TokenA.Address)
+			}
+
+			if !p.state.CheckTokenExists(pool.TokenB.Address) {
+				logrus.Fatalf("smart exposure underlying token missing from tokens list: %s (%s)", pool.TokenB.Symbol, pool.TokenB.Address)
+			}
+		}
+
 		p.storables = append(p.storables, seScrape.New(p.Block, p.state))
 		p.storables = append(p.storables, seTranches.New(p.Block, p.state))
 		p.storables = append(p.storables, sePools.New(p.Block, p.state))
@@ -89,6 +105,12 @@ func (p *Processor) registerSmartAlpha() {
 	if config.Store.Storable.SmartAlpha.Enabled {
 		if !config.Store.Storable.Erc20Transfers.Enabled || !config.Store.Storable.TokenPrices.Enabled {
 			logrus.Fatal("could not register smartAlpha storables because incomplete dependencies")
+		}
+
+		for _, pool := range p.state.SmartAlpha.Pools {
+			if !p.state.CheckTokenExists(pool.PoolToken.Address) {
+				logrus.Fatalf("smart alpha underlying token missing from tokens list: %s (%s)", pool.PoolToken.Symbol, pool.PoolToken.Symbol)
+			}
 		}
 
 		p.storables = append(p.storables, saEvents.New(p.Block, p.state))

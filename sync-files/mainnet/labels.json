@@ -47,6 +47,18 @@
     {
       "address": "0x5cFcFb6171db72a26b84bc50EdD2d80b0F3fc094",
       "label": "SmartYield aGUSD provider"
+    },
+    {
+      "address": "0x6ac048eE380cBf0Cb22c30401e710c28d91EB94d",
+      "label": "SmartYield cUSDT provider"
+    },
+    {
+      "address": "0x02Cbe7FeAa8B969aCC43ab368B6ed45Cb63F3354",
+      "label": "SmartYield aRAI provider"
+    },
+    {
+      "address": "0xFe2A30438f31CcFb5331044AF6957B971fC66309",
+      "label": "SmartYield aSUSD provider"
     }
   ]
 }

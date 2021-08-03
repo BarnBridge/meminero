@@ -24,6 +24,10 @@ func GetTokensPrices(ctx context.Context, tokens map[string]types.Token, blockNu
 				return nil, errors.New("invalid provider")
 			}
 
+			if blockNumber < v.StartAtBlock {
+				continue
+			}
+
 			for _, p := range v.Path {
 				calls[utils.NormalizeAddress(p.Address)] = p
 			}
@@ -59,6 +63,10 @@ func GetTokensPrices(ctx context.Context, tokens map[string]types.Token, blockNu
 	prices := make(map[string]map[string]decimal.Decimal)
 	for _, t := range tokens {
 		for _, v := range t.Prices {
+			if blockNumber < v.StartAtBlock {
+				continue
+			}
+
 			if len(v.Path) > 0 {
 				price := decimal.NewFromInt(1)
 
