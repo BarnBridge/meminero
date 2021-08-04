@@ -70,6 +70,7 @@ jobs:
         ECR_REPOSITORY: meminero
       run: |
         docker build \
+          --build-arg SSH_PRIVATE_KEY="${{ secrets.DEPLOY_KEY_BBBACKEND }}" \
           -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}    \
           ${GITHUB_WORKSPACE}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:${IMAGE_TAG}

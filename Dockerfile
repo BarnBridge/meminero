@@ -3,8 +3,16 @@ FROM golang:1.15 AS build
 RUN mkdir -p /meminero
 WORKDIR /meminero
 
-ADD go.mod go.mod
-ADD go.sum go.sum
+
+ARG SSH_PRIVATE_KEY
+ENV GOPRIVATE=github.com/lacasian/
+
+RUN mkdir -p ~/.ssh && umask 0077 && echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa \
+	&& git config --global url.ssh://git@github.com/.insteadOf https://github.com/ \
+	&& ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+COPY go.mod go.sum ./
+
 RUN go mod download
 
 ADD . .
