@@ -45,7 +45,7 @@ jobs:
       shell: bash
       run: |
         branchName=${{ env.BRANCH_NAME }}
-        if [ $branchName = 'master' ]; then prefix=''; else prefix=$(echo "${branchName}-"); fi
+        if [ $branchName = 'main' ]; then prefix=''; else prefix=$(echo "${branchName}-"); fi
         echo "IMAGE_TAG=$(echo $prefix)$(echo ${GITHUB_SHA} | cut -c1-7)"  >> $GITHUB_ENV
 
     - name: Configure AWS credentials
