@@ -1,0 +1,102 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+      - build
+  pull_request:
+    branches:
+      - master
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v2
+
+    - name: Notify Slack
+      if: success()
+      id: slack
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: voxmedia/github-action-slack-notify-build@v1
+      with:
+        channel: infra-ci-barnbridge
+        status: ":pepegalight: STARTED"
+        color: warning
+
+    - name: Get branch name (merge)
+      if: github.event_name != 'pull_request'
+      shell: bash
+      run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
+
+    - name: Get branch name (pull request)
+      if: github.event_name == 'pull_request'
+      shell: bash
+      run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF}/${GITHUB_REF#refs/pull/} | tr / -)" >> $GITHUB_ENV
+
+    - name: Set version
+      id: vars
+      shell: bash
+      run: |
+        branchName=${{ env.BRANCH_NAME }}
+        if [ $branchName = 'master' ]; then prefix=''; else prefix=$(echo "${branchName}-"); fi
+        echo "IMAGE_TAG=$(echo $prefix)$(echo ${GITHUB_SHA} | cut -c1-7)"  >> $GITHUB_ENV
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Echo image tag
+      run: |
+        echo "Version to set in deployment manifests: ${IMAGE_TAG}"
+
+    - name: Build, tag and push the image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: meminero
+      run: |
+        docker build \
+          -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}    \
+          ${GITHUB_WORKSPACE}
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:${IMAGE_TAG}
+
+    - name: Notify Slack success
+      if: success()
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: voxmedia/github-action-slack-notify-build@v1
+      with:
+        message_id: ${{ steps.slack.outputs.message_id }}
+        channel: infra-ci-barnbridge
+        status: ":white_check_mark: ${{ env.IMAGE_TAG }}"
+        color: good
+
+    - name: Notify Slack failure
+      if: failure()
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: voxmedia/github-action-slack-notify-build@v1
+      with:
+        message_id: ${{ steps.slack.outputs.message_id }}
+        channel: infra-ci-barnbridge
+        status: ":octagonal_sign: FAILED"
+        color: danger
+
+    - name: Logout from Amazon ECR
+      if: always()
+      run: |
+        docker logout ${{ steps.login-ecr.outputs.registry }}

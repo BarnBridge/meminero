@@ -13,5 +13,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 
 FROM scratch
 COPY --from=build /meminero/meminero .
+COPY --from=build /meminero/db/migrations db/migrations
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 CMD ["./meminero", "run", "--config=/config/config.yml"]
