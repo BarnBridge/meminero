@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
@@ -50,7 +50,7 @@ func (db *DB) Migrate(ctx context.Context) error {
 		return nil
 	}
 
-	files, err := ioutil.ReadDir(config.Store.Database.MigrationsPath)
+	files, err := os.ReadDir(config.Store.Database.MigrationsPath)
 	if err != nil {
 		return errors.Wrap(err, "reading migration packages")
 	}
