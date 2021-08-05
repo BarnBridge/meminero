@@ -22,6 +22,10 @@ func (s *Storable) Execute(ctx context.Context) error {
 	for _, p := range s.state.SmartAlpha.Pools {
 		p := p
 
+		if s.block.Number < p.StartAtBlock {
+			continue
+		}
+
 		wg.Go(func() error {
 			var epoch *big.Int
 
