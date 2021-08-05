@@ -44,7 +44,7 @@ func (m *Manager) StoreToken(ctx context.Context, token types.Token) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	if m.CheckTokenExists(token.Address) {
+	if _, exists := m.Tokens[utils.NormalizeAddress(token.Address)]; exists {
 		return nil
 	}
 
