@@ -78,10 +78,13 @@ func (db *DB) Migrate(ctx context.Context) error {
 }
 
 func (db *DB) MigratePackage(ctx context.Context, packageName string) error {
+	db.logger.Debugf("acquiring database connection")
 	conn, err := db.pool.Acquire(ctx)
 	if err != nil {
 		return errors.Wrap(err, "acquire db connection")
 	}
+
+	defer conn.Release()
 
 	migrator, err := migrate.NewMigrator(ctx, conn.Conn(), db.getMigrationsVersionTable(packageName))
 	if err != nil {
