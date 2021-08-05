@@ -218,7 +218,7 @@ func (s *Storable) handleAbrogationProposalVotes(logs []gethtypes.Log) error {
 			s.Processed.abrogationVotes = append(s.Processed.abrogationVotes, vote)
 		}
 
-		if ethtypes.Governance.IsAbrogationProposalVoteEvent(&log) {
+		if ethtypes.Governance.IsAbrogationProposalVoteCancelledEvent(&log) {
 			vote, err := ethtypes.Governance.AbrogationProposalVoteCancelledEvent(log)
 			if err != nil {
 				return errors.Wrap(err, "could not decode abrogation proposal event")
