@@ -1,18 +1,15 @@
 create or replace function smart_alpha.junior_portfolio_value_at_ts(addr text, ts bigint) returns double precision
-    language plpgsql
-as
+    language plpgsql as
 $$
 begin
-    return (
-        select sum(smart_alpha.junior_token_to_usd_at_ts(token_address, balance, ts))
-        from public.erc20_balances_at_ts(addr, (select array_agg(junior_token_address) from smart_alpha.pools), ts)
-    );
+    return ( select sum(smart_alpha.junior_token_to_usd_at_ts(token_address, balance, ts))
+             from public.erc20_balances_at_ts(addr, ( select array_agg(junior_token_address) from smart_alpha.pools ),
+                                              ts) );
 end;
 $$;
 
 create or replace function smart_alpha.junior_token_to_usd_at_ts(token_address text, amount numeric(78), ts bigint) returns double precision
-    language plpgsql
-as
+    language plpgsql as
 $$
 declare
     oracle_asset_symbol text;
@@ -25,32 +22,27 @@ begin
     from smart_alpha.pools p
     where p.junior_token_address = token_address;
 
-    return (
-        select amount::numeric(78, 18) / pow(10, pool_token_decimals) *
-               (select estimated_junior_token_price::numeric(78, 18) / pow(10, 18)
-                from smart_alpha.pool_state
-                where block_timestamp <= ts
-                order by block_timestamp desc
-                limit 1) * (select token_usd_price_at_ts(pool_token_address, ts))
-    );
+    return ( select amount::numeric(78, 18) / pow(10, pool_token_decimals) *
+                    ( select estimated_junior_token_price::numeric(78, 18) / pow(10, 18)
+                      from smart_alpha.pool_state
+                      where block_timestamp <= ts
+                      order by block_timestamp desc
+                      limit 1 ) * ( select token_usd_price_at_ts(pool_token_address, ts) ) );
 end;
 $$;
 
 create or replace function smart_alpha.senior_portfolio_value_at_ts(addr text, ts bigint) returns double precision
-    language plpgsql
-as
+    language plpgsql as
 $$
 begin
-    return (
-        select sum(smart_alpha.senior_token_to_usd_at_ts(token_address, balance, ts))
-        from public.erc20_balances_at_ts(addr, (select array_agg(senior_token_address) from smart_alpha.pools), ts)
-    );
+    return ( select sum(smart_alpha.senior_token_to_usd_at_ts(token_address, balance, ts))
+             from public.erc20_balances_at_ts(addr, ( select array_agg(senior_token_address) from smart_alpha.pools ),
+                                              ts) );
 end;
 $$;
 
 create or replace function smart_alpha.senior_token_to_usd_at_ts(token_address text, amount numeric(78), ts bigint) returns double precision
-    language plpgsql
-as
+    language plpgsql as
 $$
 declare
     oracle_asset_symbol text;
@@ -63,13 +55,11 @@ begin
     from smart_alpha.pools p
     where p.senior_token_address = token_address;
 
-    return (
-        select amount::numeric(78, 18) / pow(10, pool_token_decimals) *
-               (select estimated_senior_token_price::numeric(78, 18) / pow(10, 18)
-                from smart_alpha.pool_state
-                where block_timestamp <= ts
-                order by block_timestamp desc
-                limit 1) * (select token_usd_price_at_ts(pool_token_address, ts))
-    );
+    return ( select amount::numeric(78, 18) / pow(10, pool_token_decimals) *
+                    ( select estimated_senior_token_price::numeric(78, 18) / pow(10, 18)
+                      from smart_alpha.pool_state
+                      where block_timestamp <= ts
+                      order by block_timestamp desc
+                      limit 1 ) * ( select token_usd_price_at_ts(pool_token_address, ts) ) );
 end;
 $$;
