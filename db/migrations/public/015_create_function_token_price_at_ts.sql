@@ -1,4 +1,4 @@
-create or replace function token_price_at_ts(addr text, quote text, ts bigint) returns double precision
+create or replace function public.token_price_at_ts(addr text, quote text, ts bigint) returns double precision
     language plpgsql
 as
 $$
