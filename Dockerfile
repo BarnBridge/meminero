@@ -23,4 +23,4 @@ FROM scratch
 COPY --from=build /meminero/meminero .
 COPY --from=build /meminero/db/migrations db/migrations
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-CMD ["./meminero", "run", "--config=/config/config.yml"]
+CMD ["./meminero", "scrape", "queue"]

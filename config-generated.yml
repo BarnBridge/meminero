@@ -70,6 +70,8 @@ storable:
         enabled: true
         # Enable/disable governance notifications
         notifications: true
+    smartalpha:
+        enabled: true
     smartexposure:
         enabled: true
         epoolhelperaddress: ""
