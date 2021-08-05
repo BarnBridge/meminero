@@ -19,7 +19,7 @@ ADD . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 
-FROM scratch
+FROM ubuntu
 COPY --from=build /meminero/meminero .
 COPY --from=build /meminero/db/migrations db/migrations
 COPY --from=build /meminero/sync-files sync-files
