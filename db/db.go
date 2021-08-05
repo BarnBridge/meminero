@@ -61,7 +61,10 @@ func (db *DB) Migrate(ctx context.Context) error {
 	}
 
 	for _, f := range files {
+		db.logger.Debugf("processing file: %s", f.Name())
+
 		if !f.IsDir() || f.Name() == "public" {
+			db.logger.Warnf("file ignored: %s", f.Name())
 			continue
 		}
 
