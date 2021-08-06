@@ -1,20 +1,52 @@
 {
   "smart-alpha-pools": [
     {
-      "poolName": "WETH/USD",
-      "poolAddress": "0x97bad35821c20dBe590ac661F00cfe31Ab0AAE0D",
+      "poolName": "WETH-USD",
+      "poolAddress": "0xA3C3a8d11f5e179c50c007509cA976F1E494D754",
       "poolToken": {
-        "address": "0x118E186bC7c025e1A8dA7570b72313CC88a1059b",
+        "address": "0x13690071c13573d2bE241A6C188c8387818A626F",
         "symbol": "WETH",
+        "decimals": 18
+      },
+      "juniorTokenAddress": "0x8e8529faB892e58Ca78Db3b080D709324fE421d6",
+      "seniorTokenAddress": "0xC777c9741f74A1dFfe75138dE094D812c360e6b7",
+      "oracleAddress": "0x7F08656E5f26b19a9773476a1a0dd1F7d712bc75",
+      "oracleAssetSymbol": "USD",
+      "epoch1Start": 1630929600,
+      "epochDuration": 1800,
+      "startAtBlock": 26614295
+    },
+    {
+      "poolName": "WBTC-USD-30m",
+      "poolAddress": "0x3f17F74cAb8c6d7991d8ca410e6fAbBCd99FC411",
+      "poolToken": {
+        "address": "0xC802b80dB38729f272D704f7F32194CC91E6476B",
+        "symbol": "WBTC",
         "decimals": 8
       },
-      "juniorTokenAddress": "0x9d4C71dBcDb4E4812db4600A4de62dbb4089c583",
-      "seniorTokenAddress": "0x072f818ccf9D92b8218E1d49Bb539Ea2Db46d8D5",
-      "oracleAddress": "0x625A407C5399D45C9919414270B687eb70501781",
+      "juniorTokenAddress": "0x54172Cc26e7A70d81A92B164EB4F5b2988Dd9D5A",
+      "seniorTokenAddress": "0x62AbFFfEccB6Ae1151C27B88bFA47a3C346f220C",
+      "oracleAddress": "0x4c7751588285fDe79e23d49492b1227dbA732C5b",
       "oracleAssetSymbol": "USD",
-      "epoch1Start": 1627478400,
-      "epochDuration": 600,
-      "startAtBlock": 26423219
+      "epoch1Start": 1630929600,
+      "epochDuration": 1800,
+      "startAtBlock": 26614320
+    },
+    {
+      "poolName": "WBTC-USD-1d",
+      "poolAddress": "0x8b08Cae57628210cEBc19A80Cf51371E71919822",
+      "poolToken": {
+        "address": "0xC802b80dB38729f272D704f7F32194CC91E6476B",
+        "symbol": "WBTC",
+        "decimals": 8
+      },
+      "juniorTokenAddress": "0x145D47f6f54e1D0dDd04775F96087d8578d69892",
+      "seniorTokenAddress": "0xDAc960bbad541D54B36B36081010317c49Ba4145",
+      "oracleAddress": "0x3e928e3004fD8b08B6072834Ac63810d206ECcfC",
+      "oracleAssetSymbol": "USD",
+      "epoch1Start": 1630929600,
+      "epochDuration": 86400,
+      "startAtBlock": 26614333
     }
   ]
 }
