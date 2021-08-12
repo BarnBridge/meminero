@@ -156,7 +156,7 @@ func SoftDeleteJobsWithTx(ctx context.Context, tx pgx.Tx, jobs ...*Job) error {
 
 	del := `
 		UPDATE
-			"notification_jobs"
+			public.notification_jobs
 		SET 
 		    "deleted" = TRUE
 		WHERE

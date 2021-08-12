@@ -24,6 +24,9 @@ var notificationsCmd = &cobra.Command{
 		}
 
 		n, err := notifications.NewWorker(d.Connection())
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		n.Run(ctx)
 

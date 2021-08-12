@@ -754,7 +754,7 @@ func (jd *ProposalExecutedJobData) ExecuteWithTx(ctx context.Context, tx pgx.Tx)
 
 func proposalState(ctx context.Context, tx pgx.Tx, id int64) (string, error) {
 	var ps string
-	sel := `SELECT * FROM proposal_state($1);`
+	sel := `SELECT * FROM governance.proposal_state($1);`
 	err := tx.QueryRow(ctx, sel, id).Scan(&ps)
 	if err != nil && err != sql.ErrNoRows {
 		return ps, errors.Wrap(err, "get proposal state")

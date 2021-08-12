@@ -66,7 +66,7 @@ func (w *Worker) jobs(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 			"metadata",
 			"included_in_block"
 		FROM
-			"notification_jobs"
+			public."notification_jobs"
 		WHERE
 			"execute_on" < EXTRACT(EPOCH FROM NOW())::bigint
 			AND deleted = FALSE
