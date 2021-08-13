@@ -135,10 +135,10 @@ func DeleteJobsWithTx(ctx context.Context, tx pgx.Tx, jobs ...*Job) error {
 	}
 
 	del := `
-		DELETE FROM
+		delete from
 			public.notification_jobs
-		WHERE
-			id = ANY($1)
+		where
+			id = any($1)
 		;
 	`
 	_, err := tx.Exec(ctx, del, pq.Array(ids))
@@ -155,12 +155,12 @@ func SoftDeleteJobsWithTx(ctx context.Context, tx pgx.Tx, jobs ...*Job) error {
 	}
 
 	del := `
-		UPDATE
+		update
 			public.notification_jobs
-		SET 
-		    "deleted" = TRUE
-		WHERE
-			id = ANY($1)
+		set 
+		    "deleted" = true
+		where
+			id = any($1)
 		;
 	`
 	_, err := tx.Exec(ctx, del, pq.Array(ids))
