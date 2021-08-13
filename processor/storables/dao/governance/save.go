@@ -65,7 +65,7 @@ func (s *Storable) storeProposals(ctx context.Context, tx pgx.Tx) error {
 
 		a := s.Processed.proposalsActions[i]
 		for i := 0; i < len(a.Targets); i++ {
-			targets = append(targets, a.Targets[i].String())
+			targets = append(targets, utils.NormalizeAddress(a.Targets[i].String()))
 			values = append(values, a.Values[i].String())
 			signatures = append(signatures, a.Signatures[i])
 			calldatas = append(calldatas, hex.EncodeToString(a.Calldatas[i]))
