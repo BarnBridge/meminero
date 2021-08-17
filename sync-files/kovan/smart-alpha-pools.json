@@ -1,52 +1,52 @@
 {
   "smart-alpha-pools": [
     {
-      "poolName": "WETH-USD",
-      "poolAddress": "0xA3C3a8d11f5e179c50c007509cA976F1E494D754",
+      "poolName": "WETH-BTC-30m",
+      "poolAddress": "0x10038E4c3939D8C1dA90652262ec466Fa5FdB664",
       "poolToken": {
         "address": "0x13690071c13573d2bE241A6C188c8387818A626F",
         "symbol": "WETH",
         "decimals": 18
       },
-      "juniorTokenAddress": "0x8e8529faB892e58Ca78Db3b080D709324fE421d6",
-      "seniorTokenAddress": "0xC777c9741f74A1dFfe75138dE094D812c360e6b7",
-      "oracleAddress": "0x7F08656E5f26b19a9773476a1a0dd1F7d712bc75",
-      "oracleAssetSymbol": "USD",
-      "epoch1Start": 1630929600,
+      "juniorTokenAddress": "0x337cB471eB9D9F0b1bCfa197FaCF85De8aB42489",
+      "seniorTokenAddress": "0x867349dF94be931cD1Df23F43A98d25b44Fea1D0",
+      "oracleAddress": "0x6D88bd0e81AF53fB2Ee2414010Dbf5c0f59D7bf6",
+      "oracleAssetSymbol": "BTC",
+      "epoch1Start": 1629201600,
       "epochDuration": 1800,
-      "startAtBlock": 26614295
-    },
-    {
-      "poolName": "WBTC-USD-30m",
-      "poolAddress": "0x3f17F74cAb8c6d7991d8ca410e6fAbBCd99FC411",
-      "poolToken": {
-        "address": "0xC802b80dB38729f272D704f7F32194CC91E6476B",
-        "symbol": "WBTC",
-        "decimals": 8
-      },
-      "juniorTokenAddress": "0x54172Cc26e7A70d81A92B164EB4F5b2988Dd9D5A",
-      "seniorTokenAddress": "0x62AbFFfEccB6Ae1151C27B88bFA47a3C346f220C",
-      "oracleAddress": "0x4c7751588285fDe79e23d49492b1227dbA732C5b",
-      "oracleAssetSymbol": "USD",
-      "epoch1Start": 1630929600,
-      "epochDuration": 1800,
-      "startAtBlock": 26614320
+      "startAtBlock": 26814515
     },
     {
       "poolName": "WBTC-USD-1d",
-      "poolAddress": "0x8b08Cae57628210cEBc19A80Cf51371E71919822",
+      "poolAddress": "0x24ef86b0D1DD9869B8195b86cB01E244f0Cf216A",
       "poolToken": {
         "address": "0xC802b80dB38729f272D704f7F32194CC91E6476B",
         "symbol": "WBTC",
         "decimals": 8
       },
-      "juniorTokenAddress": "0x145D47f6f54e1D0dDd04775F96087d8578d69892",
-      "seniorTokenAddress": "0xDAc960bbad541D54B36B36081010317c49Ba4145",
-      "oracleAddress": "0x3e928e3004fD8b08B6072834Ac63810d206ECcfC",
+      "juniorTokenAddress": "0x88dbb86b4e93F6097E6F96E9541A59D929E5EC5c",
+      "seniorTokenAddress": "0x930580a41e5d76A4C0a9D279F4f6ccF14f77B2F8",
+      "oracleAddress": "0x33a934B4aBe029E5D2aA66EB10D445CC3E9FBaf5",
       "oracleAssetSymbol": "USD",
-      "epoch1Start": 1630929600,
+      "epoch1Start": 1629201600,
       "epochDuration": 86400,
-      "startAtBlock": 26614333
+      "startAtBlock": 26813540
+    },
+    {
+      "poolName": "WBTC-USD-30m",
+      "poolAddress": "0x0559047B9f83EC217d7cd2ff8e83C8D2f5e50C03",
+      "poolToken": {
+        "address": "0xC802b80dB38729f272D704f7F32194CC91E6476B",
+        "symbol": "WBTC",
+        "decimals": 8
+      },
+      "juniorTokenAddress": "0xFc380CeA7F8c55A56af3457a7230071bcB200248",
+      "seniorTokenAddress": "0x3ADD46EcC33EeCbdaa4E4b933Df7cE3CE995379A",
+      "oracleAddress": "0xb8D4430cEC511D76881AEaC999f97EC7051009e7",
+      "oracleAssetSymbol": "USD",
+      "epoch1Start": 1629201600,
+      "epochDuration": 1800,
+      "startAtBlock": 26813572
     }
   ]
 }

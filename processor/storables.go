@@ -1,6 +1,8 @@
 package processor
 
 import (
+	"strings"
+
 	"github.com/sirupsen/logrus"
 
 	"github.com/barnbridge/meminero/config"
@@ -109,7 +111,28 @@ func (p *Processor) registerSmartAlpha() {
 
 		for _, pool := range p.state.SmartAlpha.Pools {
 			if !p.state.CheckTokenExists(pool.PoolToken.Address) {
-				logrus.Fatalf("smart alpha underlying token missing from tokens list: %s (%s)", pool.PoolToken.Symbol, pool.PoolToken.Symbol)
+				logrus.Fatalf("smart alpha underlying token missing from tokens list: %s (%s)", pool.PoolToken.Symbol, pool.PoolToken.Address)
+			}
+
+			t := p.state.GetTokenByAddress(pool.PoolToken.Address)
+
+			var hasQuotePrice, hasUSDPrice bool
+			for _, p := range t.Prices {
+				if strings.ToLower(p.Quote) == "usd" {
+					hasUSDPrice = true
+				}
+
+				if strings.ToLower(p.Quote) == strings.ToLower(pool.OracleAssetSymbol) {
+					hasQuotePrice = true
+				}
+			}
+
+			if !hasQuotePrice {
+				logrus.Fatalf("smart alpha underlying token missing price in quote asset: %s-%s (%s)", pool.PoolToken.Symbol, pool.OracleAssetSymbol, pool.PoolToken.Address)
+			}
+
+			if !hasUSDPrice {
+				logrus.Fatalf("smart alpha underlying token missing USD price: %s (%s)", pool.PoolToken.Symbol, pool.PoolToken.Address)
 			}
 		}
 
