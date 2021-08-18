@@ -7,16 +7,20 @@ import (
 )
 
 type Pool struct {
-	PoolName           string `json:"poolName"`
-	PoolAddress        string `json:"poolAddress"`
-	PoolToken          types.Token
-	JuniorTokenAddress string `json:"juniorTokenAddress"`
-	SeniorTokenAddress string `json:"seniorTokenAddress"`
-	OracleAddress      string `json:"oracleAddress"`
-	OracleAssetSymbol  string `json:"oracleAssetSymbol"`
-	Epoch1Start        int64  `json:"epoch1Start"`
-	EpochDuration      int64  `json:"epochDuration"`
-	StartAtBlock       int64  `json:"startAtBlock"`
+	PoolName               string `json:"poolName"`
+	PoolAddress            string `json:"poolAddress"`
+	PoolToken              types.Token
+	JuniorTokenAddress     string `json:"juniorTokenAddress"`
+	JuniorTokenSymbol      string `json:"juniorTokenSymbol"`
+	SeniorTokenAddress     string `json:"seniorTokenAddress"`
+	SeniorTokenSymbol      string `json:"seniorTokenSymbol"`
+	OracleAddress          string `json:"oracleAddress"`
+	OracleAssetSymbol      string `json:"oracleAssetSymbol"`
+	SeniorRateModelAddress string `json:"seniorRateModelAddress"`
+	AccountingModelAddress string `json:"accountingModelAddress"`
+	Epoch1Start            int64  `json:"epoch1Start"`
+	EpochDuration          int64  `json:"epochDuration"`
+	StartAtBlock           int64  `json:"startAtBlock"`
 }
 
 const JuniorTranche = "JUNIOR"
