@@ -67,6 +67,7 @@ func (s *Storable) Execute(ctx context.Context) error {
 				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "epochDownsideProtectionRate", []interface{}{}, &epochInfo.DownsideProtectionRate, s.block.Number))
 				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "getEpochJuniorTokenPrice", []interface{}{}, &epochInfo.JuniorTokenPrice, s.block.Number))
 				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "getEpochSeniorTokenPrice", []interface{}{}, &epochInfo.SeniorTokenPrice, s.block.Number))
+				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "epochEntryPrice", []interface{}{}, &epochInfo.EpochEntryPrice, s.block.Number))
 
 				err := subwg.Wait()
 				if err != nil {

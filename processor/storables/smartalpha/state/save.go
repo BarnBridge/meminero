@@ -43,6 +43,7 @@ func (s *Storable) saveEpochInfo(ctx context.Context, tx pgx.Tx) error {
 			decimal.NewFromBigInt(ei.SeniorTokenPrice, 0),
 			s.block.BlockCreationTime,
 			s.block.Number,
+			decimal.NewFromBigInt(ei.EpochEntryPrice, 0),
 		})
 	}
 
@@ -60,6 +61,7 @@ func (s *Storable) saveEpochInfo(ctx context.Context, tx pgx.Tx) error {
 			"senior_token_price_start",
 			"block_timestamp",
 			"included_in_block",
+			"epoch_entry_price",
 		},
 		pgx.CopyFromRows(rows),
 	)

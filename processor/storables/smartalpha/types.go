@@ -66,4 +66,5 @@ type EpochInfo struct {
 	DownsideProtectionRate *big.Int
 	JuniorTokenPrice       *big.Int
 	SeniorTokenPrice       *big.Int
+	EpochEntryPrice        *big.Int
 }
