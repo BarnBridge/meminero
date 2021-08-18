@@ -9,9 +9,13 @@
         "decimals": 18
       },
       "juniorTokenAddress": "0x337cB471eB9D9F0b1bCfa197FaCF85De8aB42489",
+      "juniorTokenSymbol" : "junior_WETH-BTC-30m",
       "seniorTokenAddress": "0x867349dF94be931cD1Df23F43A98d25b44Fea1D0",
+      "seniorTokenSymbol": "senior_WETH-BTC-30m",
       "oracleAddress": "0x6D88bd0e81AF53fB2Ee2414010Dbf5c0f59D7bf6",
       "oracleAssetSymbol": "BTC",
+      "seniorRateModelAddress":"0xf644CA71e1583946afe9fA7AF40ee0974abbe320",
+      "accountingModelAddress":"0x2Ae87bfE39e85a203a9dcD0F13DA8Db6210e4367",
       "epoch1Start": 1629201600,
       "epochDuration": 1800,
       "startAtBlock": 26814515
@@ -25,9 +29,13 @@
         "decimals": 8
       },
       "juniorTokenAddress": "0x88dbb86b4e93F6097E6F96E9541A59D929E5EC5c",
+      "juniorTokenSymbol" : "junior_WBTC-USD-1d",
       "seniorTokenAddress": "0x930580a41e5d76A4C0a9D279F4f6ccF14f77B2F8",
+      "seniorTokenSymbol": "senior_WBTC-USD-1d",
       "oracleAddress": "0x33a934B4aBe029E5D2aA66EB10D445CC3E9FBaf5",
       "oracleAssetSymbol": "USD",
+      "seniorRateModelAddress":"0xaE1a4bfd62D3A32b6675Cbc42bA56a1feB9Cc930",
+      "accountingModelAddress":"0x32945b3F7f2298BDe51aEe2E21b5ce9314CAf5A1",
       "epoch1Start": 1629201600,
       "epochDuration": 86400,
       "startAtBlock": 26813540
@@ -41,9 +49,13 @@
         "decimals": 8
       },
       "juniorTokenAddress": "0xFc380CeA7F8c55A56af3457a7230071bcB200248",
+      "juniorTokenSymbol" : "junior_WBTC-USD-30m",
       "seniorTokenAddress": "0x3ADD46EcC33EeCbdaa4E4b933Df7cE3CE995379A",
+      "seniorTokenSymbol": "senior_WBTC-USD-30m",
       "oracleAddress": "0xb8D4430cEC511D76881AEaC999f97EC7051009e7",
       "oracleAssetSymbol": "USD",
+      "seniorRateModelAddress":"0x77ace6B80b3d176FF69892f8f432E54D28e625da",
+      "accountingModelAddress":"0x1A76D950f8a0E85957B6D1e7a4DBD7677d16bF26",
       "epoch1Start": 1629201600,
       "epochDuration": 1800,
       "startAtBlock": 26813572
