@@ -5,8 +5,12 @@ import (
 
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
+	"golang.org/x/sync/errgroup"
 
+	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/processor/storables/smartalpha"
+	"github.com/barnbridge/meminero/utils"
 )
 
 func (s *Storable) Execute(ctx context.Context) error {
@@ -25,6 +29,11 @@ func (s *Storable) Execute(ctx context.Context) error {
 					}
 
 					s.processed.EpochEndEvents = append(s.processed.EpochEndEvents, e)
+
+					err = s.getEpochInfo(ctx, utils.NormalizeAddress(log.Address.String()))
+					if err != nil {
+						return errors.Wrap(err, "could not fetch epoch info")
+					}
 				}
 			}
 
@@ -39,6 +48,34 @@ func (s *Storable) Execute(ctx context.Context) error {
 			}
 		}
 	}
+
+	return nil
+}
+
+func (s *Storable) getEpochInfo(ctx context.Context, poolAddress string) error {
+	abi := *ethtypes.SmartAlpha.ABI
+
+	wg, _ := errgroup.WithContext(ctx)
+
+	var epochInfo = &smartalpha.EpochInfo{
+		PoolAddress: poolAddress,
+	}
+
+	wg.Go(eth.CallContractFunction(abi, poolAddress, "epoch", []interface{}{}, &epochInfo.Epoch, s.block.Number))
+	wg.Go(eth.CallContractFunction(abi, poolAddress, "epochSeniorLiquidity", []interface{}{}, &epochInfo.SeniorLiquidity, s.block.Number))
+	wg.Go(eth.CallContractFunction(abi, poolAddress, "epochJuniorLiquidity", []interface{}{}, &epochInfo.JuniorLiquidity, s.block.Number))
+	wg.Go(eth.CallContractFunction(abi, poolAddress, "epochUpsideExposureRate", []interface{}{}, &epochInfo.UpsideExposureRate, s.block.Number))
+	wg.Go(eth.CallContractFunction(abi, poolAddress, "epochDownsideProtectionRate", []interface{}{}, &epochInfo.DownsideProtectionRate, s.block.Number))
+	wg.Go(eth.CallContractFunction(abi, poolAddress, "getEpochJuniorTokenPrice", []interface{}{}, &epochInfo.JuniorTokenPrice, s.block.Number))
+	wg.Go(eth.CallContractFunction(abi, poolAddress, "getEpochSeniorTokenPrice", []interface{}{}, &epochInfo.SeniorTokenPrice, s.block.Number))
+	wg.Go(eth.CallContractFunction(abi, poolAddress, "epochEntryPrice", []interface{}{}, &epochInfo.EpochEntryPrice, s.block.Number))
+
+	err := wg.Wait()
+	if err != nil {
+		return errors.Wrap(err, "could not epoch info from state")
+	}
+
+	s.processed.EpochInfos = append(s.processed.EpochInfos, *epochInfo)
 
 	return nil
 }

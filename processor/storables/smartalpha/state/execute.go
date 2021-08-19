@@ -51,34 +51,6 @@ func (s *Storable) Execute(ctx context.Context) error {
 				return errors.Wrap(err, "could not get pool state")
 			}
 
-			has, err := s.state.SmartAlpha.HasEpochInfo(ctx, p.PoolAddress, epoch.Int64())
-			if err != nil {
-				return errors.Wrap(err, "could not check epoch info")
-			}
-			if !has {
-				var epochInfo = &smartalpha.EpochInfo{
-					PoolAddress: p.PoolAddress,
-					Epoch:       epoch,
-				}
-
-				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "epochSeniorLiquidity", []interface{}{}, &epochInfo.SeniorLiquidity, s.block.Number))
-				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "epochJuniorLiquidity", []interface{}{}, &epochInfo.JuniorLiquidity, s.block.Number))
-				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "epochUpsideExposureRate", []interface{}{}, &epochInfo.UpsideExposureRate, s.block.Number))
-				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "epochDownsideProtectionRate", []interface{}{}, &epochInfo.DownsideProtectionRate, s.block.Number))
-				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "getEpochJuniorTokenPrice", []interface{}{}, &epochInfo.JuniorTokenPrice, s.block.Number))
-				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "getEpochSeniorTokenPrice", []interface{}{}, &epochInfo.SeniorTokenPrice, s.block.Number))
-				subwg.Go(eth.CallContractFunction(abi, p.PoolAddress, "epochEntryPrice", []interface{}{}, &epochInfo.EpochEntryPrice, s.block.Number))
-
-				err := subwg.Wait()
-				if err != nil {
-					return errors.Wrap(err, "could not epoch info from state")
-				}
-
-				mu.Lock()
-				s.processed.EpochInfos = append(s.processed.EpochInfos, *epochInfo)
-				mu.Unlock()
-			}
-
 			mu.Lock()
 			s.processed.States = append(s.processed.States, *poolState)
 			mu.Unlock()
