@@ -6,6 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/barnbridge/meminero/ethtypes"
+	"github.com/barnbridge/meminero/processor/storables/smartalpha"
 	"github.com/barnbridge/meminero/state"
 	globalTypes "github.com/barnbridge/meminero/types"
 )
@@ -27,6 +28,7 @@ type Storable struct {
 		SeniorRedeemUnderlyingEvents []ethtypes.SmartAlphaSeniorRedeemUnderlyingEvent
 		EpochEndEvents               []ethtypes.SmartAlphaEpochEndEvent
 		TokenTransferEvents          []ethtypes.ERC20TransferEvent
+		EpochInfos                   []smartalpha.EpochInfo
 	}
 }
 

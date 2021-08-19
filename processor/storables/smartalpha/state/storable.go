@@ -17,8 +17,7 @@ type Storable struct {
 	logger *logrus.Entry
 
 	processed struct {
-		States     []smartalpha.State
-		EpochInfos []smartalpha.EpochInfo
+		States []smartalpha.State
 	}
 }
 
