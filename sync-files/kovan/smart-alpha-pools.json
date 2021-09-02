@@ -14,7 +14,7 @@
       "seniorTokenSymbol": "senior_WETH-BTC-30m",
       "oracleAddress": "0xFDd770399f1deDDBdE08723ccc158C09f93A3BD0",
       "oracleAssetSymbol": "BTC",
-      "seniorRateModelAddress": "0xb63818c931b666Ac825A3929dA9d33f6935998Aa",
+      "seniorRateModelAddress": "0x5e42beeBbD5Be0C5Dc0F5B7d0350Da5053D041b0",
       "accountingModelAddress": "0x978989400fD9EE1F317ca08e764198f63F5aCb16",
       "epoch1Start": 1629367200,
       "epochDuration": 1800,
