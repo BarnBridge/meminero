@@ -59,6 +59,26 @@
       "epoch1Start": 1629367200,
       "epochDuration": 86400,
       "startAtBlock": 26842843
+    },
+    {
+      "poolName": "WETH-BTC-30m-mock",
+      "poolAddress": "0x592dF0ee9f8AB5958bF04De48254a37503dA74E0",
+      "poolToken": {
+        "address": "0x13690071c13573d2bE241A6C188c8387818A626F",
+        "symbol": "WETH",
+        "decimals": 18
+      },
+      "juniorTokenAddress": "0x8E58a342aE8f8f659cb396a1Bd74b73C8033e2Af",
+      "juniorTokenSymbol" : "junior_WETH-BTC-30m-mock",
+      "seniorTokenAddress": "0x9821Df131BdDa68bb5a426f84B376aC79D43AcEC",
+      "seniorTokenSymbol": "senior_WETH-BTC-30m-mock",
+      "oracleAddress": "0x7C85A94d64A14B151fE996E015878Cc77a893476",
+      "oracleAssetSymbol": "BTC1",
+      "seniorRateModelAddress":"0x0a1BFE5b07BC8bC4843Bc5fA555Ea1126E11DB1c",
+      "accountingModelAddress":"0xcF3E25641b240e732B78926647B9a587a01B1f7F",
+      "epoch1Start": 1630677600,
+      "epochDuration": 1800,
+      "startAtBlock": 27040832
     }
   ]
 }
