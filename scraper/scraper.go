@@ -31,7 +31,7 @@ type Scraper struct {
 }
 
 func New() (*Scraper, error) {
-	batchLoader, err := httprpc.NewBatchLoader(0, 4*time.Millisecond)
+	batchLoader, err := httprpc.NewBatchLoader(100, 4*time.Millisecond)
 	if err != nil {
 		return nil, errors.Wrap(err, "could not init batch loader")
 	}

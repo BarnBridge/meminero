@@ -21,7 +21,7 @@ func Init() error {
 		return nil
 	}
 
-	batchLoader, err := httprpc.NewBatchLoader(0, 4*time.Millisecond)
+	batchLoader, err := httprpc.NewBatchLoader(100, 4*time.Millisecond)
 	if err != nil {
 		return errors.Wrap(err, "could not init batch loader")
 	}
