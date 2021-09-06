@@ -3,7 +3,7 @@
     {
       "protocolId": "compound/v2",
       "controllerAddress": "0x41Ab25709e0C3EDf027F6099963fE9AD3EBaB3A3",
-      "modelAddress": "0x02A83b64466333F227303407d37c7e8e8fefd5b6",
+      "modelAddress": "0x48a41E77BEF0654831C12cD816bD62cE9C5ADBb8",
       "providerAddress": "0xDAA037F99d168b552c0c61B7Fb64cF7819D78310",
       "smartYieldAddress": "0x4B8d90D68F26DEF303Dcb6CFc9b63A1aAEC15840",
       "oracleAddress": "0xbd45Dba10b4E2A81040b7511FF4c210Eb590b817",
@@ -18,7 +18,7 @@
     {
       "protocolId": "compound/v2",
       "controllerAddress": "0xaA963524E65c671EF7A5485ADF9e342C401A46fF",
-      "modelAddress": "0x4454c6Cce1CF066f7E773a686A7fC6c8142A9ebd",
+      "modelAddress": "0x48a41E77BEF0654831C12cD816bD62cE9C5ADBb8",
       "providerAddress": "0xe6c1A8E7a879d7feBB8144276a62f9a6b381bd37",
       "smartYieldAddress": "0x673f9488619821aB4f4155FdFFe06f6139De518F",
       "oracleAddress": "0x6B9eE6C8B24dcd1A1e7D7B64D7b2867e30151b78",
