@@ -801,7 +801,7 @@ func votingStatus(ctx context.Context, tx pgx.Tx, id int64) (*votes, error) {
 	var v votes
 	sel := `
 		select 
-			   ( select gp.min_quorum::numeric(78) / 100 * governance.bond_staked_at_ts(to_timestamp(gp.create_time + gp.warm_up_duration))
+			   ( select gp.min_quorum::numeric(78) / 100 * governance.bond_staked_at_ts(gp.create_time + gp.warm_up_duration)
 				 from governance.proposals as "gp"
 				 where gp.proposal_id = $1 )                            as "quorum_to_meet",
 			   coalesce(sum(case when "support" = true then "power" else 0 end), 0)  as "for_votes",
