@@ -40,6 +40,8 @@ var queueCmd = &cobra.Command{
 			scanner := bufio.NewScanner(file)
 			scanner.Split(bufio.ScanLines)
 
+			var blocks []int64
+
 			for scanner.Scan() {
 				blockStr := scanner.Text()
 				block, err := strconv.Atoi(blockStr)
@@ -47,10 +49,12 @@ var queueCmd = &cobra.Command{
 					log.Fatal("could not convert task", err)
 				}
 
-				err = r.AddTaskToQueue(int64(block))
-				if err != nil {
-					log.Fatal(err)
-				}
+				blocks = append(blocks, int64(block))
+			}
+
+			err = r.AddBatchToQueue(blocks)
+			if err != nil {
+				log.Fatal(err)
 			}
 
 			return
