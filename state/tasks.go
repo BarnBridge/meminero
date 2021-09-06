@@ -3,6 +3,7 @@ package state
 import (
 	"context"
 	"strconv"
+	"time"
 
 	"github.com/go-redis/redis"
 	"github.com/pkg/errors"
@@ -55,4 +56,37 @@ func (m *Manager) AddTaskToQueue(block int64) error {
 		Score:  float64(block),
 		Member: block,
 	}).Err()
+}
+
+func (m *Manager) AddBatchToQueue(blocks []int64) error {
+	start := time.Now()
+
+	var members []redis.Z
+	for _, i := range blocks {
+		members = append(members, redis.Z{
+			Score:  float64(i),
+			Member: i,
+		})
+	}
+
+	const batchSize = 500
+
+	batches := len(blocks)/batchSize + 1
+
+	for i := 0; i < batches; i++ {
+		end := batchSize * (i + 1)
+		if end > len(members) {
+			end = len(members)
+		}
+		m.logger.Infof("queueing batch [%d, %d]", members[batchSize*i].Member, members[end-1].Member)
+
+		err := m.redis.ZAdd(config.Store.Redis.List, members[batchSize*i:end]...).Err()
+		if err != nil && err != redis.Nil {
+			return err
+		}
+	}
+
+	m.logger.WithField("duration", time.Since(start)).Info("queued all blocks")
+
+	return nil
 }
