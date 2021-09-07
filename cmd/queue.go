@@ -65,6 +65,9 @@ var queueCmd = &cobra.Command{
 			}
 
 			log.Infof("will queue %d blocks", len(blocks))
+			if len(blocks) == 0 {
+				return
+			}
 
 			err = r.AddBatchToQueue(blocks)
 			if err != nil {
