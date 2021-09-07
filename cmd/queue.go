@@ -2,12 +2,15 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"os"
 	"strconv"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/barnbridge/meminero/db"
 	"github.com/barnbridge/meminero/state"
 )
 
@@ -52,6 +55,20 @@ var queueCmd = &cobra.Command{
 				blocks = append(blocks, int64(block))
 			}
 
+			log.Infof("found %d blocks in file", len(blocks))
+
+			if viper.GetBool("omit-if-exists") {
+				blocks, err = checkBlocksExistInDB(blocks)
+				if err != nil {
+					log.Fatal(err)
+				}
+			}
+
+			log.Infof("will queue %d blocks", len(blocks))
+			if len(blocks) == 0 {
+				return
+			}
+
 			err = r.AddBatchToQueue(blocks)
 			if err != nil {
 				log.Fatal(err)
@@ -73,13 +90,68 @@ var queueCmd = &cobra.Command{
 	},
 }
 
+func checkBlocksExistInDB(blocks []int64) ([]int64, error) {
+	const batchSize = 500
+
+	d, err := db.New()
+	if err != nil {
+		return nil, errors.Wrap(err, "could not connect to database")
+	}
+	defer d.Connection().Close()
+
+	batches := len(blocks)/batchSize + 1
+
+	var newBlocks []int64
+
+	for i := 0; i < batches; i++ {
+		end := batchSize * (i + 1)
+		if end > len(blocks) {
+			end = len(blocks)
+		}
+
+		batch := blocks[batchSize*i : end]
+
+		rows, err := d.Connection().Query(
+			context.Background(),
+			`select number from blocks where number = ANY($1)`,
+			batch,
+		)
+		if err != nil {
+			return nil, errors.Wrap(err, "could not check if block exists")
+		}
+
+		var existingBlocks = make(map[int64]bool)
+
+		for rows.Next() {
+			var b int64
+
+			err := rows.Scan(&b)
+			if err != nil {
+				return nil, errors.Wrap(err, "could not scan existing block")
+			}
+
+			existingBlocks[b] = true
+		}
+
+		for _, b := range batch {
+			if _, exists := existingBlocks[b]; !exists {
+				newBlocks = append(newBlocks, b)
+			}
+		}
+	}
+
+	return newBlocks, nil
+}
+
 func init() {
 	RootCmd.AddCommand(queueCmd)
 
 	addRedisFlags(queueCmd)
+	addDBFlags(queueCmd)
 
 	queueCmd.Flags().Int64("block", -1, "Add a single block in the todo queue")
 	queueCmd.Flags().Int64("from", -1, "Add a series of blocks into the todo queue starting from the provided number (only use in combination with --to)")
 	queueCmd.Flags().Int64("to", -1, "Add a series of blocks into the todo queue ending with the provided number, inclusive (only use in combination with --from)")
 	queueCmd.Flags().String("file", "", "Add a series of blocks specified in file, one block per line")
+	queueCmd.Flags().Bool("omit-if-exists", false, "Omit blocks that already exist in the database")
 }
