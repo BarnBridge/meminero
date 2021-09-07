@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -44,15 +45,6 @@ var queueCmd = &cobra.Command{
 
 			var blocks []int64
 
-			var d *db.DB
-			omitIfExists := viper.GetBool("omit-if-exists")
-			if omitIfExists {
-				d, err = db.New()
-				if err != nil {
-					log.Fatal("could not connect to database")
-				}
-			}
-
 			for scanner.Scan() {
 				blockStr := scanner.Text()
 				block, err := strconv.Atoi(blockStr)
@@ -65,8 +57,11 @@ var queueCmd = &cobra.Command{
 
 			log.Infof("found %d blocks in file", len(blocks))
 
-			if omitIfExists {
-				blocks = checkBlocksExistInDB(d, blocks)
+			if viper.GetBool("omit-if-exists") {
+				blocks, err = checkBlocksExistInDB(blocks)
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
 
 			log.Infof("will queue %d blocks", len(blocks))
@@ -92,8 +87,14 @@ var queueCmd = &cobra.Command{
 	},
 }
 
-func checkBlocksExistInDB(d *db.DB, blocks []int64) []int64 {
+func checkBlocksExistInDB(blocks []int64) ([]int64, error) {
 	const batchSize = 500
+
+	d, err := db.New()
+	if err != nil {
+		return nil, errors.Wrap(err, "could not connect to database")
+	}
+	defer d.Connection().Close()
 
 	batches := len(blocks)/batchSize + 1
 
@@ -113,7 +114,7 @@ func checkBlocksExistInDB(d *db.DB, blocks []int64) []int64 {
 			batch,
 		)
 		if err != nil {
-			log.Fatal("could not check if blocks exist", err)
+			return nil, errors.Wrap(err, "could not check if block exists")
 		}
 
 		var existingBlocks = make(map[int64]bool)
@@ -123,7 +124,7 @@ func checkBlocksExistInDB(d *db.DB, blocks []int64) []int64 {
 
 			err := rows.Scan(&b)
 			if err != nil {
-				log.Fatal("could not scan existing block", err)
+				return nil, errors.Wrap(err, "could not scan existing block")
 			}
 
 			existingBlocks[b] = true
@@ -136,7 +137,7 @@ func checkBlocksExistInDB(d *db.DB, blocks []int64) []int64 {
 		}
 	}
 
-	return newBlocks
+	return newBlocks, nil
 }
 
 func init() {
