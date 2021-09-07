@@ -116,12 +116,12 @@ func checkBlocksExistInDB(d *db.DB, blocks []int64) []int64 {
 			log.Fatal("could not check if blocks exist", err)
 		}
 
-		var existingBlocks map[int64]bool
+		var existingBlocks = make(map[int64]bool)
 
 		for rows.Next() {
 			var b int64
 
-			err := rows.Scan(&existingBlocks)
+			err := rows.Scan(&b)
 			if err != nil {
 				log.Fatal("could not scan existing block", err)
 			}
