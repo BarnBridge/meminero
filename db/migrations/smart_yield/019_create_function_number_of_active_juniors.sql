@@ -10,14 +10,14 @@ begin
                                where token_address = _pool_address
                                  and receiver not in ( select pool_address
                                                        from smart_yield.reward_pools
-                                                       where pool_address = _pool_address )
+                                                       where pool_token_address = _pool_address )
                                union all
                                select receiver as address, value as amount
                                from public.erc20_transfers
                                where token_address = _pool_address
                                  and sender not in ( select pool_address
                                                      from smart_yield.reward_pools
-                                                     where pool_address = _pool_address ) )
+                                                     where pool_token_address = _pool_address ) )
            select address, sum(amount) as balance
            from transfers
            group by address ) x
