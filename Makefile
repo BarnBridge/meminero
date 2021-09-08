@@ -8,10 +8,10 @@ reset: meminero
 	./meminero migrate
 
 sync-mainnet: meminero
-	./meminero sync --syncer.network mainnet --syncer.datasets labels,monitored-accounts,monitored-erc20,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
+	./meminero sync --syncer.network mainnet --syncer.datasets labels,monitored-accounts,monitored-erc20,smart-alpha-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
 
 sync-kovan: meminero
-	./meminero sync --syncer.network kovan --syncer.datasets labels,monitored-accounts,smart-alpha-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
+	./meminero sync --syncer.network kovan --syncer.datasets labels,monitored-accounts,monitored-erc20,smart-alpha-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
 
 gen: meminero
 	./meminero generate-eth-types
