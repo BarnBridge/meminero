@@ -118,7 +118,7 @@ begin
              from smart_alpha.user_join_entry_queue_events j
                       left join smart_alpha.user_redeem_tokens_events r
                                 on j.user_address = r.user_address and j.pool_address = r.pool_address and
-                                   j.epoch_id = r.epoch_id and r.block_timestamp < ts
+                                   j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp < ts
                       inner join smart_alpha.pools p on j.pool_address = p.pool_address
              where j.user_address = addr
                and j.block_timestamp < ts
@@ -152,7 +152,7 @@ begin
              from smart_alpha.user_join_exit_queue_events j
                       left join smart_alpha.user_redeem_underlying_events r
                                 on j.user_address = r.user_address and j.pool_address = r.pool_address and
-                                   j.epoch_id = r.epoch_id and r.block_timestamp < ts
+                                   j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp < ts
                       inner join smart_alpha.pools p on j.pool_address = p.pool_address
              where j.user_address = addr
                and j.block_timestamp < ts
