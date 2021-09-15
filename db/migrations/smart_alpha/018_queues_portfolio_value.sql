@@ -23,7 +23,9 @@ begin
              from smart_alpha.pool_epoch_info pei
                       inner join smart_alpha.pools p on p.pool_address = pool
              where pei.pool_address = pool
-               and pei.epoch_id = _epoch );
+               and pei.epoch_id > _epoch
+             order by pei.epoch_id
+             limit 1 );
 end;
 $$;
 
@@ -36,7 +38,9 @@ begin
              from smart_alpha.pool_epoch_info pei
                       inner join smart_alpha.pools p on p.pool_address = pool
              where pei.pool_address = pool
-               and pei.epoch_id = _epoch );
+               and pei.epoch_id > _epoch
+             order by pei.epoch_id
+             limit 1 );
 end;
 $$;
 
