@@ -8,7 +8,7 @@ begin
     return ( select epoch_id
              from smart_alpha.pool_epoch_info
              where pool_address = addr
-               and block_timestamp < ts
+               and block_timestamp <= ts
              order by block_timestamp desc
              limit 1 );
 end;
@@ -51,7 +51,7 @@ begin
     return (( select estimated_junior_token_price
               from smart_alpha.pool_state ps
               where ps.pool_address = pool
-                and ps.block_timestamp < ts
+                and ps.block_timestamp <= ts
               order by ps.block_timestamp desc
               limit 1 ) / pow(10, 18));
 end;
@@ -64,7 +64,7 @@ begin
     return (( select estimated_senior_token_price
               from smart_alpha.pool_state ps
               where ps.pool_address = pool
-                and ps.block_timestamp < ts
+                and ps.block_timestamp <= ts
               order by ps.block_timestamp desc
               limit 1 ) / pow(10, 18));
 end;
@@ -122,10 +122,10 @@ begin
              from smart_alpha.user_join_entry_queue_events j
                       left join smart_alpha.user_redeem_tokens_events r
                                 on j.user_address = r.user_address and j.pool_address = r.pool_address and
-                                   j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp < ts
+                                   j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp <= ts
                       inner join smart_alpha.pools p on j.pool_address = p.pool_address
              where j.user_address = addr
-               and j.block_timestamp < ts
+               and j.block_timestamp <= ts
                and r.user_address is null );
 end;
 $$;
@@ -156,10 +156,10 @@ begin
              from smart_alpha.user_join_exit_queue_events j
                       left join smart_alpha.user_redeem_underlying_events r
                                 on j.user_address = r.user_address and j.pool_address = r.pool_address and
-                                   j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp < ts
+                                   j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp <= ts
                       inner join smart_alpha.pools p on j.pool_address = p.pool_address
              where j.user_address = addr
-               and j.block_timestamp < ts
+               and j.block_timestamp <= ts
                and r.user_address is null );
 end;
 $$;
