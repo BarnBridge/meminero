@@ -23,6 +23,8 @@ eth:
         poll-interval: 15s
         # WS endpoint of JSON-RPC enabled Ethereum node (provide this only if you want to use websocket subscription for tracking best block)
         ws: ""
+    # Maximum JSON-RPC requests to batch together
+    max-batch: 100
 ethtypes:
     # Folder containing ABI JSONs
     abi-folder: ethtypes/_source

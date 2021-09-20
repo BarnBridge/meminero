@@ -35,6 +35,8 @@ eth:
     # The interval at which the task manager will poll the node for best block (default:"15s")
     # optional, only used if `ws` url is not specified
     poll-interval: "15s"
+  # Maximum JSON-RPC requests to batch together
+  max-batch: 100
 
 ethtypes:
   # Folder containing ABI JSONs
