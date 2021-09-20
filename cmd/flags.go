@@ -39,6 +39,7 @@ func addETHFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().String("eth.client.http", "", "HTTP endpoint of JSON-RPC enabled Ethereum node")
 	cmd.PersistentFlags().String("eth.client.ws", "", "WS endpoint of JSON-RPC enabled Ethereum node (provide this only if you want to use websocket subscription for tracking best block)")
 	cmd.PersistentFlags().Duration("eth.client.poll-interval", 15*time.Second, "Interval to be used for polling the Ethereum node for best block")
+	cmd.PersistentFlags().Int("eth.max-batch", 100, "Maximum JSON-RPC requests to batch together")
 }
 
 func addGenerateETHTypesFlags(cmd *cobra.Command) {

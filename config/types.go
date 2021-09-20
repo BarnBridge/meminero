@@ -46,6 +46,7 @@ type features struct {
 
 type eth struct {
 	bestblock.Config `mapstructure:"client"`
+	MaxBatch int `mapstructure:"max-batch"`
 }
 
 type ethtypes struct {
