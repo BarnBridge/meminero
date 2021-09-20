@@ -13,5 +13,8 @@ sync-mainnet: meminero
 sync-kovan: meminero
 	./meminero sync --syncer.network kovan --syncer.datasets labels,monitored-accounts,monitored-erc20,smart-alpha-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
 
+sync-poly: meminero
+	./meminero sync --syncer.network polygon --syncer.datasets monitored-erc20,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
+
 gen: meminero
 	./meminero generate-eth-types
