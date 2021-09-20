@@ -13,6 +13,10 @@
       "label": "BarnBridge Community Vault"
     },
     {
+      "address": "0x5A21f270492E55Fec2CC78C627618cAE42295695",
+      "label": "BarnBridge Multisig"
+    },
+    {
       "address": "0xDAA037F99d168b552c0c61B7Fb64cF7819D78310",
       "label": "SmartYield cUSDC provider"
     },
@@ -59,6 +63,22 @@
     {
       "address": "0xFe2A30438f31CcFb5331044AF6957B971fC66309",
       "label": "SmartYield aSUSD provider"
+    },
+    {
+      "address": "0x31f7Da25361AD99ca4DAa4E8709624660f324F48",
+      "label": "SmartAlpha WETH-USD-1w"
+    },
+    {
+      "address": "0x13d5387389Ac1a3b72391D88b03B893a945B17cd",
+      "label": "SmartAlpha WBTC-USD-1w"
+    },
+    {
+      "address": "0xE4Fbc5a705AAb5a094fc3961dFc764716F041ee9",
+      "label": "SmartAlpha WETH-BTC-1w"
+    },
+    {
+      "address": "0xB0105F829d50841B949C274636C2D173a78DB7e0",
+      "label": "SmartAlpha WBTC-ETH-1w"
     }
   ]
 }
