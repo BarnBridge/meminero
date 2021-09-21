@@ -79,6 +79,22 @@
     {
       "address": "0xB0105F829d50841B949C274636C2D173a78DB7e0",
       "label": "SmartAlpha WBTC-ETH-1w"
+    },
+    {
+      "address": "0x0b2BCde6a404c53c05A6c0F5402daEd4f2dD5779",
+      "label": "SmartAlpha stkAAVE-USD-1w"
+    },
+    {
+      "address": "0x4aB87E2e6C53c4ef437c73793e3029D76B258688",
+      "label": "SmartAlpha UNI-USD-1w"
+    },
+    {
+      "address": "0x21f768446a171f50A20C727E420981AD70e0E9d9",
+      "label": "SmartAlpha LINK-USD-1w"
+    },
+    {
+      "address": "0xeCa0ffc5E3566e9dAD05f206F2Ca1fF0174AF476",
+      "label": "SmartAlpha xSUSHI-USD-1w"
     }
   ]
 }

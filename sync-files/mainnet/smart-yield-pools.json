@@ -179,6 +179,21 @@
       "underlyingSymbol": "sUSD",
       "underlyingDecimals": 18,
       "startAtBlock": 12921859
+    },
+    {
+      "protocolId": "aave/v2",
+      "controllerAddress": "0xa23A8bb1f3a6c69548BdFF2e5D39CB167E1CcA34",
+      "modelAddress": "0xaD15d9abE02606188DAa2A8d771AccB720b5bD27",
+      "providerAddress": "0x7Eef331c1173D062fB305a69b423002EDdAf88D4",
+      "smartYieldAddress": "0x8Ea7D9FA613Ea66e8021338B7Fc19F3F239665Fc",
+      "oracleAddress": "0x552dAF8F888903E33c2A5d97E5C2F6E591De9f40",
+      "juniorBondAddress": "0x5d05066ECFd8DdDf3d8a157F5ECB1d39036E0a03",
+      "seniorBondAddress": "0x4605Aa7A159Ea5995fA697E3aEE28Ac2f9970d28",
+      "receiptTokenAddress": "0xAcF35Af93a65904C50ED93dfb010bAAdEBb4ccF0",
+      "underlyingAddress": "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
+      "underlyingSymbol": "FEI",
+      "underlyingDecimals": 18,
+      "startAtBlock": 13267415
     }
   ]
 }
