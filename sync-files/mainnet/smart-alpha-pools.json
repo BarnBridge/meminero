@@ -79,6 +79,86 @@
       "epoch1Start": 1631541600,
       "epochDuration": 604800,
       "startAtBlock": 13185614
+    },
+    {
+      "poolName": "stkAAVE-USD-1w",
+      "poolAddress": "0x0b2BCde6a404c53c05A6c0F5402daEd4f2dD5779",
+      "poolToken": {
+        "address": "0x4da27a545c0c5b758a6ba100e3a049001de870f5",
+        "symbol": "stkAAVE",
+        "decimals": 18
+      },
+      "juniorTokenAddress": "0xd30c763ab439316ac59eD4666E0f45f930c2FCb2",
+      "juniorTokenSymbol": "junior_stkAAVE-USD-1w",
+      "seniorTokenAddress": "0x54961dd499012180bB253A81EDe497163ba1Cef5",
+      "seniorTokenSymbol": "senior_stkAAVE-USD-1w",
+      "oracleAddress": "0xE7922CD86c60dbE663922a2860BD628d502f3Ac2",
+      "oracleAssetSymbol": "USD",
+      "seniorRateModelAddress": "0x869fc51c699E117896f3f9CE3FA109EC15929471",
+      "accountingModelAddress": "0x786B2A1890eb13081385ad436bEcc34b91a77eAA",
+      "epoch1Start": 1632751200,
+      "epochDuration": 604800,
+      "startAtBlock": 13267829
+    },
+    {
+      "poolName": "UNI-USD-1w",
+      "poolAddress": "0x4aB87E2e6C53c4ef437c73793e3029D76B258688",
+      "poolToken": {
+        "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+        "symbol": "UNI",
+        "decimals": 18
+      },
+      "juniorTokenAddress": "0xEf157e092164d576e2D18B396DE67F04C9A126AB",
+      "juniorTokenSymbol": "junior_UNI-USD-1w",
+      "seniorTokenAddress": "0x49D9b25E10EE44f75C0C218CC3302196611388D1",
+      "seniorTokenSymbol": "senior_UNI-USD-1w",
+      "oracleAddress": "0xCdF6D026f29A77B2a315164923988586df325291",
+      "oracleAssetSymbol": "USD",
+      "seniorRateModelAddress": "0x74E3377a2E49b042eD91a2349A536d251b5f5EB0",
+      "accountingModelAddress": "0xdcA9DE53ea1D8A6f3DfbEc9e810a195Bb071c653",
+      "epoch1Start": 1632751200,
+      "epochDuration": 604800,
+      "startAtBlock": 13267832
+    },
+    {
+      "poolName": "LINK-USD-1w",
+      "poolAddress": "0x21f768446a171f50A20C727E420981AD70e0E9d9",
+      "poolToken": {
+        "address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+        "symbol": "LINK",
+        "decimals": 18
+      },
+      "juniorTokenAddress": "0x7CE67f40459cda69823Bc3BEa09736E3BA4da3af",
+      "juniorTokenSymbol": "junior_LINK-USD-1w",
+      "seniorTokenAddress": "0x6F3903775Df057f038516830c6a8BcA13228DC62",
+      "seniorTokenSymbol": "senior_LINK-USD-1w",
+      "oracleAddress": "0x2F31bBf0704a346bac0Ef38878DCf625d3ee1f0E",
+      "oracleAssetSymbol": "USD",
+      "seniorRateModelAddress": "0x72435D0B04536dB659d984bCcB7cdC04F45B9C4c",
+      "accountingModelAddress": "0x84966c9F664445581E581Ab300484d80faB01798",
+      "epoch1Start": 1632751200,
+      "epochDuration": 604800,
+      "startAtBlock": 13267834
+    },
+    {
+      "poolName": "xSUSHI-USD-1w",
+      "poolAddress": "0xeCa0ffc5E3566e9dAD05f206F2Ca1fF0174AF476",
+      "poolToken": {
+        "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
+        "symbol": "xSUSHI",
+        "decimals": 18
+      },
+      "juniorTokenAddress": "0x55c1159B2E1aE9bda73409c7Af07A8a13A6e34b8",
+      "juniorTokenSymbol": "junior_xSUSHI-USD-1w",
+      "seniorTokenAddress": "0x3f0eB829e03C5be99467BC712839c0C9c6F4395C",
+      "seniorTokenSymbol": "senior_xSUSHI-USD-1w",
+      "oracleAddress": "0x93De95216348eBD9B3B406AAEd7c3bAa52155ED5",
+      "oracleAssetSymbol": "USD",
+      "seniorRateModelAddress": "0x52742ad34F21DF4C66EAb99F8C133C760F77652A",
+      "accountingModelAddress": "0xc6aCF0194D6971697d90a618CFB9afE78282015C",
+      "epoch1Start": 1632751200,
+      "epochDuration": 604800,
+      "startAtBlock": 13267844
     }
   ]
 }
