@@ -82,15 +82,15 @@ func (p *Processor) rollbackAll(ctx context.Context, db *pgxpool.Pool) error {
 }
 
 // Store will open a database transaction and execute all the registered Storables in the said transaction
-func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
+func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) (bool, error) {
 	exists, err := p.checkBlockExists(ctx, db)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	if exists && !config.Store.Feature.ReplaceBlocks {
 		p.logger.Info("block already exists in the database; skipping")
-		return nil
+		return false, nil
 	}
 
 	if config.Store.Feature.ReplaceBlocks {
@@ -98,12 +98,12 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 
 		err = p.rollbackAll(ctx, db)
 		if err != nil {
-			return err
+			return false, err
 		}
 	} else {
 		reorged, err := p.checkBlockReorged(ctx, db)
 		if err != nil {
-			return err
+			return false, err
 		}
 
 		if reorged {
@@ -111,7 +111,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 
 			err = p.rollbackAll(ctx, db)
 			if err != nil {
-				return err
+				return false, err
 			}
 		}
 	}
@@ -144,17 +144,17 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) error {
 
 	err = wg.Wait()
 	if err != nil {
-		return errors.Wrap(err, "got error executing storables")
+		return false, errors.Wrap(err, "got error executing storables")
 	}
 
 	p.logger.WithField("duration", time.Since(start)).Info("done executing storables")
 
 	err = p.storeAll(ctx, db)
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	return nil
+	return true, nil
 }
 
 func (p *Processor) storeAll(ctx context.Context, db *pgxpool.Pool) error {

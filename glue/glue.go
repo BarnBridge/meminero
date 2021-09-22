@@ -21,7 +21,11 @@ import (
 var (
 	metricsBlocksProcessed = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "scraper_processed_blocks",
-		Help: "Number of blocks scraped",
+		Help: "Number of blocks scraped and saved",
+	})
+	metricsBlocksSkipped = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "scraper_skipped_blocks",
+		Help: "Number of blocks that have been processed but not saved",
 	})
 	metricsBlocksErrored = promauto.NewCounter(prometheus.CounterOpts{
 		Name: "scraper_errored_blocks",
@@ -64,19 +68,19 @@ func New(db *pgxpool.Pool, state *state.Manager) (*Glue, error) {
 	}, nil
 }
 
-func (g *Glue) ScrapeSingleBlock(ctx context.Context, b int64) error {
+func (g *Glue) ScrapeSingleBlock(ctx context.Context, b int64) (bool,error) {
 	log := g.logger.WithField("block", b)
 	log.Info("processing block")
 
 	start := time.Now()
 	blk, err := g.scraper.Exec(b)
 	if err != nil {
-		return errors.Wrap(err, "could not scrape block")
+		return false, errors.Wrap(err, "could not scrape block")
 	}
 
 	_, err = g.validateBlock(log, blk)
 	if err != nil {
-		return errors.Wrap(err, "could not validate block")
+		return false, errors.Wrap(err, "could not validate block")
 	}
 
 	log.Debug("block is valid; processing")
@@ -93,18 +97,18 @@ func (g *Glue) ScrapeSingleBlock(ctx context.Context, b int64) error {
 
 	p, err := processor.New(blk, g.state)
 	if err != nil {
-		return errors.Wrap(err, "could not init processor")
+		return false, errors.Wrap(err, "could not init processor")
 	}
 
-	err = p.Store(ctx, g.db)
+	savedBlock, err := p.Store(ctx, g.db)
 	if err != nil {
-		return errors.Wrap(err, "could not store block")
+		return false, errors.Wrap(err, "could not store block")
 	}
 
 	metricsProcessingDuration.Observe(float64(time.Since(startProcessing) / time.Millisecond))
 	log.WithField("duration", time.Since(start)).Info("done processing block")
 
-	return nil
+	return savedBlock, nil
 }
 
 func (g *Glue) Run(ctx context.Context) {
@@ -127,7 +131,7 @@ func (g *Glue) Run(ctx context.Context) {
 
 		g.stopMu.Lock()
 
-		err = g.ScrapeSingleBlock(ctx, b)
+		savedBlock, err := g.ScrapeSingleBlock(ctx, b)
 		if err != nil {
 			g.logger.Error(err)
 			err = g.state.UnlockBlock(b)
@@ -141,7 +145,11 @@ func (g *Glue) Run(ctx context.Context) {
 			if err != nil {
 				g.logger.Fatal(err)
 			}
-			metricsBlocksProcessed.Inc()
+			if savedBlock {
+				metricsBlocksProcessed.Inc()
+			} else {
+				metricsBlocksSkipped.Inc()
+			}
 		}
 
 		g.stopMu.Unlock()
