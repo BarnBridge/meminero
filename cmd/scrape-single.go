@@ -48,9 +48,12 @@ var scrapeSingleCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		err = g.ScrapeSingleBlock(context.Background(), block)
+		savedBlock, err := g.ScrapeSingleBlock(context.Background(), block)
 		if err != nil {
 			log.Fatal(err)
+		}
+		if !savedBlock {
+			log.Info("block skipped")
 		}
 
 		log.Info("Work done. Goodbye!")
