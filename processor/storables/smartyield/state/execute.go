@@ -39,15 +39,39 @@ func (s *Storable) Execute(ctx context.Context) error {
 			var abond Abond
 
 			subwg, _ := errgroup.WithContext(ctx1)
-			subwg.Go(eth.CallContractFunction(syAbi, p.PoolAddress, "underlyingTotal", []interface{}{}, &underlyingTotal, s.block.Number))
-			subwg.Go(eth.CallContractFunction(syAbi, p.PoolAddress, "underlyingJuniors", []interface{}{}, &underlyingJuniors, s.block.Number))
-			subwg.Go(eth.CallContractFunction(syAbi, p.PoolAddress, "price", []interface{}{}, &jtokenPrice, s.block.Number))
+			subwg.Go(func() error {
+				err := eth.CallContractFunction(syAbi, p.PoolAddress, "underlyingTotal", []interface{}{}, &underlyingTotal, s.block.Number)()
+				if err != nil && strings.Contains(err.Error(), "execution reverted") {
+					underlyingTotal = big.NewInt(0)
+					return nil
+				}
+
+				return err
+			})
+			subwg.Go(func() error {
+				err := eth.CallContractFunction(syAbi, p.PoolAddress, "underlyingJuniors", []interface{}{}, &underlyingJuniors, s.block.Number)()
+				if err != nil && strings.Contains(err.Error(), "execution reverted") {
+					underlyingJuniors = big.NewInt(0)
+					return nil
+				}
+
+				return err
+			})
+			subwg.Go(func() error {
+				err := eth.CallContractFunction(syAbi, p.PoolAddress, "price", []interface{}{}, &jtokenPrice, s.block.Number)()
+				if err != nil && strings.Contains(err.Error(), "execution reverted") {
+					jtokenPrice = big.NewInt(0)
+					return nil
+				}
+
+				return err
+			})
 			subwg.Go(eth.CallContractFunction(syAbi, p.PoolAddress, "abond", []interface{}{}, &abond, s.block.Number))
 			subwg.Go(func() error {
 				var maxBondDailyRate = big.NewInt(0)
 
 				err := eth.CallContractFunction(syAbi, p.PoolAddress, "maxBondDailyRate", []interface{}{}, &maxBondDailyRate, s.block.Number)()
-				if err != nil && !strings.Contains(err.Error(), "Reverted") {
+				if err != nil && !strings.Contains(err.Error(), "Reverted") && !strings.Contains(err.Error(), "execution reverted") {
 					return errors.Wrap(err, "could not get maxBondDailyRate")
 				}
 
