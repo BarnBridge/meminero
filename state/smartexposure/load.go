@@ -2,8 +2,8 @@ package smartexposure
 
 import (
 	"context"
-	"database/sql"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 
@@ -36,7 +36,7 @@ func (se *SmartExposure) LoadPools(ctx context.Context, db *pgxpool.Pool) error 
 
 func (se *SmartExposure) LoadTranches(ctx context.Context, db *pgxpool.Pool) error {
 	rows, err := db.Query(ctx, `select pool_address,etoken_address,etoken_symbol,s_factor_e,target_ratio,token_a_ratio,token_b_ratio,start_at_block from smart_exposure.tranches;`)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil && err != pgx.ErrNoRows {
 		return errors.Wrap(err, "could not query database for SmartExposure tranches")
 	}
 

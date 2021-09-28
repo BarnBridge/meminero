@@ -2,7 +2,6 @@ package notifications
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"time"
 
@@ -756,7 +755,7 @@ func proposalState(ctx context.Context, tx pgx.Tx, id int64) (string, error) {
 	var ps string
 	sel := `SELECT * FROM governance.proposal_state($1);`
 	err := tx.QueryRow(ctx, sel, id).Scan(&ps)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil && err != pgx.ErrNoRows {
 		return ps, errors.Wrap(err, "get proposal state")
 	}
 
@@ -786,11 +785,11 @@ func proposalAsJobData(ctx context.Context, tx pgx.Tx, id int64) (*ProposalJobDa
 		&pjd.IncludedInBlockNumber,
 	)
 
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil && err != pgx.ErrNoRows {
 		return nil, errors.Wrapf(err, "get proposal as job data %d", id)
 	}
 
-	if err == sql.ErrNoRows {
+	if err == pgx.ErrNoRows {
 		return nil, nil
 	}
 
@@ -810,7 +809,7 @@ func votingStatus(ctx context.Context, tx pgx.Tx, id int64) (*votes, error) {
 	`
 
 	err := tx.QueryRow(ctx, sel, id).Scan(&v.QuorumToMeet, &v.For, &v.Against)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil && err != pgx.ErrNoRows {
 		return nil, errors.Wrap(err, "get voting power")
 	}
 	return &v, nil

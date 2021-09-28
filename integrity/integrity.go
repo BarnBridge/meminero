@@ -2,10 +2,10 @@ package integrity
 
 import (
 	"context"
-	"database/sql"
 	"sort"
 	"time"
 
+	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
@@ -163,9 +163,9 @@ func (c *Checker) lifecycle(ctx context.Context) error {
 func (c *Checker) getLastCheckpoint(ctx context.Context) (int64, error) {
 	var b int64
 	err := c.db.QueryRow(ctx, `select number from public.integrity_checkpoints order by created_at desc limit 1`).Scan(&b)
-	if err == sql.ErrNoRows {
+	if err == pgx.ErrNoRows {
 		err1 := c.db.QueryRow(ctx, `select min(number) from blocks`).Scan(&b)
-		if err1 == sql.ErrNoRows {
+		if err1 == pgx.ErrNoRows {
 			return -1, nil
 		}
 		if err1 != nil {
