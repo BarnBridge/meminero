@@ -18,7 +18,7 @@
             "accountingModelAddress": "0x7cBbaD2Dd3e98f023D0f8c2c68F0a3De5544365e",
             "epoch1Start": 1633096800,
             "epochDuration": 1800,
-            "startAtBlock": null
+            "startAtBlock": 1835717
         }
     ]
 }
