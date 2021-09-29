@@ -2,7 +2,6 @@ package notifications
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	"github.com/jackc/pgx/v4"
@@ -74,7 +73,7 @@ func (w *Worker) jobs(ctx context.Context, tx pgx.Tx) ([]*Job, error) {
 		;
 	`
 	rows, err := tx.Query(ctx, sel)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil && err != pgx.ErrNoRows {
 		return nil, errors.Wrap(err, "get jobs")
 	}
 
