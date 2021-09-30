@@ -1,0 +1,84 @@
+{
+    "smart-alpha-pools": [
+        {
+            "poolName": "WETH-USD-1w",
+            "poolAddress": "0x57cc088a4e52A556C1ddF0110A99b3C60362A0e8",
+            "poolToken": {
+                "address": "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
+                "symbol": "WETH.e",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x0780b9d06Fb6c3fEDFA09D93196D7AA79C28f4A3",
+            "juniorTokenSymbol": "junior_WETH-USD-1w",
+            "seniorTokenAddress": "0x4Af0960Cd37Bbc9A31C822D39236c62469B37cc9",
+            "seniorTokenSymbol": "senior_WETH-USD-1w",
+            "oracleAddress": "0xbdf8132904F81Db06DD259A0b00e4AFa68fb71C7",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0xF23D5076F079a77A2b8b2Bf3C19B686eEe1E4F08",
+            "accountingModelAddress": "0x7db06B9371A72d522F38A204910fC775127C64C4",
+            "epoch1Start": 1633356000,
+            "epochDuration": 604800,
+            "startAtBlock": 5032338
+        },
+        {
+            "poolName": "WBTC-USD-1w",
+            "poolAddress": "0x6a9046e261dD763252C1fA9CA9392037b41928F6",
+            "poolToken": {
+                "address": "0x50b7545627a5162F82A992c33b87aDc75187B218",
+                "symbol": "WBTC.e",
+                "decimals": 8
+            },
+            "juniorTokenAddress": "0xA2E26B562A8ed81e125d2CE7B7BD22468Cdf52D7",
+            "juniorTokenSymbol": "junior_WBTC-USD-1w",
+            "seniorTokenAddress": "0x8596c372576b9dDf1247e0977869ecd62c40C268",
+            "seniorTokenSymbol": "senior_WBTC-USD-1w",
+            "oracleAddress": "0x6347F5bA1512c2f348f72c4d7Ee9356540ebD1C8",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0xbB1A3274eb29b077aaE808fA39958CAAd1A6Ff66",
+            "accountingModelAddress": "0xc69337e4EaAD5052334e4ee99Fd659f49383a9c6",
+            "epoch1Start": 1633356000,
+            "epochDuration": 604800,
+            "startAtBlock": 5032353
+        },
+        {
+            "poolName": "WAVAX-USD-1w",
+            "poolAddress": "0x3a0B7B0ffC98409a878D496e10FA8af97B6BcD55",
+            "poolToken": {
+                "address": "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+                "symbol": "WAVAX",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x58A08F44580f4b991fBE46cE4C4c18ACd9729Fda",
+            "juniorTokenSymbol": "junior_WAVAX-USD-1w",
+            "seniorTokenAddress": "0x97cf6E019759CA007599797CD06c5887E37821d5",
+            "seniorTokenSymbol": "senior_WAVAX-USD-1w",
+            "oracleAddress": "0x2510384a57ceE35f7600415FE35636eBD2b70dF1",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x8A3c61405c0099babE1D938e22fAa25E9bce501f",
+            "accountingModelAddress": "0xC560dc004d91481718C18D7Eea44BF18b0b84425",
+            "epoch1Start": 1633356000,
+            "epochDuration": 604800,
+            "startAtBlock": 5032366
+        },
+        {
+            "poolName": "AAVE-USD-1w",
+            "poolAddress": "0x372153d795f6115f9F0f41D874A260F43f714F10",
+            "poolToken": {
+                "address": "0x63a72806098Bd3D9520cC43356dD78afe5D386D9",
+                "symbol": "AAVE.e",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x526Db1bfbE86C03f3Cf3E0055f6dDFF2648Da25c",
+            "juniorTokenSymbol": "junior_AAVE-USD-1w",
+            "seniorTokenAddress": "0x6Af4A80442D59e4C0eb5EBB03AE87B72101Dd4f0",
+            "seniorTokenSymbol": "senior_AAVE-USD-1w",
+            "oracleAddress": "0x186d85A5991eD700E34801d87E95111d7910b38c",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x6Ea65634d79Dd896Cd0Ef87F3AB14ec108489801",
+            "accountingModelAddress": "0x3515B3ED7af5C5d0838aB96718c1af3B497957EA",
+            "epoch1Start": 1633356000,
+            "epochDuration": 604800,
+            "startAtBlock": 5032376
+        }
+    ]
+}
