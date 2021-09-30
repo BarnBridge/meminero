@@ -19,5 +19,8 @@ sync-poly: meminero
 sync-fuji: meminero
 	./meminero sync --config config-sync.yml --syncer.network fuji --syncer.datasets smart-alpha-pools,tokens
 
+sync-avalanche: meminero
+	./meminero sync --config config-sync-fwd.yml --syncer.network avalanche --syncer.datasets smart-alpha-pools,tokens
+
 gen: meminero
 	./meminero generate-eth-types
