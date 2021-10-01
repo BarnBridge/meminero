@@ -16,21 +16,6 @@ type Pool struct {
 	StartAtBlock        int64
 }
 
-type RewardPoolType string
-
-const (
-	PoolTypeSingle RewardPoolType = "SINGLE"
-	PoolTypeMulti  RewardPoolType = "MULTI"
-)
-
-type RewardPool struct {
-	PoolType             RewardPoolType
-	PoolAddress          string
-	PoolTokenAddress     string
-	RewardTokenAddresses []string
-	StartAtBlock         int64
-}
-
 type TxType string
 
 const (

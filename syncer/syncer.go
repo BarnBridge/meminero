@@ -25,6 +25,7 @@ type Data struct {
 	SmartYieldPools       SmartYieldPools       `json:"smart-yield-pools"`
 	SmartYieldRewardPools SmartYieldRewardPools `json:"smart-yield-reward-pools"`
 	SmartAlphaPools       SmartAlphaPools       `json:"smart-alpha-pools"`
+	SmartAlphaRewardPools SmartAlphaRewardPools `json:"smart-alpha-reward-pools"`
 	Tokens                Tokens                `json:"tokens"`
 }
 

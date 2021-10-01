@@ -11,7 +11,7 @@ import (
 
 	"github.com/barnbridge/meminero/eth"
 	"github.com/barnbridge/meminero/ethtypes"
-	"github.com/barnbridge/meminero/processor/storables/smartyield"
+	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
 )
 
@@ -63,7 +63,7 @@ func (s *Storable) processNewPoolSingle(ctx context.Context, log ethtypes.SmartY
 		return nil
 	}
 
-	a := *ethtypes.SmartYieldPoolSingle.ABI
+	a := *ethtypes.RewardPoolSingle.ABI
 
 	var rewardToken, poolToken common.Address
 
@@ -76,8 +76,8 @@ func (s *Storable) processNewPoolSingle(ctx context.Context, log ethtypes.SmartY
 		return errors.Wrap(err, "could not call contract functions")
 	}
 
-	var p smartyield.RewardPool
-	p.PoolType = smartyield.PoolTypeSingle
+	var p types.RewardPool
+	p.PoolType = types.PoolTypeSingle
 	p.PoolAddress = poolAddr
 	p.RewardTokenAddresses = []string{utils.NormalizeAddress(rewardToken.String())}
 	p.PoolTokenAddress = utils.NormalizeAddress(poolToken.String())
@@ -97,7 +97,7 @@ func (s *Storable) processNewPoolMulti(ctx context.Context, log ethtypes.SmartYi
 		return nil
 	}
 
-	a := *ethtypes.SmartYieldPoolMulti.ABI
+	a := *ethtypes.RewardPoolMulti.ABI
 
 	var numRewardTokens *big.Int
 
@@ -132,8 +132,8 @@ func (s *Storable) processNewPoolMulti(ctx context.Context, log ethtypes.SmartYi
 		}
 	}
 
-	var p smartyield.RewardPool
-	p.PoolType = smartyield.PoolTypeMulti
+	var p types.RewardPool
+	p.PoolType = types.PoolTypeMulti
 	p.PoolAddress = poolAddr
 	p.RewardTokenAddresses = rewardTokensString
 	p.PoolTokenAddress = utils.NormalizeAddress(poolToken.String())
@@ -147,8 +147,8 @@ func (s *Storable) processNewPoolMulti(ctx context.Context, log ethtypes.SmartYi
 }
 
 func (s *Storable) processRewardPoolEvent(log gethtypes.Log) error {
-	poolSingle := *ethtypes.SmartYieldPoolSingle
-	poolMulti := *ethtypes.SmartYieldPoolMulti
+	poolSingle := *ethtypes.RewardPoolSingle
+	poolMulti := *ethtypes.RewardPoolMulti
 
 	if poolSingle.IsClaimEvent(&log) {
 		e, err := poolSingle.ClaimEvent(log)

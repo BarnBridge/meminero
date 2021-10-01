@@ -11,7 +11,7 @@ sync-mainnet: meminero
 	./meminero sync --syncer.network mainnet --syncer.datasets labels,monitored-accounts,monitored-erc20,smart-alpha-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
 
 sync-kovan: meminero
-	./meminero sync --syncer.network kovan --syncer.datasets labels,monitored-accounts,monitored-erc20,smart-alpha-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
+	./meminero sync --syncer.network kovan --syncer.datasets labels,monitored-accounts,monitored-erc20,smart-alpha-pools,smart-alpha-reward-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens
 
 sync-poly: meminero
 	./meminero sync --syncer.network polygon --syncer.datasets monitored-erc20,smart-alpha-pools,smart-exposure-pools,smart-yield-pools,smart-yield-reward-pools,tokens

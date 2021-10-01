@@ -11,6 +11,7 @@ import (
 	"github.com/barnbridge/meminero/processor/storables/dao/governance"
 	"github.com/barnbridge/meminero/processor/storables/erc20transfers"
 	saEvents "github.com/barnbridge/meminero/processor/storables/smartalpha/events"
+	saRewards "github.com/barnbridge/meminero/processor/storables/smartalpha/rewards"
 	saState "github.com/barnbridge/meminero/processor/storables/smartalpha/state"
 	seScrape "github.com/barnbridge/meminero/processor/storables/smartexposure/events"
 	sePools "github.com/barnbridge/meminero/processor/storables/smartexposure/pool_state"
@@ -136,7 +137,14 @@ func (p *Processor) registerSmartAlpha() {
 			}
 		}
 
+		for _, rewardPool := range p.state.SmartAlpha.RewardPools {
+			if !p.state.CheckTokenExists(rewardPool.PoolTokenAddress) {
+				logrus.Fatalf("smart alpha reward pool missing pool token from tokens list: %s (%s)", rewardPool.PoolTokenAddress)
+			}
+		}
+
 		p.storables = append(p.storables, saEvents.New(p.Block, p.state))
 		p.storables = append(p.storables, saState.New(p.Block, p.state))
+		p.storables = append(p.storables, saRewards.New(p.Block, p.state))
 	}
 }

@@ -2,12 +2,13 @@ package smartyield
 
 import (
 	"github.com/barnbridge/meminero/processor/storables/smartyield"
+	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
 )
 
 type SmartYield struct {
 	Pools       []smartyield.Pool
-	RewardPools []smartyield.RewardPool
+	RewardPools []types.RewardPool
 }
 
 func New() *SmartYield {

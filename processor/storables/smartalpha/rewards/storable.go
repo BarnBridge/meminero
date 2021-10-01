@@ -2,11 +2,9 @@ package rewards
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/ethtypes"
 	"github.com/barnbridge/meminero/state"
 	"github.com/barnbridge/meminero/types"
@@ -18,10 +16,7 @@ type Storable struct {
 	state  *state.Manager
 	logger *logrus.Entry
 
-	factories []string
-
 	processed struct {
-		Pools       []types.RewardPool
 		Claims      []ethtypes.RewardPoolSingleClaimEvent
 		ClaimsMulti []ethtypes.RewardPoolMultiClaimRewardTokenEvent
 		Deposits    []ethtypes.RewardPoolSingleDepositEvent
@@ -29,14 +24,13 @@ type Storable struct {
 	}
 }
 
-const storableID = "smartYield.rewards"
+const storableID = "smartAlpha.rewards"
 
 func New(block *types.Block, state *state.Manager) *Storable {
 	return &Storable{
-		block:     block,
-		state:     state,
-		logger:    logrus.WithField("module", fmt.Sprintf("storable(%s)", storableID)),
-		factories: strings.Split(config.Store.Storable.SmartYield.Rewards.Factories, ","),
+		block:  block,
+		state:  state,
+		logger: logrus.WithField("module", fmt.Sprintf("storable(%s)", storableID)),
 	}
 }
 
