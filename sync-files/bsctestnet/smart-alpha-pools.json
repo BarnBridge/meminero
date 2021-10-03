@@ -1,0 +1,24 @@
+{
+    "smart-alpha-pools": [
+        {
+            "poolName": "WBNB-USD-30m",
+            "poolAddress": "0xF759b75366deA4b5c9982DC71C48c308e487d131",
+            "poolToken": {
+                "address": "0xae13d989dac2f0debff460ac112a837c89baa7cd",
+                "symbol": "WBNB",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x34B34c278b4CD9A13b3aF9B2Ec382471C9ff90F3",
+            "juniorTokenSymbol" : "junior_WBNB-USD-30m",
+            "seniorTokenAddress": "0xaA003eb686429F779a84A9F5894dAF2eCCbBa542",
+            "seniorTokenSymbol": "senior_WBNB-USD-30m",
+            "oracleAddress": "0xaD74F6a551Cda7865c2Cba0870615F000Fee0228",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress":"0xDE81307f05bCbD3d3FD3735Ab706C90c7553AF8A",
+            "accountingModelAddress":"0xA14f5Ee852e0110Df16d83B8399228D476f4c2e2",
+            "epoch1Start": 1633356000,
+            "epochDuration": 1800,
+            "startAtBlock": 12885892
+        }
+    ]
+}
