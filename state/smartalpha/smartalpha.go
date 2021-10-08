@@ -4,13 +4,15 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 
 	"github.com/barnbridge/meminero/processor/storables/smartalpha"
+	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
 )
 
 type SmartAlpha struct {
 	db *pgxpool.Pool
 
-	Pools []smartalpha.Pool
+	Pools       []smartalpha.Pool
+	RewardPools []types.RewardPool
 }
 
 func New(db *pgxpool.Pool) *SmartAlpha {

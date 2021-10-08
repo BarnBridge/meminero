@@ -182,18 +182,18 @@
     },
     {
       "protocolId": "aave/v2",
-      "controllerAddress": "0xa23A8bb1f3a6c69548BdFF2e5D39CB167E1CcA34",
-      "modelAddress": "0xaD15d9abE02606188DAa2A8d771AccB720b5bD27",
-      "providerAddress": "0x7Eef331c1173D062fB305a69b423002EDdAf88D4",
-      "smartYieldAddress": "0x8Ea7D9FA613Ea66e8021338B7Fc19F3F239665Fc",
-      "oracleAddress": "0x552dAF8F888903E33c2A5d97E5C2F6E591De9f40",
-      "juniorBondAddress": "0x5d05066ECFd8DdDf3d8a157F5ECB1d39036E0a03",
-      "seniorBondAddress": "0x4605Aa7A159Ea5995fA697E3aEE28Ac2f9970d28",
-      "receiptTokenAddress": "0xAcF35Af93a65904C50ED93dfb010bAAdEBb4ccF0",
+      "controllerAddress": "0xAFb2DE2C3d1aE9375f76B5F664a0334f2eA672ED",
+      "modelAddress": "0x76C57F8f07388D2Feb8d3BBeE439c8c17A9245FB",
+      "providerAddress": "0x1bA32Fb7Babd785459E1bbbfa4358CBF77A2b542",
+      "smartYieldAddress": "0xA3abb32c657adA8803bF6AEEF6Eb42B29c74bf28",
+      "oracleAddress": "0xD64A7f14508Da50A6435B50a5ee7aa987ff60C48",
+      "juniorBondAddress": "0x59be025532f89b73E1505D5f7a36C9953c949576",
+      "seniorBondAddress": "0x6E5589e62Ad508C3D13387850f0c58C6da30c0e4",
+      "receiptTokenAddress": "0x683923dB55Fead99A79Fa01A27EeC3cB19679cC3",
       "underlyingAddress": "0x956F47F50A910163D8BF957Cf5846D573E7f87CA",
       "underlyingSymbol": "FEI",
       "underlyingDecimals": 18,
-      "startAtBlock": 13267415
+      "startAtBlock": 13301715
     }
   ]
 }

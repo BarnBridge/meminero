@@ -1,0 +1,13 @@
+{
+  "smart-alpha-reward-pools": [
+    {
+      "poolType": "SINGLE",
+      "poolAddress": "0xF2BCb97C4353e9A70B5b65d17831433346aA4693",
+      "poolTokenAddress": "0xb17f52E389C66e96c2DA4C7b5f9bFD2F7fd37eC1",
+      "rewardTokenAddresses": [
+        "0xEA87F6ea125BF4b0e8653758A683Af59f2e8dEF4"
+      ],
+      "startAtBlock": 13326497
+    }
+  ]
+}

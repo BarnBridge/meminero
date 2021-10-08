@@ -1,11 +1,11 @@
 package smartyield
 
 import (
-	"github.com/barnbridge/meminero/processor/storables/smartyield"
+	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
 )
 
-func (sy *SmartYield) RewardPoolByAddress(addr string) *smartyield.RewardPool {
+func (sy *SmartYield) RewardPoolByAddress(addr string) *types.RewardPool {
 	addr = utils.NormalizeAddress(addr)
 
 	for _, p := range sy.RewardPools {
@@ -17,7 +17,7 @@ func (sy *SmartYield) RewardPoolByAddress(addr string) *smartyield.RewardPool {
 	return nil
 }
 
-func (sy *SmartYield) CacheRewardPool(p smartyield.RewardPool) {
+func (sy *SmartYield) CacheRewardPool(p types.RewardPool) {
 	if sy.RewardPoolByAddress(p.PoolAddress) != nil {
 		return
 	}

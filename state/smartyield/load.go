@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/barnbridge/meminero/processor/storables/smartyield"
+	"github.com/barnbridge/meminero/types"
 	"github.com/barnbridge/meminero/utils"
 )
 
@@ -73,7 +74,7 @@ func (sy *SmartYield) LoadPools(ctx context.Context, db *pgxpool.Pool) error {
 }
 
 func (sy *SmartYield) LoadRewardPools(ctx context.Context, db *pgxpool.Pool) error {
-	sy.RewardPools = []smartyield.RewardPool{}
+	sy.RewardPools = []types.RewardPool{}
 
 	rows, err := db.Query(ctx, `
 		select pool_type, pool_address, pool_token_address, reward_token_addresses, start_at_block
@@ -84,7 +85,7 @@ func (sy *SmartYield) LoadRewardPools(ctx context.Context, db *pgxpool.Pool) err
 	}
 
 	for rows.Next() {
-		var p smartyield.RewardPool
+		var p types.RewardPool
 
 		err := rows.Scan(&p.PoolType, &p.PoolAddress, &p.PoolTokenAddress, &p.RewardTokenAddresses, &p.StartAtBlock)
 		if err != nil {
