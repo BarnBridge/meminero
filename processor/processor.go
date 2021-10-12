@@ -89,7 +89,7 @@ func (p *Processor) Store(ctx context.Context, db *pgxpool.Pool) (bool, error) {
 	}
 
 	if exists && !config.Store.Feature.ReplaceBlocks {
-		p.logger.Info("block already exists in the database; skipping")
+		p.logger.Infof("block %d (%s) already exists in the database; skipping", p.Block.Number, p.Block.BlockHash)
 		return false, nil
 	}
 
