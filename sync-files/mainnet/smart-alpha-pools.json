@@ -159,6 +159,46 @@
       "epoch1Start": 1632751200,
       "epochDuration": 604800,
       "startAtBlock": 13267844
+    },
+    {
+      "poolName": "DPI-USD-1w",
+      "poolAddress": "0x173824aaD3cA34cCFe006CC2e6A6e1a183091997",
+      "poolToken": {
+        "address": "0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b",
+        "symbol": "DPI",
+        "decimals": 18
+      },
+      "juniorTokenAddress": "0x6Ba623B4570AEb9b13c4c22Fc76333cD87fF7f77",
+      "juniorTokenSymbol": "junior_DPI-USD-1w",
+      "seniorTokenAddress": "0xE1CC838c073b1CC9E6e35BF0B0bF12f22872131b",
+      "seniorTokenSymbol": "senior_DPI-USD-1w",
+      "oracleAddress": "0xEb7AB9A2dD0609F665d6CB71F71c7EdE6aA2fA6c",
+      "oracleAssetSymbol": "USD",
+      "seniorRateModelAddress": "0x67C289B10a17439a8316CCf7d8D0c6B739E1ab3F",
+      "accountingModelAddress": "0x6fA6Edc873E3330F908Eec51a9cC6cDa69650160",
+      "epoch1Start": 1634565600,
+      "epochDuration": 604800,
+      "startAtBlock": 13415885
+    },
+    {
+      "poolName": "DPI-ETH-1w",
+      "poolAddress": "0xEBC6d26939F035644EbcE4a5aCeb9f29df29c383",
+      "poolToken": {
+        "address": "0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b",
+        "symbol": "DPI",
+        "decimals": 18
+      },
+      "juniorTokenAddress": "0xBBD8EF5D5a1F730DbaF37272BdbdA4C71eAaC6d3",
+      "juniorTokenSymbol": "junior_DPI-ETH-1w",
+      "seniorTokenAddress": "0x6B612Cb572D784F9dB5A494dBD38C3F7510fffFB",
+      "seniorTokenSymbol": "senior_DPI-ETH-1w",
+      "oracleAddress": "0xf767D70BaC8dfa9d5C94C1632075eA5f0619eF19",
+      "oracleAssetSymbol": "ETH",
+      "seniorRateModelAddress": "0xBCe293A90eE73E51D17940FA3C8220514d709E6e",
+      "accountingModelAddress": "0xFE268D1B296A3ea072449cc48328ece8A5aB4ed1",
+      "epoch1Start": 1634565600,
+      "epochDuration": 604800,
+      "startAtBlock": 13415899
     }
   ]
 }
