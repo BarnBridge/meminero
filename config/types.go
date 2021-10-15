@@ -42,6 +42,7 @@ type features struct {
 		Lag     int64
 	}
 	ReplaceBlocks bool `mapstructure:"replace-blocks"`
+	RequeueFailedBlocks bool `mapstructure:"requeue-failed-blocks"`
 }
 
 type eth struct {
