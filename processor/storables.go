@@ -35,7 +35,7 @@ func (p *Processor) registerStorables() {
 		p.storables = append(p.storables, erc20transfers.New(p.Block, p.state))
 	}
 
-	if config.Store.Storable.TokenPrices.Enabled && config.Store.Feature.State.Enabled {
+	if config.Store.Storable.TokenPrices.Enabled && config.Store.Feature.ContractState.Enabled {
 		p.storables = append(p.storables, tokenprices.New(p.Block, p.state))
 	}
 
@@ -65,7 +65,7 @@ func (p *Processor) registerDAO() {
 
 func (p *Processor) registerSmartYield() {
 	if config.Store.Storable.SmartYield.Enabled {
-		if config.Store.Feature.State.Enabled && (!config.Store.Storable.Erc20Transfers.Enabled || !config.Store.Storable.TokenPrices.Enabled) {
+		if config.Store.Feature.ContractState.Enabled && (!config.Store.Storable.Erc20Transfers.Enabled || !config.Store.Storable.TokenPrices.Enabled) {
 			logrus.Fatal("could not register smartYield storables because incomplete dependencies")
 		}
 
@@ -79,7 +79,7 @@ func (p *Processor) registerSmartYield() {
 		p.storables = append(p.storables, syERC721.New(p.Block, p.state))
 		p.storables = append(p.storables, syRewards.New(p.Block, p.state))
 
-		if config.Store.Feature.State.Enabled {
+		if config.Store.Feature.ContractState.Enabled {
 			p.storables = append(p.storables, syState.New(p.Block, p.state))
 		}
 	}
@@ -87,7 +87,7 @@ func (p *Processor) registerSmartYield() {
 
 func (p *Processor) registerSmartExposure() {
 	if config.Store.Storable.SmartExposure.Enabled {
-		if config.Store.Feature.State.Enabled && (!config.Store.Storable.Erc20Transfers.Enabled || !config.Store.Storable.TokenPrices.Enabled) {
+		if config.Store.Feature.ContractState.Enabled && (!config.Store.Storable.Erc20Transfers.Enabled || !config.Store.Storable.TokenPrices.Enabled) {
 			logrus.Fatal("could not register smartExposure storables because incomplete dependencies")
 		}
 
@@ -103,7 +103,7 @@ func (p *Processor) registerSmartExposure() {
 
 		p.storables = append(p.storables, seScrape.New(p.Block, p.state))
 
-		if config.Store.Feature.State.Enabled {
+		if config.Store.Feature.ContractState.Enabled {
 			p.storables = append(p.storables, seTranches.New(p.Block, p.state))
 			p.storables = append(p.storables, sePools.New(p.Block, p.state))
 		}
@@ -112,7 +112,7 @@ func (p *Processor) registerSmartExposure() {
 
 func (p *Processor) registerSmartAlpha() {
 	if config.Store.Storable.SmartAlpha.Enabled {
-		if config.Store.Feature.State.Enabled && (!config.Store.Storable.Erc20Transfers.Enabled || !config.Store.Storable.TokenPrices.Enabled) {
+		if config.Store.Feature.ContractState.Enabled && (!config.Store.Storable.Erc20Transfers.Enabled || !config.Store.Storable.TokenPrices.Enabled) {
 			logrus.Fatal("could not register smartAlpha storables because incomplete dependencies")
 		}
 
@@ -152,7 +152,7 @@ func (p *Processor) registerSmartAlpha() {
 		p.storables = append(p.storables, saEvents.New(p.Block, p.state))
 		p.storables = append(p.storables, saRewards.New(p.Block, p.state))
 
-		if config.Store.Feature.State.Enabled {
+		if config.Store.Feature.ContractState.Enabled {
 			p.storables = append(p.storables, saState.New(p.Block, p.state))
 		}
 	}

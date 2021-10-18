@@ -42,9 +42,9 @@ type features struct {
 		Lag     int64
 	}
 	ReplaceBlocks bool `mapstructure:"replace-blocks"`
-	State         struct {
+	ContractState struct {
 		Enabled bool
-	}
+	} `mapstructure:"contract-state"`
 }
 
 type eth struct {
