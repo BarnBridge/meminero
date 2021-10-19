@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/alethio/web3-go/validator"
+	"github.com/barnbridge/meminero/config"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
@@ -138,7 +139,9 @@ func (g *Glue) Run(ctx context.Context) {
 			if err != nil {
 				g.logger.Fatal(err)
 			}
-			g.mustRequeueTask(b)
+			if config.Store.Feature.RequeueFailedBlocks {
+				g.mustRequeueTask(b)
+			}
 			metricsBlocksErrored.Inc()
 		} else {
 			err = g.state.UnlockBlock(b)
