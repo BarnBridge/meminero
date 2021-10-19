@@ -31,6 +31,9 @@ ethtypes:
     # Path where to generate packages. Final folder represents package name
     package-path: ethtypes
 feature:
+    contract-state:
+        # Enable/disable state scraping (if enabled, it requires archive node support)
+        enabled: true
     integrity:
         # Enable/disable the integrity checker
         enabled: true

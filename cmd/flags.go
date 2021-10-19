@@ -33,6 +33,7 @@ func addFeatureFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("feature.queuekeeper.enabled", true, "Enable/disable the queue keeper (watch new heads and store into the queue)")
 	cmd.PersistentFlags().Int64("feature.queuekeeper.lag", 10, "The amount of blocks to lag behind the tip of the chain")
 	cmd.PersistentFlags().Bool("feature.replace-blocks", false, "Enable this if the scraper should replace existing blocks instead of skipping them")
+	cmd.PersistentFlags().Bool("feature.contract-state.enabled", true, "Enable/disable state scraping (if enabled, it requires archive node support)")
 	cmd.PersistentFlags().Bool("feature.requeue-failed-blocks", true, "Enable this if the scraper should retry failed blocks instead of skipping them. If false, disable integrity checker.")
 }
 

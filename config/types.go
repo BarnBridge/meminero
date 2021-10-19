@@ -42,12 +42,15 @@ type features struct {
 		Lag     int64
 	}
 	ReplaceBlocks bool `mapstructure:"replace-blocks"`
+	ContractState struct {
+		Enabled bool
+	} `mapstructure:"contract-state"`
 	RequeueFailedBlocks bool `mapstructure:"requeue-failed-blocks"`
 }
 
 type eth struct {
 	bestblock.Config `mapstructure:"client"`
-	MaxBatch int `mapstructure:"max-batch"`
+	MaxBatch         int `mapstructure:"max-batch"`
 }
 
 type ethtypes struct {
