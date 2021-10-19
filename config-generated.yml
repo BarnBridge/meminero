@@ -44,6 +44,8 @@ feature:
         lag: 10
     # Enable this if the scraper should replace existing blocks instead of skipping them
     replace-blocks: false
+    # Enable this if the scraper should retry failed blocks instead of skipping them. If false, disable integrity checker.
+    requeue-failed-blocks: true
 # Display debug messages
 logging: '*=info'
 metrics:
