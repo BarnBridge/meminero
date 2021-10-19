@@ -28,5 +28,11 @@ sync-bsctestnet: meminero
 sync-bsc: meminero
 	./meminero sync --config config-sync-fwd.yml --syncer.network bsc --syncer.datasets smart-alpha-pools,tokens
 
+sync-arbitrumrinkeby: meminero
+	./meminero sync --config config-sync.yml --syncer.network arbitrumrinkeby --syncer.datasets smart-alpha-pools,tokens
+
+sync-arbitrum: meminero
+	./meminero sync --config config-sync-fwd.yml --syncer.network arbitrum --syncer.datasets smart-alpha-pools,tokens
+
 gen: meminero
 	./meminero generate-eth-types

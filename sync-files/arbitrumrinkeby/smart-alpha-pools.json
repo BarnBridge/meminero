@@ -1,0 +1,24 @@
+{
+    "smart-alpha-pools": [
+        {
+            "poolName": "WETH-USD-30m",
+            "poolAddress": "0x72B9F1B45058c307e73b16A119dDb99433C91364",
+            "poolToken": {
+                "address": "0xb47e6a5f8b33b3f17603c83a0535a9dcd7e32681",
+                "symbol": "WETH",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x0beDD9A36BF4B1B6A4328100a206F7a18330B914",
+            "juniorTokenSymbol" : "junior_WETH-USD-30m",
+            "seniorTokenAddress": "0x4f07EA62c56ce4A41c5E60D6D0148CeDA86a2545",
+            "seniorTokenSymbol": "senior_WETH-USD-30m",
+            "oracleAddress": "0x67288167b9b238A46A83180F792d23913d354bf8",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress":"0x0c6362B47F1C1e01070938aEf5330BF1F5C97dBA",
+            "accountingModelAddress":"0x21E56fbED0DD05DF84503E97ad444b389DC395ab",
+            "epoch1Start": 1634133600,
+            "epochDuration": 1800,
+            "startAtBlock": 5509319
+        }
+    ]
+}
