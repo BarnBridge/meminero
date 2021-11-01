@@ -30,6 +30,7 @@ func addMetricsFlags(cmd *cobra.Command) {
 
 func addFeatureFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().Bool("feature.integrity.enabled", true, "Enable/disable the integrity checker")
+	cmd.PersistentFlags().Duration("feature.integrity.interval", time.Minute, "How often to run the integrity checker")
 	cmd.PersistentFlags().Bool("feature.queuekeeper.enabled", true, "Enable/disable the queue keeper (watch new heads and store into the queue)")
 	cmd.PersistentFlags().Int64("feature.queuekeeper.lag", 10, "The amount of blocks to lag behind the tip of the chain")
 	cmd.PersistentFlags().Bool("feature.replace-blocks", false, "Enable this if the scraper should replace existing blocks instead of skipping them")

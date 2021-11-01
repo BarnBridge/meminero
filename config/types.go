@@ -1,6 +1,8 @@
 package config
 
 import (
+	"time"
+
 	"github.com/lacasian/ethwheels/bestblock"
 )
 
@@ -35,7 +37,8 @@ type api struct {
 
 type features struct {
 	Integrity struct {
-		Enabled bool
+		Enabled  bool
+		Interval time.Duration
 	}
 	QueueKeeper struct {
 		Enabled bool

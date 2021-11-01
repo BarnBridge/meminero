@@ -12,9 +12,10 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/sirupsen/logrus"
 
+	"github.com/lacasian/ethwheels/bestblock"
+
 	"github.com/barnbridge/meminero/config"
 	"github.com/barnbridge/meminero/state"
-	"github.com/lacasian/ethwheels/bestblock"
 )
 
 var (
@@ -49,7 +50,7 @@ func NewChecker(db *pgxpool.Pool, tracker *bestblock.Tracker, tm *state.Manager)
 }
 
 func (c *Checker) Run(ctx context.Context) {
-	t := time.NewTicker(1 * time.Minute)
+	t := time.NewTicker(config.Store.Feature.Integrity.Interval)
 
 	for {
 		select {
