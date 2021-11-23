@@ -17,7 +17,7 @@ require (
 	github.com/jackc/pgtype v1.7.0
 	github.com/jackc/pgx/v4 v4.11.0
 	github.com/jackc/tern v1.12.5
-	github.com/lacasian/ethwheels v0.1.0
+	github.com/BarnBridge/ethwheels v0.1.0
 	github.com/lacasian/gogo v0.0.0-20210409131350-2a34a42d506e
 	github.com/lacasian/logrus-module-formatter v0.0.0-20201126131010-ff27c57db003
 	github.com/leodido/go-urn v1.2.1 // indirect
