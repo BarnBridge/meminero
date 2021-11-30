@@ -96,6 +96,11 @@ func (m *Manager) RefreshCache(ctx context.Context) error {
 		return errors.Wrap(err, "could not load smart alpha state")
 	}
 
+	err = m.refreshDBCache(ctx)
+	if err != nil {
+		return errors.Wrap(err, "could not refresh db cache")
+	}
+
 	return nil
 }
 
