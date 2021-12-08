@@ -34,5 +34,8 @@ sync-arbitrumrinkeby: meminero
 sync-arbitrum: meminero
 	./meminero sync --config config-sync-fwd.yml --syncer.network arbitrum --syncer.datasets smart-alpha-pools,tokens
 
+sync-optimistickovan: meminero
+	./meminero sync --config config-sync.yml --syncer.network optimistickovan --syncer.datasets smart-alpha-pools,tokens
+
 gen: meminero
 	./meminero generate-eth-types
