@@ -1,204 +1,224 @@
 {
-  "smart-alpha-pools": [
-    {
-      "poolName": "WETH-USD-1w",
-      "poolAddress": "0x31f7Da25361AD99ca4DAa4E8709624660f324F48",
-      "poolToken": {
-        "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        "symbol": "WETH",
-        "decimals": 18
-      },
-      "juniorTokenAddress": "0xcD89c90ce3D565F51587033604591BA292BA1866",
-      "juniorTokenSymbol": "junior_WETH-USD-1w",
-      "seniorTokenAddress": "0xb138dD4A00f9aFa14C7FeaAcD710F37A22fE4f12",
-      "seniorTokenSymbol": "senior_WETH-USD-1w",
-      "oracleAddress": "0xDc5fd56dfE15dBC1dBBf28dE113f4B64F52F1D5f",
-      "oracleAssetSymbol": "USD",
-      "seniorRateModelAddress": "0x8e27CcDB8374A823C83C3e00f278980a8523753e",
-      "accountingModelAddress": "0xA4393A0ceaBfe4513837D5C96A5e6bdf8Cd73af0",
-      "epoch1Start": 1631541600,
-      "epochDuration": 604800,
-      "startAtBlock": 13185569
-    },
-    {
-      "poolName": "WBTC-USD-1w",
-      "poolAddress": "0x13d5387389Ac1a3b72391D88b03B893a945B17cd",
-      "poolToken": {
-        "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-        "symbol": "WBTC",
-        "decimals": 8
-      },
-      "juniorTokenAddress": "0x2766CC123D0a005C73F7bAc66ce9e6a746fC1006",
-      "juniorTokenSymbol": "junior_WBTC-USD-1w",
-      "seniorTokenAddress": "0xC919D5d1053a9Ab77529618e45f168B199bd823d",
-      "seniorTokenSymbol": "senior_WBTC-USD-1w",
-      "oracleAddress": "0x195ed973Fd92567F5351a8c2825Bde24Ca813703",
-      "oracleAssetSymbol": "USD",
-      "seniorRateModelAddress": "0x46F5b61dD3b8afAf7187A22f1f04aA47A667Adb8",
-      "accountingModelAddress": "0x4B297EB320397F9212B1A193B9c0fC70509f24B3",
-      "epoch1Start": 1631541600,
-      "epochDuration": 604800,
-      "startAtBlock": 13185584
-    },
-    {
-      "poolName": "WETH-BTC-1w",
-      "poolAddress": "0xE4Fbc5a705AAb5a094fc3961dFc764716F041ee9",
-      "poolToken": {
-        "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-        "symbol": "WETH",
-        "decimals": 18
-      },
-      "juniorTokenAddress": "0xBf1D345817e458dB6E441b39eB2189c8678A350C",
-      "juniorTokenSymbol": "junior_WETH-BTC-1w",
-      "seniorTokenAddress": "0x1bd8665c25AFAe64cA5efD7623B363728Cfc0e35",
-      "seniorTokenSymbol": "senior_WETH-BTC-1w",
-      "oracleAddress": "0x019ed88941D44561AB11b9541476C0e86891Cd70",
-      "oracleAssetSymbol": "BTC",
-      "seniorRateModelAddress": "0x21627f5bd8b25fe8A623e1AE3A0B3756D649283d",
-      "accountingModelAddress": "0xFf52405F2EF7ab3c3e4f3A00eCd39Bb4C4C544E6",
-      "epoch1Start": 1631541600,
-      "epochDuration": 604800,
-      "startAtBlock": 13185600
-    },
-    {
-      "poolName": "WBTC-ETH-1w",
-      "poolAddress": "0xB0105F829d50841B949C274636C2D173a78DB7e0",
-      "poolToken": {
-        "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
-        "symbol": "WBTC",
-        "decimals": 8
-      },
-      "juniorTokenAddress": "0x5779365Ba25615BFff8c22636A40A1EF4963926F",
-      "juniorTokenSymbol": "junior_WBTC-ETH-1w",
-      "seniorTokenAddress": "0x8dB2fDE98327810d3A2f9Ed804D39933C5473d5D",
-      "seniorTokenSymbol": "senior_WBTC-ETH-1w",
-      "oracleAddress": "0xA2FcF1c6aBfB2CdB10Ba2Ef430E2055a5a7E7E68",
-      "oracleAssetSymbol": "ETH",
-      "seniorRateModelAddress": "0x6Afa4122e183c243B00fB7d4d77C54926353E506",
-      "accountingModelAddress": "0xDD37FeE56276d2f2A06cFA43DB5A32795E9cE030",
-      "epoch1Start": 1631541600,
-      "epochDuration": 604800,
-      "startAtBlock": 13185614
-    },
-    {
-      "poolName": "stkAAVE-USD-1w",
-      "poolAddress": "0x0b2BCde6a404c53c05A6c0F5402daEd4f2dD5779",
-      "poolToken": {
-        "address": "0x4da27a545c0c5b758a6ba100e3a049001de870f5",
-        "symbol": "stkAAVE",
-        "decimals": 18
-      },
-      "juniorTokenAddress": "0xd30c763ab439316ac59eD4666E0f45f930c2FCb2",
-      "juniorTokenSymbol": "junior_stkAAVE-USD-1w",
-      "seniorTokenAddress": "0x54961dd499012180bB253A81EDe497163ba1Cef5",
-      "seniorTokenSymbol": "senior_stkAAVE-USD-1w",
-      "oracleAddress": "0xE7922CD86c60dbE663922a2860BD628d502f3Ac2",
-      "oracleAssetSymbol": "USD",
-      "seniorRateModelAddress": "0x869fc51c699E117896f3f9CE3FA109EC15929471",
-      "accountingModelAddress": "0x786B2A1890eb13081385ad436bEcc34b91a77eAA",
-      "epoch1Start": 1632751200,
-      "epochDuration": 604800,
-      "startAtBlock": 13267829
-    },
-    {
-      "poolName": "UNI-USD-1w",
-      "poolAddress": "0x4aB87E2e6C53c4ef437c73793e3029D76B258688",
-      "poolToken": {
-        "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
-        "symbol": "UNI",
-        "decimals": 18
-      },
-      "juniorTokenAddress": "0xEf157e092164d576e2D18B396DE67F04C9A126AB",
-      "juniorTokenSymbol": "junior_UNI-USD-1w",
-      "seniorTokenAddress": "0x49D9b25E10EE44f75C0C218CC3302196611388D1",
-      "seniorTokenSymbol": "senior_UNI-USD-1w",
-      "oracleAddress": "0xCdF6D026f29A77B2a315164923988586df325291",
-      "oracleAssetSymbol": "USD",
-      "seniorRateModelAddress": "0x74E3377a2E49b042eD91a2349A536d251b5f5EB0",
-      "accountingModelAddress": "0xdcA9DE53ea1D8A6f3DfbEc9e810a195Bb071c653",
-      "epoch1Start": 1632751200,
-      "epochDuration": 604800,
-      "startAtBlock": 13267832
-    },
-    {
-      "poolName": "LINK-USD-1w",
-      "poolAddress": "0x21f768446a171f50A20C727E420981AD70e0E9d9",
-      "poolToken": {
-        "address": "0x514910771af9ca656af840dff83e8264ecf986ca",
-        "symbol": "LINK",
-        "decimals": 18
-      },
-      "juniorTokenAddress": "0x7CE67f40459cda69823Bc3BEa09736E3BA4da3af",
-      "juniorTokenSymbol": "junior_LINK-USD-1w",
-      "seniorTokenAddress": "0x6F3903775Df057f038516830c6a8BcA13228DC62",
-      "seniorTokenSymbol": "senior_LINK-USD-1w",
-      "oracleAddress": "0x2F31bBf0704a346bac0Ef38878DCf625d3ee1f0E",
-      "oracleAssetSymbol": "USD",
-      "seniorRateModelAddress": "0x72435D0B04536dB659d984bCcB7cdC04F45B9C4c",
-      "accountingModelAddress": "0x84966c9F664445581E581Ab300484d80faB01798",
-      "epoch1Start": 1632751200,
-      "epochDuration": 604800,
-      "startAtBlock": 13267834
-    },
-    {
-      "poolName": "xSUSHI-USD-1w",
-      "poolAddress": "0xeCa0ffc5E3566e9dAD05f206F2Ca1fF0174AF476",
-      "poolToken": {
-        "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
-        "symbol": "xSUSHI",
-        "decimals": 18
-      },
-      "juniorTokenAddress": "0x55c1159B2E1aE9bda73409c7Af07A8a13A6e34b8",
-      "juniorTokenSymbol": "junior_xSUSHI-USD-1w",
-      "seniorTokenAddress": "0x3f0eB829e03C5be99467BC712839c0C9c6F4395C",
-      "seniorTokenSymbol": "senior_xSUSHI-USD-1w",
-      "oracleAddress": "0x93De95216348eBD9B3B406AAEd7c3bAa52155ED5",
-      "oracleAssetSymbol": "USD",
-      "seniorRateModelAddress": "0x52742ad34F21DF4C66EAb99F8C133C760F77652A",
-      "accountingModelAddress": "0xc6aCF0194D6971697d90a618CFB9afE78282015C",
-      "epoch1Start": 1632751200,
-      "epochDuration": 604800,
-      "startAtBlock": 13267844
-    },
-    {
-      "poolName": "DPI-USD-1w",
-      "poolAddress": "0x173824aaD3cA34cCFe006CC2e6A6e1a183091997",
-      "poolToken": {
-        "address": "0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b",
-        "symbol": "DPI",
-        "decimals": 18
-      },
-      "juniorTokenAddress": "0x6Ba623B4570AEb9b13c4c22Fc76333cD87fF7f77",
-      "juniorTokenSymbol": "junior_DPI-USD-1w",
-      "seniorTokenAddress": "0xE1CC838c073b1CC9E6e35BF0B0bF12f22872131b",
-      "seniorTokenSymbol": "senior_DPI-USD-1w",
-      "oracleAddress": "0xEb7AB9A2dD0609F665d6CB71F71c7EdE6aA2fA6c",
-      "oracleAssetSymbol": "USD",
-      "seniorRateModelAddress": "0x67C289B10a17439a8316CCf7d8D0c6B739E1ab3F",
-      "accountingModelAddress": "0x6fA6Edc873E3330F908Eec51a9cC6cDa69650160",
-      "epoch1Start": 1634565600,
-      "epochDuration": 604800,
-      "startAtBlock": 13415885
-    },
-    {
-      "poolName": "DPI-ETH-1w",
-      "poolAddress": "0xEBC6d26939F035644EbcE4a5aCeb9f29df29c383",
-      "poolToken": {
-        "address": "0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b",
-        "symbol": "DPI",
-        "decimals": 18
-      },
-      "juniorTokenAddress": "0xBBD8EF5D5a1F730DbaF37272BdbdA4C71eAaC6d3",
-      "juniorTokenSymbol": "junior_DPI-ETH-1w",
-      "seniorTokenAddress": "0x6B612Cb572D784F9dB5A494dBD38C3F7510fffFB",
-      "seniorTokenSymbol": "senior_DPI-ETH-1w",
-      "oracleAddress": "0xf767D70BaC8dfa9d5C94C1632075eA5f0619eF19",
-      "oracleAssetSymbol": "ETH",
-      "seniorRateModelAddress": "0xBCe293A90eE73E51D17940FA3C8220514d709E6e",
-      "accountingModelAddress": "0xFE268D1B296A3ea072449cc48328ece8A5aB4ed1",
-      "epoch1Start": 1634565600,
-      "epochDuration": 604800,
-      "startAtBlock": 13415899
-    }
-  ]
+    "smart-alpha-pools": [
+        {
+            "poolName": "WETH-USD-1w",
+            "poolAddress": "0x31f7Da25361AD99ca4DAa4E8709624660f324F48",
+            "poolToken": {
+                "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                "symbol": "WETH",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0xcD89c90ce3D565F51587033604591BA292BA1866",
+            "juniorTokenSymbol": "junior_WETH-USD-1w",
+            "seniorTokenAddress": "0xb138dD4A00f9aFa14C7FeaAcD710F37A22fE4f12",
+            "seniorTokenSymbol": "senior_WETH-USD-1w",
+            "oracleAddress": "0xDc5fd56dfE15dBC1dBBf28dE113f4B64F52F1D5f",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x8e27CcDB8374A823C83C3e00f278980a8523753e",
+            "accountingModelAddress": "0xA4393A0ceaBfe4513837D5C96A5e6bdf8Cd73af0",
+            "epoch1Start": 1631541600,
+            "epochDuration": 604800,
+            "startAtBlock": 13185569
+        },
+        {
+            "poolName": "WBTC-USD-1w",
+            "poolAddress": "0x13d5387389Ac1a3b72391D88b03B893a945B17cd",
+            "poolToken": {
+                "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+                "symbol": "WBTC",
+                "decimals": 8
+            },
+            "juniorTokenAddress": "0x2766CC123D0a005C73F7bAc66ce9e6a746fC1006",
+            "juniorTokenSymbol": "junior_WBTC-USD-1w",
+            "seniorTokenAddress": "0xC919D5d1053a9Ab77529618e45f168B199bd823d",
+            "seniorTokenSymbol": "senior_WBTC-USD-1w",
+            "oracleAddress": "0x195ed973Fd92567F5351a8c2825Bde24Ca813703",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x46F5b61dD3b8afAf7187A22f1f04aA47A667Adb8",
+            "accountingModelAddress": "0x4B297EB320397F9212B1A193B9c0fC70509f24B3",
+            "epoch1Start": 1631541600,
+            "epochDuration": 604800,
+            "startAtBlock": 13185584
+        },
+        {
+            "poolName": "WETH-BTC-1w",
+            "poolAddress": "0xE4Fbc5a705AAb5a094fc3961dFc764716F041ee9",
+            "poolToken": {
+                "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                "symbol": "WETH",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0xBf1D345817e458dB6E441b39eB2189c8678A350C",
+            "juniorTokenSymbol": "junior_WETH-BTC-1w",
+            "seniorTokenAddress": "0x1bd8665c25AFAe64cA5efD7623B363728Cfc0e35",
+            "seniorTokenSymbol": "senior_WETH-BTC-1w",
+            "oracleAddress": "0x019ed88941D44561AB11b9541476C0e86891Cd70",
+            "oracleAssetSymbol": "BTC",
+            "seniorRateModelAddress": "0x21627f5bd8b25fe8A623e1AE3A0B3756D649283d",
+            "accountingModelAddress": "0xFf52405F2EF7ab3c3e4f3A00eCd39Bb4C4C544E6",
+            "epoch1Start": 1631541600,
+            "epochDuration": 604800,
+            "startAtBlock": 13185600
+        },
+        {
+            "poolName": "WBTC-ETH-1w",
+            "poolAddress": "0xB0105F829d50841B949C274636C2D173a78DB7e0",
+            "poolToken": {
+                "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+                "symbol": "WBTC",
+                "decimals": 8
+            },
+            "juniorTokenAddress": "0x5779365Ba25615BFff8c22636A40A1EF4963926F",
+            "juniorTokenSymbol": "junior_WBTC-ETH-1w",
+            "seniorTokenAddress": "0x8dB2fDE98327810d3A2f9Ed804D39933C5473d5D",
+            "seniorTokenSymbol": "senior_WBTC-ETH-1w",
+            "oracleAddress": "0xA2FcF1c6aBfB2CdB10Ba2Ef430E2055a5a7E7E68",
+            "oracleAssetSymbol": "ETH",
+            "seniorRateModelAddress": "0x6Afa4122e183c243B00fB7d4d77C54926353E506",
+            "accountingModelAddress": "0xDD37FeE56276d2f2A06cFA43DB5A32795E9cE030",
+            "epoch1Start": 1631541600,
+            "epochDuration": 604800,
+            "startAtBlock": 13185614
+        },
+        {
+            "poolName": "stkAAVE-USD-1w",
+            "poolAddress": "0x0b2BCde6a404c53c05A6c0F5402daEd4f2dD5779",
+            "poolToken": {
+                "address": "0x4da27a545c0c5b758a6ba100e3a049001de870f5",
+                "symbol": "stkAAVE",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0xd30c763ab439316ac59eD4666E0f45f930c2FCb2",
+            "juniorTokenSymbol": "junior_stkAAVE-USD-1w",
+            "seniorTokenAddress": "0x54961dd499012180bB253A81EDe497163ba1Cef5",
+            "seniorTokenSymbol": "senior_stkAAVE-USD-1w",
+            "oracleAddress": "0xE7922CD86c60dbE663922a2860BD628d502f3Ac2",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x869fc51c699E117896f3f9CE3FA109EC15929471",
+            "accountingModelAddress": "0x786B2A1890eb13081385ad436bEcc34b91a77eAA",
+            "epoch1Start": 1632751200,
+            "epochDuration": 604800,
+            "startAtBlock": 13267829
+        },
+        {
+            "poolName": "UNI-USD-1w",
+            "poolAddress": "0x4aB87E2e6C53c4ef437c73793e3029D76B258688",
+            "poolToken": {
+                "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+                "symbol": "UNI",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0xEf157e092164d576e2D18B396DE67F04C9A126AB",
+            "juniorTokenSymbol": "junior_UNI-USD-1w",
+            "seniorTokenAddress": "0x49D9b25E10EE44f75C0C218CC3302196611388D1",
+            "seniorTokenSymbol": "senior_UNI-USD-1w",
+            "oracleAddress": "0xCdF6D026f29A77B2a315164923988586df325291",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x74E3377a2E49b042eD91a2349A536d251b5f5EB0",
+            "accountingModelAddress": "0xdcA9DE53ea1D8A6f3DfbEc9e810a195Bb071c653",
+            "epoch1Start": 1632751200,
+            "epochDuration": 604800,
+            "startAtBlock": 13267832
+        },
+        {
+            "poolName": "LINK-USD-1w",
+            "poolAddress": "0x21f768446a171f50A20C727E420981AD70e0E9d9",
+            "poolToken": {
+                "address": "0x514910771af9ca656af840dff83e8264ecf986ca",
+                "symbol": "LINK",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x7CE67f40459cda69823Bc3BEa09736E3BA4da3af",
+            "juniorTokenSymbol": "junior_LINK-USD-1w",
+            "seniorTokenAddress": "0x6F3903775Df057f038516830c6a8BcA13228DC62",
+            "seniorTokenSymbol": "senior_LINK-USD-1w",
+            "oracleAddress": "0x2F31bBf0704a346bac0Ef38878DCf625d3ee1f0E",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x72435D0B04536dB659d984bCcB7cdC04F45B9C4c",
+            "accountingModelAddress": "0x84966c9F664445581E581Ab300484d80faB01798",
+            "epoch1Start": 1632751200,
+            "epochDuration": 604800,
+            "startAtBlock": 13267834
+        },
+        {
+            "poolName": "xSUSHI-USD-1w",
+            "poolAddress": "0xeCa0ffc5E3566e9dAD05f206F2Ca1fF0174AF476",
+            "poolToken": {
+                "address": "0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272",
+                "symbol": "xSUSHI",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x55c1159B2E1aE9bda73409c7Af07A8a13A6e34b8",
+            "juniorTokenSymbol": "junior_xSUSHI-USD-1w",
+            "seniorTokenAddress": "0x3f0eB829e03C5be99467BC712839c0C9c6F4395C",
+            "seniorTokenSymbol": "senior_xSUSHI-USD-1w",
+            "oracleAddress": "0x93De95216348eBD9B3B406AAEd7c3bAa52155ED5",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x52742ad34F21DF4C66EAb99F8C133C760F77652A",
+            "accountingModelAddress": "0xc6aCF0194D6971697d90a618CFB9afE78282015C",
+            "epoch1Start": 1632751200,
+            "epochDuration": 604800,
+            "startAtBlock": 13267844
+        },
+        {
+            "poolName": "DPI-USD-1w",
+            "poolAddress": "0x173824aaD3cA34cCFe006CC2e6A6e1a183091997",
+            "poolToken": {
+                "address": "0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b",
+                "symbol": "DPI",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x6Ba623B4570AEb9b13c4c22Fc76333cD87fF7f77",
+            "juniorTokenSymbol": "junior_DPI-USD-1w",
+            "seniorTokenAddress": "0xE1CC838c073b1CC9E6e35BF0B0bF12f22872131b",
+            "seniorTokenSymbol": "senior_DPI-USD-1w",
+            "oracleAddress": "0xEb7AB9A2dD0609F665d6CB71F71c7EdE6aA2fA6c",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x67C289B10a17439a8316CCf7d8D0c6B739E1ab3F",
+            "accountingModelAddress": "0x6fA6Edc873E3330F908Eec51a9cC6cDa69650160",
+            "epoch1Start": 1634565600,
+            "epochDuration": 604800,
+            "startAtBlock": 13415885
+        },
+        {
+            "poolName": "DPI-ETH-1w",
+            "poolAddress": "0xEBC6d26939F035644EbcE4a5aCeb9f29df29c383",
+            "poolToken": {
+                "address": "0x1494ca1f11d487c2bbe4543e90080aeba4ba3c2b",
+                "symbol": "DPI",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0xBBD8EF5D5a1F730DbaF37272BdbdA4C71eAaC6d3",
+            "juniorTokenSymbol": "junior_DPI-ETH-1w",
+            "seniorTokenAddress": "0x6B612Cb572D784F9dB5A494dBD38C3F7510fffFB",
+            "seniorTokenSymbol": "senior_DPI-ETH-1w",
+            "oracleAddress": "0xf767D70BaC8dfa9d5C94C1632075eA5f0619eF19",
+            "oracleAssetSymbol": "ETH",
+            "seniorRateModelAddress": "0xBCe293A90eE73E51D17940FA3C8220514d709E6e",
+            "accountingModelAddress": "0xFE268D1B296A3ea072449cc48328ece8A5aB4ed1",
+            "epoch1Start": 1634565600,
+            "epochDuration": 604800,
+            "startAtBlock": 13415899
+        },
+        {
+            "poolName": "FLOKI-USD-1w",
+            "poolAddress": "0x6ACb5F6D4C7E2ca6FE3B7cac13cA6B3Ea6c9eE01",
+            "poolToken": {
+                "address": "0x43f11c02439e2736800433b4594994bd43cd066d",
+                "symbol": "FLOKI",
+                "decimals": 9
+            },
+            "juniorTokenAddress": "0xeAE0Fd9dD7420170616e887E2DF8E7D5f6939962",
+            "juniorTokenSymbol": "junior_FLOKI-USD-1w",
+            "seniorTokenAddress": "0x56a046b4879AbF39FF7f9C17a6f4d2E5354aF292",
+            "seniorTokenSymbol": "senior_FLOKI-USD-1w",
+            "oracleAddress": "0x92a3B3f33e1D3AAD27144279dC2DDBCB92956Ebf",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x5d167382707624C193c623b1302cE6E67fA16Bb3",
+            "accountingModelAddress": "0x661C620Ba786b421A7Be2b477dE9AF07B4A2B6F3",
+            "epoch1Start": 1640613600,
+            "epochDuration": 604800,
+            "startAtBlock": 13854340
+        }
+    ]
 }
