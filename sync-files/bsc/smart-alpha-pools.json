@@ -9,13 +9,13 @@
                 "decimals": 18
             },
             "juniorTokenAddress": "0xB7f18f06e86f94D79Fc24C1e2113F997Ba27ceF0",
-            "juniorTokenSymbol" : "junior_ETH-USD-1w",
+            "juniorTokenSymbol": "junior_ETH-USD-1w",
             "seniorTokenAddress": "0x24a968Ff1dC2Bc6f8bD3E553C8907deF811b49b6",
             "seniorTokenSymbol": "senior_ETH-USD-1w",
             "oracleAddress": "0xf1F311849e9dca2983e7094dC661eF36FE5Ac7Cc",
             "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress":"0x5bDb4f13Bea877DE01d694698f5a4E82a259D2F7",
-            "accountingModelAddress":"0x8706D9FB94f8e29E9ed99cb73CCe4E5c62aA35C6",
+            "seniorRateModelAddress": "0x5bDb4f13Bea877DE01d694698f5a4E82a259D2F7",
+            "accountingModelAddress": "0x8706D9FB94f8e29E9ed99cb73CCe4E5c62aA35C6",
             "epoch1Start": 1633960800,
             "epochDuration": 604800,
             "startAtBlock": 11536917
@@ -29,13 +29,13 @@
                 "decimals": 18
             },
             "juniorTokenAddress": "0x786a8a01a899768df806B1C56913A5A7DDF0B200",
-            "juniorTokenSymbol" : "junior_BTCB-USD-1w",
+            "juniorTokenSymbol": "junior_BTCB-USD-1w",
             "seniorTokenAddress": "0x5079619dDb10e6555E4069527970d713052dd6ea",
             "seniorTokenSymbol": "senior_BTCB-USD-1w",
             "oracleAddress": "0x96FfC3766B5D9322aA03c27355f9f594B5f7Ee19",
             "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress":"0x27DCee717Fa84f35bC79D888a234E7609b75C340",
-            "accountingModelAddress":"0x3E84f847A3F5938C97DBacc58d24d6394d4b67c0",
+            "seniorRateModelAddress": "0x27DCee717Fa84f35bC79D888a234E7609b75C340",
+            "accountingModelAddress": "0x3E84f847A3F5938C97DBacc58d24d6394d4b67c0",
             "epoch1Start": 1633960800,
             "epochDuration": 604800,
             "startAtBlock": 11536930
@@ -49,13 +49,13 @@
                 "decimals": 18
             },
             "juniorTokenAddress": "0x31797710Af4ddC9D9A4Da869B79A57FFC503e3bb",
-            "juniorTokenSymbol" : "junior_WBNB-USD-1w",
+            "juniorTokenSymbol": "junior_WBNB-USD-1w",
             "seniorTokenAddress": "0x1E472fF8C880718A930bf504a3D91346539097A0",
             "seniorTokenSymbol": "senior_WBNB-USD-1w",
             "oracleAddress": "0x6445843cEe1C9caB25722886f26777d1f4ffC150",
             "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress":"0x97156C0d9D83FeD5C45DC7E7F2fFc873D00B62B8",
-            "accountingModelAddress":"0xab14f025CA516454346F11A0E1bEEAeb0160Bf46",
+            "seniorRateModelAddress": "0x97156C0d9D83FeD5C45DC7E7F2fFc873D00B62B8",
+            "accountingModelAddress": "0xab14f025CA516454346F11A0E1bEEAeb0160Bf46",
             "epoch1Start": 1633960800,
             "epochDuration": 604800,
             "startAtBlock": 11536944
@@ -69,16 +69,36 @@
                 "decimals": 18
             },
             "juniorTokenAddress": "0xE1cCf8F855059C8d30E92F68e00bDF7Fc7a4CD50",
-            "juniorTokenSymbol" : "junior_CAKE-USD-1w",
+            "juniorTokenSymbol": "junior_CAKE-USD-1w",
             "seniorTokenAddress": "0x3b75a6507769e23a55c2Aa66C791bd071684abd6",
             "seniorTokenSymbol": "senior_CAKE-USD-1w",
             "oracleAddress": "0xDa2CC5723C1f44Eb7C5E0eE15eD0B5b0569A59ef",
             "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress":"0xFb3AaF7a379D5463046854649EF5aD2d3d739896",
-            "accountingModelAddress":"0xD56d4a9AbC6Af41D04533071A9f221Fe33ECC39C",
+            "seniorRateModelAddress": "0xFb3AaF7a379D5463046854649EF5aD2d3d739896",
+            "accountingModelAddress": "0xD56d4a9AbC6Af41D04533071A9f221Fe33ECC39C",
             "epoch1Start": 1633960800,
             "epochDuration": 604800,
             "startAtBlock": 11536957
+        },
+        {
+            "poolName": "FLOKI-USD-1w",
+            "poolAddress": "0xF88b77681BFa3a05790c2491f021Ff085a1BDEd5",
+            "poolToken": {
+                "address": "0x2b3f34e9d4b127797ce6244ea341a83733ddd6e4",
+                "symbol": "FLOKI",
+                "decimals": 9
+            },
+            "juniorTokenAddress": "0x9A369DB61A61dF10c68C1d64b77454b699772626",
+            "juniorTokenSymbol": "junior_FLOKI-USD-1w",
+            "seniorTokenAddress": "0xdEC3Fb30d9a1e363957b0d1eeCD0CA99D34105cA",
+            "seniorTokenSymbol": "senior_FLOKI-USD-1w",
+            "oracleAddress": "0xdeD8526BC324EE6e4F965B3d8c550011C28FAf73",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress": "0x128b8D8513701E8cDde26f47A8CfBd3D952F8Fb5",
+            "accountingModelAddress": "0x5c979b9C52f2c2800b7072aaDa9Eb69b7cfF3a2e",
+            "epoch1Start": 1640613600,
+            "epochDuration": 604800,
+            "startAtBlock": 13728888
         }
     ]
 }
