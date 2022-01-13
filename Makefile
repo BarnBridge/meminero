@@ -37,5 +37,8 @@ sync-arbitrum: meminero
 sync-optimistickovan: meminero
 	./meminero sync --syncer.network optimistickovan --syncer.datasets smart-alpha-pools,tokens
 
+sync-optimistic: meminero
+	./meminero sync --syncer.network optimistic --syncer.datasets smart-alpha-pools,tokens
+
 gen: meminero
 	./meminero generate-eth-types
