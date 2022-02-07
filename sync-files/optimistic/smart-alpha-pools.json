@@ -79,6 +79,86 @@
             "epoch1Start": 1643032800,
             "epochDuration": 604800,
             "startAtBlock": 2475236
+        },
+        {
+            "poolName": "WETH-USD-1d",
+            "poolAddress": "0x56f9ea7953DAcCb139ebC5473FF7D773D7D3E5d2",
+            "poolToken": {
+                "address": "0x4200000000000000000000000000000000000006",
+                "symbol": "WETH",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x64F36BBB40100660935371fE70883280C6AeA4EF",
+            "juniorTokenSymbol" : "junior_WETH-USD-1d",
+            "seniorTokenAddress": "0xa2d87098289B8b5aDE3CD327Cdd4F360d73e1ED1",
+            "seniorTokenSymbol": "senior_WETH-USD-1d",
+            "oracleAddress": "0xB17Eb3a2631b8809d78B68603A930356D8f46bEB",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress":"0x86C9F8e4461e6DcB782807A083dB42600F4E1563",
+            "accountingModelAddress":"0xfDF86758bF5ed11163c6D1e7695FcEfc59cCb548",
+            "epoch1Start": 1644328800,
+            "epochDuration": 86400,
+            "startAtBlock": 3251530
+        },
+        {
+            "poolName": "WBTC-USD-1d",
+            "poolAddress": "0x346305BDB8c3DfA1796045E67b68965a7eEddC6D",
+            "poolToken": {
+                "address": "0x68f180fcce6836688e9084f035309e29bf0a2095",
+                "symbol": "WBTC",
+                "decimals": 8
+            },
+            "juniorTokenAddress": "0x51a8988C363a3F2825422A21a408995d43f28308",
+            "juniorTokenSymbol" : "junior_WBTC-USD-1d",
+            "seniorTokenAddress": "0xA9D38FEdbE15f97C6f7acCa3b2E8e558f1675572",
+            "seniorTokenSymbol": "senior_WBTC-USD-1d",
+            "oracleAddress": "0x63F0c994938c700A477a1f3C5b7B6762a2Da4Ed2",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress":"0x64Ca6960Eb9b1Acd2bCa6E8551133022935831e3",
+            "accountingModelAddress":"0xCeb05B102f83610Dd46Bb5cC9466E2Edc4DccB79",
+            "epoch1Start": 1644328800,
+            "epochDuration": 86400,
+            "startAtBlock": 3251621
+        },
+        {
+            "poolName": "SNX-USD-1d",
+            "poolAddress": "0xd10c67b59a370e29C7647a210cCD09aE979bE773",
+            "poolToken": {
+                "address": "0x8700daec35af8ff88c16bdf0418774cb3d7599b4",
+                "symbol": "SNX",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x4EB31eD1a45d65843801bd465B57b6C7A1FeF64F",
+            "juniorTokenSymbol" : "junior_SNX-USD-1d",
+            "seniorTokenAddress": "0x397965e4c177aAc376be052A75d8999439213D36",
+            "seniorTokenSymbol": "senior_SNX-USD-1d",
+            "oracleAddress": "0x7CAab9a74D751b194BB9C7676907e34ec1B3CE1b",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress":"0x24E0e9C9A1a59f4AB8C65dA1AB81FB0d6A42680d",
+            "accountingModelAddress":"0xE65F3F8673CdE587FAEFCd87f2A57374d471F428",
+            "epoch1Start": 1644328800,
+            "epochDuration": 86400,
+            "startAtBlock": 3251656
+        },
+        {
+            "poolName": "LINK-USD-1d",
+            "poolAddress": "0xaCD2c6b9f8Caf18cf182d6EFd8f1a7b0B0C6A141",
+            "poolToken": {
+                "address": "0x350a791bfc2c21f9ed5d10980dad2e2638ffa7f6",
+                "symbol": "LINK",
+                "decimals": 18
+            },
+            "juniorTokenAddress": "0x3bF76227B8F45148E7D55DfA26f04205A93EA29b",
+            "juniorTokenSymbol" : "junior_LINK-USD-1d",
+            "seniorTokenAddress": "0x330F906DEa863a477885A6cDc1bC1DADF5Dc736A",
+            "seniorTokenSymbol": "senior_LINK-USD-1d",
+            "oracleAddress": "0xF6993dE0F30b73d0F070F48DdA12bae68527E6c2",
+            "oracleAssetSymbol": "USD",
+            "seniorRateModelAddress":"0xd123a3658eA8557e947d464B932C4e17c0e2bEF3",
+            "accountingModelAddress":"0x4ace2E6158687b193c6C6D15FDAd6D7F8A82809C",
+            "epoch1Start": 1644328800,
+            "epochDuration": 86400,
+            "startAtBlock": 3251721
         }
     ]
 }
