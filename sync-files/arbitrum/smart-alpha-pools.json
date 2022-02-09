@@ -79,26 +79,6 @@
             "epoch1Start": 1634565600,
             "epochDuration": 604800,
             "startAtBlock": 2214967
-        },
-        {
-            "poolName": "SUSHI-USD-1w",
-            "poolAddress": "0x73e5685b52b29B12555EfeB23b496dEE144fD502",
-            "poolToken": {
-                "address": "0xd4d42f0b6def4ce0383636770ef773390d85c61a",
-                "symbol": "SUSHI",
-                "decimals": 18
-            },
-            "juniorTokenAddress": "0x9C1C5Db9d5AcEbc82cC9F7A437EDEFDFe51Cb3b1",
-            "juniorTokenSymbol" : "junior_SUSHI-USD-1w",
-            "seniorTokenAddress": "0xcbedd761FF6e8702A8A4eE1F8455394fff9053B4",
-            "seniorTokenSymbol": "senior_SUSHI-USD-1w",
-            "oracleAddress": "0x7B50C9560837579dc716eC486D06A6f1C86A8bE4",
-            "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress":"0xaF7D04cfccFA2b20ba34ac8a447e1dB5c1aBE93A",
-            "accountingModelAddress":"0x1A9f9CeE84C261ef598311d3428Ad5e878c30DC5",
-            "epoch1Start": 1634565600,
-            "epochDuration": 604800,
-            "startAtBlock": 2214979
         }
     ]
 }
