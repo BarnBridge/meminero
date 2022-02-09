@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
@@ -159,7 +160,9 @@ func (s *Storable) Execute(ctx context.Context) error {
 			abondMaturesAt := decimal.NewFromBigInt(abond.MaturesAt, -18)
 
 			var abondAPY float64
-			if !abondPrincipal.Equal(decimal.NewFromInt(0)) {
+			if abondMaturesAt.IntPart() < time.Now().Unix() {
+				abondAPY = 0
+			} else if !abondPrincipal.Equal(decimal.NewFromInt(0)) {
 				abondAPY, _ = abondGain.Div(abondPrincipal).
 					Div(abondMaturesAt.Sub(abondIssuedAt)).
 					Mul(decimal.NewFromInt(365 * 24 * 60 * 60)).
