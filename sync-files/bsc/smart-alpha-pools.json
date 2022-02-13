@@ -21,26 +21,6 @@
             "startAtBlock": 11536917
         },
         {
-            "poolName": "BTCB-USD-1w",
-            "poolAddress": "0x87c142f2C3d65E674A899b22Aedcd1B33340B6E5",
-            "poolToken": {
-                "address": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
-                "symbol": "BTCB",
-                "decimals": 18
-            },
-            "juniorTokenAddress": "0x786a8a01a899768df806B1C56913A5A7DDF0B200",
-            "juniorTokenSymbol": "junior_BTCB-USD-1w",
-            "seniorTokenAddress": "0x5079619dDb10e6555E4069527970d713052dd6ea",
-            "seniorTokenSymbol": "senior_BTCB-USD-1w",
-            "oracleAddress": "0x96FfC3766B5D9322aA03c27355f9f594B5f7Ee19",
-            "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress": "0x27DCee717Fa84f35bC79D888a234E7609b75C340",
-            "accountingModelAddress": "0x3E84f847A3F5938C97DBacc58d24d6394d4b67c0",
-            "epoch1Start": 1633960800,
-            "epochDuration": 604800,
-            "startAtBlock": 11536930
-        },
-        {
             "poolName": "WBNB-USD-1w",
             "poolAddress": "0x8Db00420f078702b4251BF4D37e6756DBcb16f70",
             "poolToken": {
@@ -79,26 +59,6 @@
             "epoch1Start": 1633960800,
             "epochDuration": 604800,
             "startAtBlock": 11536957
-        },
-        {
-            "poolName": "FLOKI-USD-1w",
-            "poolAddress": "0xF88b77681BFa3a05790c2491f021Ff085a1BDEd5",
-            "poolToken": {
-                "address": "0x2b3f34e9d4b127797ce6244ea341a83733ddd6e4",
-                "symbol": "FLOKI",
-                "decimals": 9
-            },
-            "juniorTokenAddress": "0x9A369DB61A61dF10c68C1d64b77454b699772626",
-            "juniorTokenSymbol": "junior_FLOKI-USD-1w",
-            "seniorTokenAddress": "0xdEC3Fb30d9a1e363957b0d1eeCD0CA99D34105cA",
-            "seniorTokenSymbol": "senior_FLOKI-USD-1w",
-            "oracleAddress": "0xdeD8526BC324EE6e4F965B3d8c550011C28FAf73",
-            "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress": "0x128b8D8513701E8cDde26f47A8CfBd3D952F8Fb5",
-            "accountingModelAddress": "0x5c979b9C52f2c2800b7072aaDa9Eb69b7cfF3a2e",
-            "epoch1Start": 1640613600,
-            "epochDuration": 604800,
-            "startAtBlock": 13728888
         }
     ]
 }

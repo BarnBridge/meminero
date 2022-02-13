@@ -59,26 +59,6 @@
             "epoch1Start": 1633356000,
             "epochDuration": 604800,
             "startAtBlock": 5032366
-        },
-        {
-            "poolName": "AAVE-USD-1w",
-            "poolAddress": "0x372153d795f6115f9F0f41D874A260F43f714F10",
-            "poolToken": {
-                "address": "0x63a72806098Bd3D9520cC43356dD78afe5D386D9",
-                "symbol": "AAVE.e",
-                "decimals": 18
-            },
-            "juniorTokenAddress": "0x526Db1bfbE86C03f3Cf3E0055f6dDFF2648Da25c",
-            "juniorTokenSymbol": "junior_AAVE-USD-1w",
-            "seniorTokenAddress": "0x6Af4A80442D59e4C0eb5EBB03AE87B72101Dd4f0",
-            "seniorTokenSymbol": "senior_AAVE-USD-1w",
-            "oracleAddress": "0x186d85A5991eD700E34801d87E95111d7910b38c",
-            "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress": "0x6Ea65634d79Dd896Cd0Ef87F3AB14ec108489801",
-            "accountingModelAddress": "0x3515B3ED7af5C5d0838aB96718c1af3B497957EA",
-            "epoch1Start": 1633356000,
-            "epochDuration": 604800,
-            "startAtBlock": 5032376
         }
     ]
 }

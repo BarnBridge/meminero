@@ -119,26 +119,6 @@
             "epoch1Start": 1632751200,
             "epochDuration": 604800,
             "startAtBlock": 13267844
-        },
-        {
-            "poolName": "FLOKI-USD-1w",
-            "poolAddress": "0x6ACb5F6D4C7E2ca6FE3B7cac13cA6B3Ea6c9eE01",
-            "poolToken": {
-                "address": "0x43f11c02439e2736800433b4594994bd43cd066d",
-                "symbol": "FLOKI",
-                "decimals": 9
-            },
-            "juniorTokenAddress": "0xeAE0Fd9dD7420170616e887E2DF8E7D5f6939962",
-            "juniorTokenSymbol": "junior_FLOKI-USD-1w",
-            "seniorTokenAddress": "0x56a046b4879AbF39FF7f9C17a6f4d2E5354aF292",
-            "seniorTokenSymbol": "senior_FLOKI-USD-1w",
-            "oracleAddress": "0x92a3B3f33e1D3AAD27144279dC2DDBCB92956Ebf",
-            "oracleAssetSymbol": "USD",
-            "seniorRateModelAddress": "0x5d167382707624C193c623b1302cE6E67fA16Bb3",
-            "accountingModelAddress": "0x661C620Ba786b421A7Be2b477dE9AF07B4A2B6F3",
-            "epoch1Start": 1640613600,
-            "epochDuration": 604800,
-            "startAtBlock": 13854340
         }
     ]
 }
