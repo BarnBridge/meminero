@@ -1,21 +1,21 @@
 create function smart_alpha.lp_token_epoch_start_price_at_ts(pool text, ts bigint)
     returns table
             (
-                junior_token_price_start double precision,
-                senior_token_price_start double precision
+                junior_price_start double precision,
+                senior_price_start double precision
             )
     language plpgsql
 as
 $$
 begin
 
-    return query (select junior_token_price_start::numeric(78, 18) / pow(10, 18),
-                   senior_token_price_start::numeric(78, 18) / pow(10, 18)
-            from smart_alpha.pool_epoch_info
-            where pool_address = pool
-              and block_timestamp <= ts
-            order by block_timestamp desc
-            limit 1);
+    return query (select junior_token_price_start::numeric(78, 18) / pow(10, 18) as junior_price_start,
+                         senior_token_price_start::numeric(78, 18) / pow(10, 18) as senior_price_start
+                  from smart_alpha.pool_epoch_info
+                  where pool_address = pool
+                    and block_timestamp <= ts
+                  order by block_timestamp desc
+                  limit 1);
 end;
 $$;
 
@@ -42,7 +42,7 @@ create function smart_alpha.junior_position_performance_at_ts(addr text, pool te
 as
 $$
 declare
-    junior_balance                double precision;
+    junior_balance                numeric;
     junior_token_address          text;
     pool_token_address            text;
     junior_performance_with_sa    double precision;
@@ -59,17 +59,17 @@ begin
 
     select into junior_performance_with_sa smart_alpha.junior_token_to_usd_at_ts(junior_token_address, junior_balance,
                                                                                  ts);
-    select into junior_performance_without_sa (select format_lp_token(junior_balance, pool) *
-                                                      (select junior_token_price_start
-                                                       from lp_token_epoch_start_price_at_ts(pool, ts)) *
-                                                      (select token_usd_price_at_ts(pool_token_address, ts)));
+    select into junior_performance_without_sa (select smart_alpha.format_lp_token(junior_balance, pool) *
+                                                      (select lp.junior_price_start
+                                                       from smart_alpha.lp_token_epoch_start_price_at_ts(pool, ts) lp
+                                                       limit 1) *
+                                                      (select public.token_usd_price_at_ts(pool_token_address, ts)));
 
-    return query select (select coalesce(junior_performance_with_sa,0), coalesce(junior_performance_without_sa,0));
+    return query select  coalesce(junior_performance_with_sa, 0), coalesce(junior_performance_without_sa, 0);
 end;
 $$;
 
-
-create function smart_alpha.senior_position_performance_at_ts(addr text,pool text,ts bigint)
+create function smart_alpha.senior_position_performance_at_ts(addr text, pool text, ts bigint)
     returns table
             (
                 senior_performance_with_sa    double precision,
@@ -79,7 +79,7 @@ create function smart_alpha.senior_position_performance_at_ts(addr text,pool tex
 as
 $$
 declare
-    senior_balance                double precision;
+    senior_balance                numeric;
     senior_token_address          text;
     pool_token_address            text;
     senior_performance_with_sa    double precision;
@@ -96,10 +96,10 @@ begin
 
     select into senior_performance_with_sa smart_alpha.senior_token_to_usd_at_ts(senior_token_address, senior_balance,
                                                                                  ts);
-    select into senior_performance_without_sa (select format_lp_token(senior_balance, pool) *
-                                                      (select senior_token_price_start
-                                                       from lp_token_epoch_start_price_at_ts(pool, ts)) *
-                                                      (select token_usd_price_at_ts(pool_token_address, ts)));
-    return query select (select coalesce(senior_performance_with_sa,0), coalesce(senior_performance_without_sa,0));
+    select into senior_performance_without_sa (select smart_alpha.format_lp_token(senior_balance, pool) *
+                                                      (select lp.senior_price_start
+                                                       from smart_alpha.lp_token_epoch_start_price_at_ts(pool, ts) lp) *
+                                                      (select public.token_usd_price_at_ts(pool_token_address, ts)));
+    return query select coalesce(senior_performance_with_sa, 0), coalesce(senior_performance_without_sa, 0);
 end;
 $$;
