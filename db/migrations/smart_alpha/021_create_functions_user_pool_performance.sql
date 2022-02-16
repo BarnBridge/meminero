@@ -1,4 +1,4 @@
-create function lp_token_epoch_start_price_at_ts(pool text, ts bigint)
+create function smart_alpha.lp_token_epoch_start_price_at_ts(pool text, ts bigint)
     returns table
             (
                 junior_token_price_start double precision,
@@ -20,7 +20,7 @@ end;
 $$;
 
 
-create function format_lp_token(amount numeric, pool text) returns double precision
+create function smart_alpha.format_lp_token(amount numeric, pool text) returns double precision
     language plpgsql
 as
 $$
@@ -32,7 +32,7 @@ begin
 end;
 $$;
 
-create function junior_position_performance_at_ts(addr text, pool text, ts bigint)
+create function smart_alpha.junior_position_performance_at_ts(addr text, pool text, ts bigint)
     returns table
             (
                 junior_performance_with_sa    double precision,
@@ -64,12 +64,12 @@ begin
                                                        from lp_token_epoch_start_price_at_ts(pool, ts)) *
                                                       (select token_usd_price_at_ts(pool_token_address, ts)));
 
-    return query select (select junior_performance_with_sa, junior_performance_without_sa);
+    return query select (select coalesce(junior_performance_with_sa,0), coalesce(junior_performance_without_sa,0));
 end;
 $$;
 
 
-create function senior_position_performance_at_ts(addr text,pool text,ts bigint)
+create function smart_alpha.senior_position_performance_at_ts(addr text,pool text,ts bigint)
     returns table
             (
                 senior_performance_with_sa    double precision,
@@ -100,6 +100,6 @@ begin
                                                       (select senior_token_price_start
                                                        from lp_token_epoch_start_price_at_ts(pool, ts)) *
                                                       (select token_usd_price_at_ts(pool_token_address, ts)));
-    return query select (select senior_performance_with_sa, senior_performance_without_sa);
+    return query select (select coalesce(senior_performance_with_sa,0), coalesce(senior_performance_without_sa,0));
 end;
 $$;
