@@ -108,7 +108,7 @@ create or replace function smart_alpha.junior_tokens_not_redeemed(addr text, poo
     language plpgsql as
 $$
 begin
-    return (select j.underlying_in
+    return (select sum(j.underlying_in)
             from smart_alpha.user_join_entry_queue_events j
                      left join smart_alpha.user_redeem_tokens_events r
                                on j.user_address = r.user_address and j.pool_address = r.pool_address and
@@ -125,7 +125,7 @@ create or replace function smart_alpha.senior_tokens_not_redeemed(addr text, poo
     language plpgsql as
 $$
 begin
-    return (select j.underlying_in
+    return (select sum(j.underlying_in)
             from smart_alpha.user_join_entry_queue_events j
                      left join smart_alpha.user_redeem_tokens_events r
                                on j.user_address = r.user_address and j.pool_address = r.pool_address and
