@@ -53,7 +53,7 @@ begin
     from smart_alpha.pools p
     where p.pool_address = pool;
 
-    select into junior_balance balance
+    select into junior_balance balance + (select from smart_alpha.junior_tokens_not_redeemed(addr, pool, ts))
     from public.erc20_balances_at_ts(addr, (select array_agg(junior_token_address)), ts);
 
 
@@ -65,7 +65,7 @@ begin
                                                        limit 1) *
                                                       (select public.token_usd_price_at_ts(pool_token_address, ts)));
 
-    return query select  coalesce(junior_performance_with_sa, 0), coalesce(junior_performance_without_sa, 0);
+    return query select coalesce(junior_performance_with_sa, 0), coalesce(junior_performance_without_sa, 0);
 end;
 $$;
 
@@ -90,7 +90,7 @@ begin
     from smart_alpha.pools p
     where p.pool_address = pool;
 
-    select into senior_balance balance
+    select into senior_balance balance + (select from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts))
     from public.erc20_balances_at_ts(addr, (select array_agg(senior_token_address)), ts);
 
 
@@ -101,5 +101,39 @@ begin
                                                        from smart_alpha.lp_token_epoch_start_price_at_ts(pool, ts) lp) *
                                                       (select public.token_usd_price_at_ts(pool_token_address, ts)));
     return query select coalesce(senior_performance_with_sa, 0), coalesce(senior_performance_without_sa, 0);
+end;
+$$;
+
+create or replace function smart_alpha.junior_tokens_not_redeemed(addr text, pool text, ts bigint) returns numeric
+    language plpgsql as
+$$
+begin
+    return (select j.underlying_in
+            from smart_alpha.user_join_entry_queue_events j
+                     left join smart_alpha.user_redeem_tokens_events r
+                               on j.user_address = r.user_address and j.pool_address = r.pool_address and
+                                  j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp <= ts
+            where j.user_address = addr
+              and j.pool_address = pool
+              and j.tranche = 'JUNIOR'
+              and j.block_timestamp <= ts
+              and r.user_address is null);
+end;
+$$;
+
+create or replace function smart_alpha.senior_tokens_not_redeemed(addr text, pool text, ts bigint) returns numeric
+    language plpgsql as
+$$
+begin
+    return (select j.underlying_in
+            from smart_alpha.user_join_entry_queue_events j
+                     left join smart_alpha.user_redeem_tokens_events r
+                               on j.user_address = r.user_address and j.pool_address = r.pool_address and
+                                  j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp <= ts
+            where j.user_address = addr
+              and j.pool_address = pool
+              and j.tranche = 'SENIOR'
+              and j.block_timestamp <= ts
+              and r.user_address is null);
 end;
 $$;
