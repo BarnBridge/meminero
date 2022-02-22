@@ -1,4 +1,4 @@
-create function smart_alpha.lp_token_epoch_start_price_at_ts(pool text, ts bigint)
+create or replace function smart_alpha.lp_token_epoch_start_price_at_ts(pool text, ts bigint)
     returns table
             (
                 junior_price_start double precision,
@@ -20,7 +20,7 @@ end;
 $$;
 
 
-create function smart_alpha.format_lp_token(amount numeric, pool text) returns double precision
+create or replace function smart_alpha.format_lp_token(amount numeric, pool text) returns double precision
     language plpgsql
 as
 $$
@@ -32,7 +32,7 @@ begin
 end;
 $$;
 
-create function smart_alpha.junior_position_performance_at_ts(addr text, pool text, ts bigint)
+create or replace function smart_alpha.junior_position_performance_at_ts(addr text, pool text, ts bigint)
     returns table
             (
                 junior_performance_with_sa    double precision,
@@ -47,13 +47,23 @@ declare
     pool_token_address            text;
     junior_performance_with_sa    double precision;
     junior_performance_without_sa double precision;
+    epoch_id                      integer;
 begin
 
-    select into junior_token_address,pool_token_address p.junior_token_address, p.pool_token_address
+    select into junior_token_address,pool_token_address,epoch_id p.junior_token_address,
+                                                                 p.pool_token_address,
+                                                                 ep.epoch_id
     from smart_alpha.pools p
-    where p.pool_address = pool;
+             inner join smart_alpha.pool_epoch_info ep on p.pool_address = ep.pool_address
+    where p.pool_address = pool
+      and ep.block_timestamp <= ts
+    order by ep.epoch_id desc
+    limit 1;
 
-    select into junior_balance balance + (select from smart_alpha.junior_tokens_not_redeemed(addr, pool, ts))
+    select into junior_balance balance + (select
+                                          from smart_alpha.underlying_to_junior_tokens_at_epoch(pool,
+                                                                                                (smart_alpha.junior_tokens_not_redeemed(addr, pool, ts)),
+                                                                                                epoch_id))
     from public.erc20_balances_at_ts(addr, (select array_agg(junior_token_address)), ts);
 
 
@@ -69,7 +79,7 @@ begin
 end;
 $$;
 
-create function smart_alpha.senior_position_performance_at_ts(addr text, pool text, ts bigint)
+create or replace function smart_alpha.senior_position_performance_at_ts(addr text, pool text, ts bigint)
     returns table
             (
                 senior_performance_with_sa    double precision,
@@ -84,13 +94,24 @@ declare
     pool_token_address            text;
     senior_performance_with_sa    double precision;
     senior_performance_without_sa double precision;
+    epoch_id                      integer;
 begin
 
-    select into senior_token_address,pool_token_address p.senior_token_address, p.pool_token_address
+    select into senior_token_address,pool_token_address,epoch_id p.senior_token_address,
+                                                                 p.pool_token_address,
+                                                                 ep.epoch_id
     from smart_alpha.pools p
-    where p.pool_address = pool;
+             inner join smart_alpha.pool_epoch_info ep on p.pool_address = ep.pool_address
+    where p.pool_address = pool
+      and ep.block_timestamp <= ts
+    order by ep.epoch_id desc
+    limit 1;
 
-    select into senior_balance balance + (select from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts))
+    select into senior_balance balance + (select
+                                          from smart_alpha.underlying_to_senior_tokens_at_epoch(pool,
+                                                                                                (select from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts)),
+                                                                                                epoch_id)
+    )
     from public.erc20_balances_at_ts(addr, (select array_agg(senior_token_address)), ts);
 
 
