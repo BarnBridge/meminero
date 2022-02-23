@@ -32,6 +32,107 @@ begin
 end;
 $$;
 
+create or replace function smart_alpha.junior_tokens_not_redeemed(addr text, pool text, ts bigint)
+    returns table
+            (
+                junior_not_redeemed_with_sa    double precision,
+                junior_not_redeemed_without_sa double precision
+            )
+    language plpgsql
+as
+$$
+declare
+    junior_token_address           text;
+    pool_token_address             text;
+    junior_balance_not_redeemed    numeric;
+    epoch_ts                       bigint;
+    junior_not_redeemed_with_sa    double precision;
+    junior_not_redeemed_without_sa double precision;
+
+
+begin
+    select into junior_token_address,pool_token_address,junior_balance_not_redeemed,epoch_ts p.junior_token_address,
+                                                                                             p.pool_token_address,
+                                                                                             j.underlying_in,
+                                                                                             j.block_timestamp
+
+    from smart_alpha.user_join_entry_queue_events j
+             left join smart_alpha.user_redeem_tokens_events r
+                       on j.user_address = r.user_address and
+                          j.pool_address = r.pool_address and
+                          j.epoch_id = r.epoch_id and
+                          j.tranche = r.tranche and
+                          r.block_timestamp <= ts
+             inner join smart_alpha.pools p on j.pool_address = p.pool_address
+    where j.user_address = addr
+      and j.pool_address = pool
+      and j.tranche = 'JUNIOR'
+      and j.block_timestamp <= ts
+      and r.user_address is null;
+
+    select into junior_not_redeemed_with_sa smart_alpha.junior_token_to_usd_at_ts(junior_token_address,
+                                                                                  junior_balance_not_redeemed,
+                                                                                  epoch_ts);
+    select into junior_not_redeemed_without_sa (select smart_alpha.format_lp_token(junior_balance_not_redeemed, pool) *
+                                                       (select lp.junior_price_start
+                                                        from smart_alpha.lp_token_epoch_start_price_at_ts(pool, epoch_ts) lp
+                                                        limit 1) *
+                                                       (select public.token_usd_price_at_ts(pool_token_address, epoch_ts)));
+    return query select junior_not_redeemed_with_sa, junior_not_redeemed_without_sa;
+end;
+$$;
+
+create or replace function smart_alpha.senior_tokens_not_redeemed(addr text, pool text, ts bigint)
+    returns table
+            (
+                senior_not_redeemed_with_sa    double precision,
+                senior_not_redeemed_without_sa double precision
+            )
+    language plpgsql
+as
+$$
+declare
+    senior_token_address           text;
+    pool_token_address             text;
+    senior_balance_not_redeemed    numeric;
+    epoch_ts                       bigint;
+    senior_not_redeemed_with_sa    double precision;
+    senior_not_redeemed_without_sa double precision;
+
+
+begin
+    select into senior_token_address,pool_token_address,senior_balance_not_redeemed,epoch_ts p.senior_token_address,
+                                                                                             p.pool_token_address,
+                                                                                             j.underlying_in,
+                                                                                             j.block_timestamp
+
+    from smart_alpha.user_join_entry_queue_events j
+             left join smart_alpha.user_redeem_tokens_events r
+                       on j.user_address = r.user_address and
+                          j.pool_address = r.pool_address and
+                          j.epoch_id = r.epoch_id and
+                          j.tranche = r.tranche and
+                          r.block_timestamp <= ts
+             inner join smart_alpha.pools p on j.pool_address = p.pool_address
+    where j.user_address = addr
+      and j.pool_address = pool
+      and j.tranche = 'SENIOR'
+      and j.block_timestamp <= ts
+      and r.user_address is null;
+
+    select into senior_not_redeemed_with_sa smart_alpha.junior_token_to_usd_at_ts(senior_token_address,
+                                                                                  senior_balance_not_redeemed,
+                                                                                  epoch_ts);
+    select into senior_not_redeemed_without_sa (select smart_alpha.format_lp_token(senior_balance_not_redeemed, pool) *
+                                                       (select lp.senior_price_start
+                                                        from smart_alpha.lp_token_epoch_start_price_at_ts(pool, epoch_ts) lp
+                                                        limit 1) *
+                                                       (select public.token_usd_price_at_ts(pool_token_address, epoch_ts)));
+
+    return query select senior_not_redeemed_with_sa, senior_not_redeemed_without_sa;
+end;
+$$;
+
 create or replace function smart_alpha.junior_position_performance_at_ts(addr text, pool text, ts bigint)
     returns table
             (
@@ -47,23 +148,15 @@ declare
     pool_token_address            text;
     junior_performance_with_sa    double precision;
     junior_performance_without_sa double precision;
-    epoch_id                      integer;
 begin
 
-    select into junior_token_address,pool_token_address,epoch_id p.junior_token_address,
-                                                                 p.pool_token_address,
-                                                                 ep.epoch_id
-    from smart_alpha.pools p
-             inner join smart_alpha.pool_epoch_info ep on p.pool_address = ep.pool_address
-    where p.pool_address = pool
-      and ep.block_timestamp <= ts
-    order by ep.epoch_id desc
-    limit 1;
+    select into junior_token_address,pool_token_address p.junior_token_address,
+                                                        p.pool_token_address
 
-    select into junior_balance balance + (select
-                                          from smart_alpha.underlying_to_junior_tokens_at_epoch(pool,
-                                                                                                (smart_alpha.junior_tokens_not_redeemed(addr, pool, ts)),
-                                                                                                epoch_id))
+    from smart_alpha.pools p
+    where p.pool_address = pool;
+
+    select into junior_balance balance
     from public.erc20_balances_at_ts(addr, (select array_agg(junior_token_address)), ts);
 
 
@@ -75,7 +168,12 @@ begin
                                                        limit 1) *
                                                       (select public.token_usd_price_at_ts(pool_token_address, ts)));
 
-    return query select coalesce(junior_performance_with_sa, 0), coalesce(junior_performance_without_sa, 0);
+    return query select coalesce(junior_performance_with_sa + (select junior_not_redeemed_with_sa
+                                                               from smart_alpha.junior_tokens_not_redeemed(addr, pool, ts)),
+                                 0),
+                        coalesce(junior_performance_without_sa + (select junior_not_redeemed_without_sa
+                                                                  from smart_alpha.junior_tokens_not_redeemed(addr, pool, ts)),
+                                 0);
 end;
 $$;
 
@@ -94,24 +192,14 @@ declare
     pool_token_address            text;
     senior_performance_with_sa    double precision;
     senior_performance_without_sa double precision;
-    epoch_id                      integer;
 begin
 
-    select into senior_token_address,pool_token_address,epoch_id p.senior_token_address,
-                                                                 p.pool_token_address,
-                                                                 ep.epoch_id
+    select into senior_token_address,pool_token_address p.senior_token_address,
+                                                        p.pool_token_address
     from smart_alpha.pools p
-             inner join smart_alpha.pool_epoch_info ep on p.pool_address = ep.pool_address
-    where p.pool_address = pool
-      and ep.block_timestamp <= ts
-    order by ep.epoch_id desc
-    limit 1;
+    where p.pool_address = pool;
 
-    select into senior_balance balance + (select
-                                          from smart_alpha.underlying_to_senior_tokens_at_epoch(pool,
-                                                                                                (select from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts)),
-                                                                                                epoch_id)
-    )
+    select into senior_balance balance
     from public.erc20_balances_at_ts(addr, (select array_agg(senior_token_address)), ts);
 
 
@@ -121,40 +209,12 @@ begin
                                                       (select lp.senior_price_start
                                                        from smart_alpha.lp_token_epoch_start_price_at_ts(pool, ts) lp) *
                                                       (select public.token_usd_price_at_ts(pool_token_address, ts)));
-    return query select coalesce(senior_performance_with_sa, 0), coalesce(senior_performance_without_sa, 0);
+    return query select coalesce(senior_performance_with_sa + (select senior_not_redeemed_with_sa
+                                                               from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts)),
+                                 0),
+                        coalesce(senior_performance_without_sa + (select senior_not_redeemed_without_sa
+                                                                  from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts)),
+                                 0);
 end;
 $$;
 
-create or replace function smart_alpha.junior_tokens_not_redeemed(addr text, pool text, ts bigint) returns numeric
-    language plpgsql as
-$$
-begin
-    return (select sum(j.underlying_in)
-            from smart_alpha.user_join_entry_queue_events j
-                     left join smart_alpha.user_redeem_tokens_events r
-                               on j.user_address = r.user_address and j.pool_address = r.pool_address and
-                                  j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp <= ts
-            where j.user_address = addr
-              and j.pool_address = pool
-              and j.tranche = 'JUNIOR'
-              and j.block_timestamp <= ts
-              and r.user_address is null);
-end;
-$$;
-
-create or replace function smart_alpha.senior_tokens_not_redeemed(addr text, pool text, ts bigint) returns numeric
-    language plpgsql as
-$$
-begin
-    return (select sum(j.underlying_in)
-            from smart_alpha.user_join_entry_queue_events j
-                     left join smart_alpha.user_redeem_tokens_events r
-                               on j.user_address = r.user_address and j.pool_address = r.pool_address and
-                                  j.epoch_id = r.epoch_id and j.tranche = r.tranche and r.block_timestamp <= ts
-            where j.user_address = addr
-              and j.pool_address = pool
-              and j.tranche = 'SENIOR'
-              and j.block_timestamp <= ts
-              and r.user_address is null);
-end;
-$$;
