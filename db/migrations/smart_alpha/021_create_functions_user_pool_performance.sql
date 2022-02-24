@@ -67,6 +67,7 @@ begin
     where j.user_address = addr
       and j.pool_address = pool
       and j.tranche = 'JUNIOR'
+      and j.epoch_id < (select smart_alpha.pool_active_epoch_at_ts(pool, ts))
       and j.block_timestamp <= ts
       and r.user_address is null;
 
@@ -117,6 +118,7 @@ begin
     where j.user_address = addr
       and j.pool_address = pool
       and j.tranche = 'SENIOR'
+      and j.epoch_id < (select smart_alpha.pool_active_epoch_at_ts(pool, ts))
       and j.block_timestamp <= ts
       and r.user_address is null;
 
@@ -143,11 +145,13 @@ create or replace function smart_alpha.junior_position_performance_at_ts(addr te
 as
 $$
 declare
-    junior_balance                numeric;
-    junior_token_address          text;
-    pool_token_address            text;
-    junior_performance_with_sa    double precision;
-    junior_performance_without_sa double precision;
+    junior_balance                 numeric;
+    junior_token_address           text;
+    pool_token_address             text;
+    junior_performance_with_sa     double precision;
+    junior_performance_without_sa  double precision;
+    junior_not_redeemed_with_sa    double precision;
+    junior_not_redeemed_without_sa double precision;
 begin
 
     select into junior_token_address,pool_token_address p.junior_token_address,
@@ -168,11 +172,13 @@ begin
                                                        limit 1) *
                                                       (select public.token_usd_price_at_ts(pool_token_address, ts)));
 
-    return query select coalesce(junior_performance_with_sa + (select junior_not_redeemed_with_sa
-                                                               from smart_alpha.junior_tokens_not_redeemed(addr, pool, ts)),
+    select into junior_not_redeemed_with_sa,junior_performance_without_sa jnt.junior_not_redeemed_with_sa,
+                                                                          jnt.junior_not_redeemed_without_sa
+    from smart_alpha.junior_tokens_not_redeemed(addr, pool, ts) jnt;
+
+    return query select coalesce(junior_performance_with_sa + junior_not_redeemed_with_sa,
                                  0),
-                        coalesce(junior_performance_without_sa + (select junior_not_redeemed_without_sa
-                                                                  from smart_alpha.junior_tokens_not_redeemed(addr, pool, ts)),
+                        coalesce(junior_performance_without_sa + junior_not_redeemed_without_sa,
                                  0);
 end;
 $$;
@@ -187,11 +193,13 @@ create or replace function smart_alpha.senior_position_performance_at_ts(addr te
 as
 $$
 declare
-    senior_balance                numeric;
-    senior_token_address          text;
-    pool_token_address            text;
-    senior_performance_with_sa    double precision;
-    senior_performance_without_sa double precision;
+    senior_balance                 numeric;
+    senior_token_address           text;
+    pool_token_address             text;
+    senior_performance_with_sa     double precision;
+    senior_performance_without_sa  double precision;
+    senior_not_redeemed_with_sa    double precision;
+    senior_not_redeemed_without_sa double precision;
 begin
 
     select into senior_token_address,pool_token_address p.senior_token_address,
@@ -209,12 +217,15 @@ begin
                                                       (select lp.senior_price_start
                                                        from smart_alpha.lp_token_epoch_start_price_at_ts(pool, ts) lp) *
                                                       (select public.token_usd_price_at_ts(pool_token_address, ts)));
-    return query select coalesce(senior_performance_with_sa + (select senior_not_redeemed_with_sa
-                                                               from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts)),
+
+    select into senior_not_redeemed_with_sa,senior_not_redeemed_without_sa snt.senior_not_redeemed_with_sa,
+                                                                           snt.senior_not_redeemed_without_sa
+    from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts) snt;
+
+    return query select coalesce(senior_performance_with_sa + senior_performance_with_sa,
                                  0),
-                        coalesce(senior_performance_without_sa + (select senior_not_redeemed_without_sa
-                                                                  from smart_alpha.senior_tokens_not_redeemed(addr, pool, ts)),
+                        coalesce(senior_performance_without_sa + senior_performance_without_sa,
                                  0);
-end;
+end ;
 $$;
 
