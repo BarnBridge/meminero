@@ -45,7 +45,7 @@ declare
 
 begin
     select into balance_not_redeemed,epoch_id j.underlying_in,
-                                              j.block_timestamp
+                                              j.epoch_id
 
     from smart_alpha.user_join_entry_queue_events j
              left join smart_alpha.user_redeem_tokens_events r
