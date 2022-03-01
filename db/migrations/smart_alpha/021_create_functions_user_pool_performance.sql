@@ -38,7 +38,7 @@ declare
     balance_not_redeemed numeric;
     epoch_id             bigint;
 begin
-    select into balance_not_redeemed,epoch_id j.underlying_in, j.epoch_id
+    select into balance_not_redeemed,epoch_id sum(j.underlying_in), j.epoch_id
     from smart_alpha.user_join_entry_queue_events j
              left join smart_alpha.user_redeem_tokens_events r
                        on j.user_address = r.user_address and j.pool_address = r.pool_address and
@@ -49,7 +49,8 @@ begin
       and j.tranche = 'JUNIOR'
       and j.epoch_id < ( select smart_alpha.pool_active_epoch_at_ts(pool, ts) )
       and j.block_timestamp <= ts
-      and r.user_address is null;
+      and r.user_address is null
+    group by j.epoch_id;
 
     return coalesce(( select smart_alpha.underlying_to_junior_tokens_at_epoch(pool, balance_not_redeemed, epoch_id)) *
                      pow(10, 18)::numeric(78, 18), 0 );
@@ -63,7 +64,7 @@ declare
     balance_not_redeemed numeric;
     epoch_id             bigint;
 begin
-    select into balance_not_redeemed,epoch_id j.underlying_in, j.epoch_id
+    select into balance_not_redeemed,epoch_id sum(j.underlying_in), j.epoch_id
     from smart_alpha.user_join_entry_queue_events j
              left join smart_alpha.user_redeem_tokens_events r
                        on j.user_address = r.user_address and j.pool_address = r.pool_address and
@@ -74,7 +75,8 @@ begin
       and j.tranche = 'SENIOR'
       and j.epoch_id < ( select smart_alpha.pool_active_epoch_at_ts(pool, ts) )
       and j.block_timestamp <= ts
-      and r.user_address is null;
+      and r.user_address is null
+    group by j.epoch_id;
 
     return coalesce(( select smart_alpha.underlying_to_senior_tokens_at_epoch(pool, balance_not_redeemed, epoch_id)) *
                      pow(10, 18)::numeric(78, 18), 0 );
