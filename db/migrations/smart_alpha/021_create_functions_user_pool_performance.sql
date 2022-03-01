@@ -85,7 +85,7 @@ create or replace function smart_alpha.junior_tokens_redeemed_at_active_epoch(ad
     language plpgsql as
 $$
 begin
-    return coalesce(( select a.tokens_in
+    return coalesce(( select sum(a.tokens_in)
                      from smart_alpha.user_join_exit_queue_events a
                      where a.user_address = addr
                        and a.pool_address = pool
@@ -99,7 +99,7 @@ create or replace function smart_alpha.senior_tokens_redeemed_at_active_epoch(ad
     language plpgsql as
 $$
 begin
-    return coalesce(( select a.tokens_in
+    return coalesce(( select sum(a.tokens_in)
                      from smart_alpha.user_join_exit_queue_events a
                      where a.user_address = addr
                        and a.pool_address = pool
